@@ -4,8 +4,8 @@ import { validateCartStock } from '@/lib/woocommerce/orders';
 
 export async function validateCartStockAction(items: { productId: number; quantity: number }[]) {
     console.log('🔍 validateCartStockAction - Checking env vars:', {
-        hasWcKey: !!process.env.WC_CONSUMER_KEY,
-        hasWcSecret: !!process.env.WC_CONSUMER_SECRET,
+        hasWcKey: !!process.env.WORDPRESS_CONSUMER_KEY,
+        hasWcSecret: !!process.env.WORDPRESS_CONSUMER_SECRET,
         nodeEnv: process.env.NODE_ENV
     });
 

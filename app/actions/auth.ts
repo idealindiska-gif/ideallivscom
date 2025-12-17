@@ -7,11 +7,11 @@ import { getCustomerOrders } from '@/lib/woocommerce/orders';
 export async function registerUserAction(data: RegisterData) {
     const baseUrl = WC_API_CONFIG.baseUrl;
     // Use server-side keys
-    const consumerKey = process.env.WC_CONSUMER_KEY;
-    const consumerSecret = process.env.WC_CONSUMER_SECRET;
+    const consumerKey = process.env.WORDPRESS_CONSUMER_KEY;
+    const consumerSecret = process.env.WORDPRESS_CONSUMER_SECRET;
 
     if (!consumerKey || !consumerSecret) {
-        console.error('Missing WC_CONSUMER_KEY or WC_CONSUMER_SECRET');
+        console.error('Missing WORDPRESS_CONSUMER_KEY or WORDPRESS_CONSUMER_SECRET');
         return { success: false, error: 'Server configuration error: Missing API keys' };
     }
 
@@ -123,8 +123,8 @@ export async function loginUserAction(credentials: LoginCredentials) {
     // Method 3: Fallback to WooCommerce customer lookup (no JWT)
     console.log('Attempting WooCommerce customer verification...');
     const baseUrl = WC_API_CONFIG.baseUrl;
-    const consumerKey = process.env.WC_CONSUMER_KEY;
-    const consumerSecret = process.env.WC_CONSUMER_SECRET;
+    const consumerKey = process.env.WORDPRESS_CONSUMER_KEY;
+    const consumerSecret = process.env.WORDPRESS_CONSUMER_SECRET;
 
     if (!consumerKey || !consumerSecret) {
         return { success: false, error: 'Authentication service unavailable. Please contact support.' };
@@ -173,8 +173,8 @@ export async function loginUserAction(credentials: LoginCredentials) {
 
 export async function getCurrentUserAction(token: string, userEmail?: string) {
     const baseUrl = WC_API_CONFIG.baseUrl;
-    const consumerKey = process.env.WC_CONSUMER_KEY;
-    const consumerSecret = process.env.WC_CONSUMER_SECRET;
+    const consumerKey = process.env.WORDPRESS_CONSUMER_KEY;
+    const consumerSecret = process.env.WORDPRESS_CONSUMER_SECRET;
 
     console.log('Getting current user with token:', token ? 'Token exists' : 'No token');
     console.log('User email from JWT:', userEmail);
@@ -342,8 +342,8 @@ export async function getCustomerOrdersAction(customerId: number, params?: {
  */
 export async function updateCustomerAction(customerId: number, data: any) {
     const baseUrl = WC_API_CONFIG.baseUrl;
-    const consumerKey = process.env.WC_CONSUMER_KEY;
-    const consumerSecret = process.env.WC_CONSUMER_SECRET;
+    const consumerKey = process.env.WORDPRESS_CONSUMER_KEY;
+    const consumerSecret = process.env.WORDPRESS_CONSUMER_SECRET;
 
     if (!consumerKey || !consumerSecret) {
         return { success: false, error: 'Server configuration error: Missing API keys' };

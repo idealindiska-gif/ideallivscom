@@ -38,8 +38,8 @@ export async function GET() {
     }
 
     // Check WooCommerce connectivity
-    const wcConsumerKey = process.env.WC_CONSUMER_KEY;
-    const wcConsumerSecret = process.env.WC_CONSUMER_SECRET;
+    const wcConsumerKey = process.env.WORDPRESS_CONSUMER_KEY;
+    const wcConsumerSecret = process.env.WORDPRESS_CONSUMER_SECRET;
 
     if (wpUrl && wcConsumerKey && wcConsumerSecret) {
       const wcResponse = await fetch(

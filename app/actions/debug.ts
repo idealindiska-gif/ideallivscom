@@ -7,8 +7,8 @@ export async function testWooCommerceConnection() {
         config: {
             wordpressUrl: process.env.NEXT_PUBLIC_WORDPRESS_URL || 'NOT SET',
             apiUrl: '',
-            hasConsumerKey: !!process.env.WC_CONSUMER_KEY,
-            hasConsumerSecret: !!process.env.WC_CONSUMER_SECRET,
+            hasConsumerKey: !!process.env.WORDPRESS_CONSUMER_KEY,
+            hasConsumerSecret: !!process.env.WORDPRESS_CONSUMER_SECRET,
         },
         public: { success: false, message: '' },
         auth: { success: false, message: '', responseText: '' },

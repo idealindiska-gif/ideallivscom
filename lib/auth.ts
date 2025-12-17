@@ -53,8 +53,8 @@ export async function loginUser(credentials: LoginCredentials): Promise<AuthResp
  */
 export async function registerUser(data: RegisterData) {
     const baseUrl = WC_API_CONFIG.baseUrl;
-    const consumerKey = process.env.NEXT_PUBLIC_WC_CONSUMER_KEY;
-    const consumerSecret = process.env.NEXT_PUBLIC_WC_CONSUMER_SECRET;
+    const consumerKey = process.env.NEXT_PUBLIC_WORDPRESS_CONSUMER_KEY;
+    const consumerSecret = process.env.NEXT_PUBLIC_WORDPRESS_CONSUMER_SECRET;
 
     try {
         const response = await fetch(`${baseUrl}/customers`, {
@@ -102,8 +102,8 @@ export async function getCurrentUser(token: string) {
 
         // Then try to get WC customer details using email
         // Note: This requires the consumer keys as customers endpoint is protected
-        const consumerKey = process.env.NEXT_PUBLIC_WC_CONSUMER_KEY;
-        const consumerSecret = process.env.NEXT_PUBLIC_WC_CONSUMER_SECRET;
+        const consumerKey = process.env.NEXT_PUBLIC_WORDPRESS_CONSUMER_KEY;
+        const consumerSecret = process.env.NEXT_PUBLIC_WORDPRESS_CONSUMER_SECRET;
 
         const customerResponse = await fetch(
             `${baseUrl}/customers?email=${wpUser.email}`,
