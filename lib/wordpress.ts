@@ -14,9 +14,9 @@ import type {
 
 // Base URL is checked inside fetch functions to prevent build-time crashes on import
 const getBaseUrl = () => {
-  const url = process.env.WORDPRESS_URL;
+  const url = process.env.NEXT_PUBLIC_WORDPRESS_URL;
   if (!url) {
-    throw new Error("WORDPRESS_URL environment variable is not defined");
+    throw new Error("NEXT_PUBLIC_WORDPRESS_URL environment variable is not defined");
   }
   return url;
 };

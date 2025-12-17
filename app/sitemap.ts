@@ -5,7 +5,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   let posts: any[] = [];
 
   // Only try to fetch posts if WordPress is configured
-  if (process.env.WORDPRESS_URL) {
+  if (process.env.NEXT_PUBLIC_WORDPRESS_URL) {
     try {
       const { getAllPosts } = await import("@/lib/wordpress");
       posts = await getAllPosts();
