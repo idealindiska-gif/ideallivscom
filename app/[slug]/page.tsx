@@ -1,7 +1,8 @@
 import { notFound } from 'next/navigation';
 import { getProductBySlug, getRelatedProducts, getProductsByCategory, getProductCategoryBySlug } from '@/lib/woocommerce';
+import { getPostBySlug, getPageBySlug } from '@/lib/wordpress';
 import { ProductTemplate } from '@/components/templates';
-import { ArchiveTemplate } from '@/components/templates';
+import { ArchiveTemplate, PageTemplate, BlogPostTemplate } from '@/components/templates';
 import type { Metadata } from 'next';
 
 interface DynamicPageProps {
@@ -16,17 +17,37 @@ interface DynamicPageProps {
 export async function generateMetadata({ params }: DynamicPageProps): Promise<Metadata> {
   const resolvedParams = await params;
 
-  // Try category first
+  // Try blog post first (WordPress post at root level like WordPress)
   try {
-    const category = await getProductCategoryBySlug(resolvedParams.slug);
-    if (category) {
+    const post = await getPostBySlug(resolvedParams.slug);
+    if (post) {
+      const description = post.excerpt?.rendered?.replace(/<[^>]*>/g, '').trim() || '';
       return {
-        title: category.name,
-        description: category.description || `Browse our ${category.name} products`,
+        title: post.title.rendered,
+        description: description.substring(0, 160),
+        openGraph: {
+          title: post.title.rendered,
+          description: description.substring(0, 160),
+          type: 'article',
+          url: `https://ideallivs.com/${post.slug}`,
+        },
       };
     }
   } catch {
-    // Continue to try product
+    // Continue
+  }
+
+  // Try WordPress page
+  try {
+    const page = await getPageBySlug(resolvedParams.slug);
+    if (page) {
+      return {
+        title: page.title.rendered,
+        description: page.excerpt?.rendered?.replace(/<[^>]*>/g, '').substring(0, 160) || page.title.rendered,
+      };
+    }
+  } catch {
+    // Continue
   }
 
   // Try product
@@ -49,6 +70,19 @@ export async function generateMetadata({ params }: DynamicPageProps): Promise<Me
       };
     }
   } catch {
+    // Continue
+  }
+
+  // Try category
+  try {
+    const category = await getProductCategoryBySlug(resolvedParams.slug);
+    if (category) {
+      return {
+        title: category.name,
+        description: category.description || `Browse our ${category.name} products`,
+      };
+    }
+  } catch {
     // Not found
   }
 
@@ -61,7 +95,76 @@ export default async function DynamicPage({ params, searchParams }: DynamicPageP
   const resolvedParams = await params;
   const resolvedSearchParams = await searchParams;
 
-  // Try to fetch as category first
+  // Try blog post first (WordPress posts at root level - matching WordPress URL structure)
+  try {
+    const post = await getPostBySlug(resolvedParams.slug);
+    if (post) {
+      return (
+        <BlogPostTemplate post={post as any} />
+      );
+    }
+  } catch {
+    // Continue
+  }
+
+  // Try WordPress page
+  try {
+    const page = await getPageBySlug(resolvedParams.slug);
+    if (page) {
+      const featuredImage = (page as any)._embedded?.['wp:featuredmedia']?.[0]?.source_url
+        ? {
+          src: (page as any)._embedded['wp:featuredmedia'][0].source_url,
+          alt: page.title.rendered,
+        }
+        : undefined;
+
+      return (
+        <PageTemplate
+          title={page.title.rendered}
+          content={page.content.rendered}
+          featuredImage={featuredImage}
+          excerpt={page.excerpt?.rendered?.replace(/<[^>]*>/g, '').trim()}
+          breadcrumbs={[
+            { label: 'Home', href: '/' },
+            { label: page.title.rendered }
+          ]}
+          layout="two-column"
+          showHero={true}
+        />
+      );
+    }
+  } catch {
+    // Continue
+  }
+
+  // Try to fetch as product
+  try {
+    const product = await getProductBySlug(resolvedParams.slug);
+    if (product) {
+      const relatedProducts = await getRelatedProducts(product.id);
+
+      // Build breadcrumbs
+      const breadcrumbs = [
+        { label: 'Shop', href: '/shop' },
+        ...(product.categories && product.categories.length > 0
+          ? [{ label: product.categories[0].name, href: `/product-category/${product.categories[0].slug}` }]
+          : []),
+        { label: product.name },
+      ];
+
+      return (
+        <ProductTemplate
+          product={product}
+          breadcrumbs={breadcrumbs}
+          relatedProducts={relatedProducts}
+        />
+      );
+    }
+  } catch {
+    // Continue
+  }
+
+  // Try to fetch as category
   try {
     const category = await getProductCategoryBySlug(resolvedParams.slug);
     if (category) {
@@ -93,35 +196,8 @@ export default async function DynamicPage({ params, searchParams }: DynamicPageP
           totalProducts={total}
           currentPage={page}
           totalPages={totalPages}
-          basePath={`/${resolvedParams.slug}`}
+          basePath={`/product-category/${resolvedParams.slug}`}
           gridColumns={5}
-        />
-      );
-    }
-  } catch {
-    // Continue to try as product
-  }
-
-  // Try to fetch as product
-  try {
-    const product = await getProductBySlug(resolvedParams.slug);
-    if (product) {
-      const relatedProducts = await getRelatedProducts(product.id);
-
-      // Build breadcrumbs
-      const breadcrumbs = [
-        { label: 'Shop', href: '/shop' },
-        ...(product.categories && product.categories.length > 0
-          ? [{ label: product.categories[0].name, href: `/${product.categories[0].slug}` }]
-          : []),
-        { label: product.name },
-      ];
-
-      return (
-        <ProductTemplate
-          product={product}
-          breadcrumbs={breadcrumbs}
-          relatedProducts={relatedProducts}
         />
       );
     }

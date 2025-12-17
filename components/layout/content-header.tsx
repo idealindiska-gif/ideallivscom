@@ -4,6 +4,7 @@ import { Search, User, ShoppingCart, Menu, X } from "lucide-react";
 import Link from "next/link";
 import Image from "next/image";
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 import { useSidebar } from "./mobile-sidebar-toggle";
 import { CartIcon } from "@/components/cart/cart-icon";
 import { UserNav } from "@/components/layout/user-nav";
@@ -11,6 +12,14 @@ import { UserNav } from "@/components/layout/user-nav";
 export function ContentHeader() {
   const [searchQuery, setSearchQuery] = useState("");
   const { isOpen, toggle } = useSidebar();
+  const router = useRouter();
+
+  const handleSearch = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (searchQuery.trim()) {
+      router.push(`/shop?search=${encodeURIComponent(searchQuery.trim())}`);
+    }
+  };
 
   return (
     <header className="sticky top-0 lg:top-[40px] z-30 w-full bg-background/95 backdrop-blur-md border-b border-border shadow-sm">
@@ -19,7 +28,7 @@ export function ContentHeader() {
 
         {/* Search Bar - Center - Dominant */}
         <div className="flex-1 max-w-2xl mx-auto w-full">
-          <div className="relative group">
+          <form onSubmit={handleSearch} className="relative group">
             <input
               type="text"
               placeholder="Search for fresh produce, groceries, and more..."
@@ -27,10 +36,10 @@ export function ContentHeader() {
               onChange={(e) => setSearchQuery(e.target.value)}
               className="w-full pl-6 pr-14 py-2.5 text-base border border-border rounded-lg focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary bg-muted/30 hover:bg-muted/50 transition-all font-medium placeholder:text-muted-foreground/70"
             />
-            <button className="absolute right-2 top-1/2 -translate-y-1/2 p-1.5 bg-primary rounded-md text-primary-foreground hover:bg-primary/90 transition-colors shadow-sm">
+            <button type="submit" className="absolute right-2 top-1/2 -translate-y-1/2 p-1.5 bg-primary rounded-md text-primary-foreground hover:bg-primary/90 transition-colors shadow-sm">
               <Search className="h-5 w-5" />
             </button>
-          </div>
+          </form>
         </div>
 
         {/* Login/Signup & Cart - Right */}
@@ -152,7 +161,7 @@ export function ContentHeader() {
 
         {/* Search Bar - Bottom Row */}
         <div className="px-4 py-3 bg-muted/20">
-          <div className="relative">
+          <form onSubmit={handleSearch} className="relative">
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
             <input
               type="text"
@@ -161,7 +170,7 @@ export function ContentHeader() {
               onChange={(e) => setSearchQuery(e.target.value)}
               className="w-full pl-10 pr-4 py-2.5 text-sm border border-border rounded-lg focus:outline-none focus:ring-1 focus:ring-primary focus:border-primary bg-background shadow-sm"
             />
-          </div>
+          </form>
         </div>
       </div>
     </header>

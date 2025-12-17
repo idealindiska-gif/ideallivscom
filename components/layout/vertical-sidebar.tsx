@@ -207,7 +207,7 @@ export function VerticalSidebar({ categories = [] }: VerticalSidebarProps) {
                 return (
                   <Link
                     key={category.id}
-                    href={`/shop?category=${category.slug}`}
+                    href={`/product-category/${category.slug}`}
                     className={cn(
                       "flex items-center gap-3 p-3 rounded-xl transition-all duration-200 group border border-transparent",
                       isHovered ? "bg-green-50 dark:bg-green-950/20 border-green-100 dark:border-green-900" : "hover:bg-muted"

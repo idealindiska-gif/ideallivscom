@@ -18,7 +18,7 @@ export function Hero({
     badge = "Premium Quality Guaranteed"
 }: HeroProps) {
     return (
-        <section className="relative w-full h-[60vh] min-h-[450px] flex items-center justify-start overflow-hidden bg-muted/20">
+        <section className="relative w-full h-[60vh] min-h-[450px] flex items-center justify-start overflow-hidden bg-muted/20 lg:-mt-[10px]">
             {/* Background Image with Overlay */}
             <div className="absolute inset-0 z-0">
                 {/* Fallback pattern if no image */}
@@ -57,7 +57,7 @@ export function Hero({
                         initial={{ opacity: 0, y: 20 }}
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ duration: 0.8, delay: 0.2, ease: "easeOut" }}
-                        className="text-2xl sm:text-3xl md:text-5xl lg:text-6xl xl:text-7xl font-heading font-bold text-foreground leading-[1.15] tracking-tight"
+                        className="text-2xl sm:text-3xl md:text-4xl lg:text-[65px] font-heading font-bold text-foreground leading-[1.15] tracking-tight"
                     >
                         Authentic Indian & Pakistani <br className="hidden sm:block" />
                         <span className="text-primary">Groceries in Stockholm</span>
