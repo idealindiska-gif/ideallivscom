@@ -202,6 +202,9 @@ export async function Footer() {
                 <li>
                   <Link href="/delivery-information" className="hover:text-primary transition-colors">Stockholm Delivery</Link>
                 </li>
+                <li>
+                  <Link href="/faq" className="hover:text-primary transition-colors">FAQ</Link>
+                </li>
               </ul>
             </div>
           </div>
