@@ -27,7 +27,7 @@ export async function POST(request: NextRequest) {
 
     // Call WordPress MCP API
     const response = await fetch(
-      `${WP_API_BASE}/wp-json/fourlines-mcp/v1/shipping/calculate`,
+      `${WP_API_BASE}/fourlines-mcp/v1/shipping/calculate`,
       {
         method: 'POST',
         headers: {
