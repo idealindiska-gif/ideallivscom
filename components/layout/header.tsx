@@ -29,7 +29,7 @@ const NavLink = ({ href, children }: { href: string; children: React.ReactNode }
 
 export function Header({ className, categories = [] }: HeaderProps) {
   // Use Ideal Livs logo
-  const logoUrl = 'https://ideallivs.com/wp-content/uploads/2025/04/final-new-logo-black.png';
+  const logoUrl = 'https://crm.ideallivs.com/wp-content/uploads/2025/04/final-new-logo-black.png';
 
   // Chat functionality
   const { isOpen, openChat, closeChat, ChatWidget } = useAIChat();
@@ -78,6 +78,7 @@ export function Header({ className, categories = [] }: HeaderProps) {
                       alt={brandProfile.name}
                       fill
                       className="object-contain"
+                      unoptimized
                     />
                   </div>
                 </Link>
@@ -132,6 +133,7 @@ export function Header({ className, categories = [] }: HeaderProps) {
                     fill
                     className="object-contain"
                     priority
+                    unoptimized
                   />
                 </div>
               </Link>

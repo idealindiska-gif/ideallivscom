@@ -29,7 +29,7 @@ export function Hero({
                 <div className="absolute right-0 top-0 h-full w-full md:w-3/4 lg:w-2/3 ml-auto opacity-30 md:opacity-100">
                     <div className="relative h-full w-full bg-muted">
                         <Image
-                            src="https://ideallivs.com/wp-content/uploads/2025/08/delivery-cover-post.png"
+                            src="https://crm.ideallivs.com/wp-content/uploads/2025/08/delivery-cover-post.png"
                             alt="Fresh Groceries"
                             fill
                             className="object-cover object-center"
@@ -58,8 +58,8 @@ export function Hero({
                         initial={{ opacity: 0, y: 20 }}
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ duration: 0.8, delay: 0.2, ease: "easeOut" }}
-                        className="text-2xl sm:text-3xl md:text-5xl lg:text-6xl xl:text-7xl font-heading font-bold text-foreground tracking-normal"
-                        style={{ lineHeight: 1.2 }}
+                        className="text-2xl sm:text-3xl md:text-5xl lg:text-6xl xl:text-7xl font-heading font-bold text-foreground tracking-tight"
+                        style={{ lineHeight: 1.1 }}
                     >
                         Authentic Indian & Pakistani{' '}
                         <span className="text-primary">Groceries in Stockholm</span>

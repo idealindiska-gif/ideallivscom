@@ -15,11 +15,12 @@ export function PromotionGrid() {
                         <div className="relative overflow-hidden rounded-2xl shadow-sm group-hover:shadow-lg transition-all h-full">
                             <div className="relative aspect-[4/3] w-full">
                                 <Image
-                                    src="https://ideallivs.com/wp-content/uploads/2025/05/sona-masoori-speical-promotion-price-web.jpg"
+                                    src="https://crm.ideallivs.com/wp-content/uploads/2025/05/sona-masoori-speical-promotion-price-web.jpg"
                                     alt="Sona Masoori Special Promotion"
                                     fill
                                     className="object-cover group-hover:scale-105 transition-transform duration-500"
                                     sizes="(max-width: 768px) 100vw, 33vw"
+                                    unoptimized
                                 />
                             </div>
                         </div>

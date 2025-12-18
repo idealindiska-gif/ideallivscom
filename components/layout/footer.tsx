@@ -18,7 +18,7 @@ export async function Footer() {
               {/* Brand Logo */}
               <div className="relative h-16 w-28">
                 <Image
-                  src="https://ideallivs.com/wp-content/uploads/2025/04/final-new-logo-black.png"
+                  src="https://crm.ideallivs.com/wp-content/uploads/2025/04/final-new-logo-black.png"
                   alt={brandProfile.name}
                   fill
                   className="object-contain"

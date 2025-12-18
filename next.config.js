@@ -13,6 +13,11 @@ const nextConfig = {
                 hostname: 'ideallivs.com',
                 pathname: '/wp-content/uploads/**',
             },
+            {
+                protocol: 'https',
+                hostname: 'www.ideallivs.com',
+                pathname: '/wp-content/uploads/**',
+            },
         ],
     },
 };
