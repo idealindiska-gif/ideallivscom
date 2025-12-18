@@ -67,7 +67,7 @@ export function MobileMenu() {
                             {/* Logo */}
                             <div className="relative h-20 w-32">
                                 <Image
-                                    src="https://ideallivs.com/wp-content/uploads/2025/04/final-new-logo-black.png"
+                                    src="https://crm.ideallivs.com/wp-content/uploads/2025/04/final-new-logo-black.png"
                                     alt="Ideal Indiska LIVS"
                                     fill
                                     className="object-contain"
@@ -95,8 +95,8 @@ export function MobileMenu() {
                                     }
                                 }}
                                 className={`group relative flex items-center gap-4 px-4 py-3.5 rounded-xl text-foreground transition-all duration-300 ${isComingSoon
-                                        ? 'opacity-60 cursor-not-allowed'
-                                        : 'hover:text-primary hover:bg-gradient-to-r hover:from-primary/10 hover:to-primary/5 hover:shadow-md hover:scale-[1.02] active:scale-[0.98]'
+                                    ? 'opacity-60 cursor-not-allowed'
+                                    : 'hover:text-primary hover:bg-gradient-to-r hover:from-primary/10 hover:to-primary/5 hover:shadow-md hover:scale-[1.02] active:scale-[0.98]'
                                     }`}
                                 style={{
                                     animationDelay: `${index * 50}ms`,

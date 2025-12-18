@@ -13,7 +13,7 @@ export function PromotionGrid() {
                     {/* Card 1: Sona Masoori Rice Promotion */}
                     <Link href="/shop" className="group">
                         <div className="relative overflow-hidden rounded-2xl shadow-sm group-hover:shadow-lg transition-all h-full">
-                            <div className="relative aspect-[4/3] w-full">
+                            <div className="relative aspect-[4/4] w-full">
                                 <Image
                                     src="https://crm.ideallivs.com/wp-content/uploads/2025/05/sona-masoori-speical-promotion-price-web.jpg"
                                     alt="Sona Masoori Special Promotion"

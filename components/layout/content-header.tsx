@@ -146,7 +146,7 @@ export function ContentHeader() {
           <Link href="/" className="flex items-center">
             <div className="relative w-28 h-14 sm:w-32 sm:h-16">
               <Image
-                src="https://ideallivs.com/wp-content/uploads/2025/04/final-new-logo-black.png"
+                src="https://crm.ideallivs.com/wp-content/uploads/2025/04/final-new-logo-black.png"
                 alt="Ideal Livs"
                 fill
                 className="object-contain"

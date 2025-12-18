@@ -58,7 +58,7 @@ export function Hero({
                         initial={{ opacity: 0, y: 20 }}
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ duration: 0.8, delay: 0.2, ease: "easeOut" }}
-                        className="text-2xl sm:text-3xl md:text-5xl lg:text-6xl xl:text-[3.5rem] font-heading font-bold text-foreground tracking-tight"
+                        className="text-3xl md:text-5xl lg:text-6xl xl:text-[3.5rem] font-heading font-bold text-foreground tracking-tight"
                         style={{ lineHeight: 1 }}
                     >
                         Authentic Indian & Pakistani{' '}

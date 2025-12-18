@@ -103,7 +103,7 @@ export function VerticalSidebar({ categories = [] }: VerticalSidebarProps) {
           <Link href="/" className="flex items-center justify-center group py-2">
             <div className="relative h-16 w-28 transition-transform duration-300 group-hover:scale-105">
               <Image
-                src="https://ideallivs.com/wp-content/uploads/2025/04/final-new-logo-black.png"
+                src="https://crm.ideallivs.com/wp-content/uploads/2025/04/final-new-logo-black.png"
                 alt="Ideal Livs"
                 fill
                 className="object-contain"
