@@ -57,7 +57,7 @@ export function Hero({
                         initial={{ opacity: 0, y: 20 }}
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ duration: 0.8, delay: 0.2, ease: "easeOut" }}
-                        className="text-2xl sm:text-3xl md:text-4xl lg:text-[65px] font-heading font-bold text-foreground leading-[1.15] tracking-tight"
+                        className="text-2xl sm:text-3xl md:text-4xl lg:text-[65px] font-heading font-bold text-foreground leading-[1.2] tracking-normal"
                     >
                         Authentic Indian & Pakistani{' '}
                         <span className="text-primary">Groceries in Stockholm</span>
