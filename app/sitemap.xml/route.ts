@@ -13,7 +13,9 @@ export async function GET() {
         `${baseUrl}/sitemap-pages.xml`,
         `${baseUrl}/sitemap-delivery.xml`,
         `${baseUrl}/sitemap-posts.xml`,
+        `${baseUrl}/sitemap-post-categories.xml`,
         `${baseUrl}/sitemap-product-categories.xml`,
+        `${baseUrl}/sitemap-product-brands.xml`,
         `${baseUrl}/sitemap-images.xml`,
     ];
 
