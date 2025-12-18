@@ -29,7 +29,7 @@ export default function ContactPage() {
               Contact Us & Get in Touch
             </h1>
             <p className="text-xl text-muted-foreground">
-              At {brandProfile.name}, we are more than just a grocery store; we are a community hub for lovers of authentic Indian and Pakistani food in Stockholm.
+              At Ideal Indiska, we are more than just a grocery store; we are a community hub for lovers of authentic Indian and Pakistani food in Stockholm. We love connecting with our customers, whether you visit us in person at our welcoming store in Bandhagen Centrum or have a question about your online order. This is your direct line to us.
             </p>
           </div>
         </Container>
@@ -107,15 +107,15 @@ export default function ContactPage() {
                   <div>
                     <h3 className="font-bold mb-1">WhatsApp for Quick Questions</h3>
                     <p className="text-sm text-muted-foreground mb-2">
-                      For the fastest response, especially regarding an order or product availability
+                      For the fastest response, especially regarding an order or product availability. It&apos;s the perfect way to get a quick answer.
                     </p>
                     <a
-                      href={`https://wa.me/${brandProfile.contact.whatsapp}`}
+                      href="https://wa.me/46728494801"
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="text-primary hover:underline"
+                      className="text-primary hover:underline font-bold"
                     >
-                      WhatsApp {brandProfile.contact.phoneFormatted}
+                      WhatsApp +46 728 494 801
                     </a>
                   </div>
                 </div>

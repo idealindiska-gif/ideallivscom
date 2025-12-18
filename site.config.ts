@@ -6,8 +6,8 @@ type SiteConfig = {
 };
 
 export const siteConfig: SiteConfig = {
-  site_name: "Grocery Store",
-  site_description: "Your trusted online grocery store - Fresh products, quality brands, delivered to your door.",
-  site_domain: process.env.NEXT_PUBLIC_SITE_URL || "https://example.com",
-  site_tagline: "Fresh. Quality. Convenience.",
+  site_name: "Ideal Indiska LIVS",
+  site_description: "Your trusted source for authentic Indian and Pakistani groceries in Stockholm. Fresh produce, aromatic spices, and premium grains delivered to your door.",
+  site_domain: "https://ideallivs.com",
+  site_tagline: "Everything You Need. Just Around the Corner.",
 };

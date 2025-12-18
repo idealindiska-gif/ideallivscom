@@ -46,7 +46,7 @@ export async function Footer() {
             <h4 className="font-heading text-sm font-bold uppercase tracking-wider mb-4 text-foreground">Delivery</h4>
             <ul className="space-y-3 text-sm text-muted-foreground">
               <li>
-                <Link href="/pages/delivery-information" className="hover:text-primary transition-colors">
+                <Link href="/delivery-information" className="hover:text-primary transition-colors">
                   <p className="font-medium text-foreground mb-1">Delivery Information</p>
                   <p className="text-xs">Fast & reliable delivery</p>
                 </Link>
@@ -200,7 +200,7 @@ export async function Footer() {
                   <Link href="/europe-delivery" className="hover:text-primary transition-colors">Europe Delivery</Link>
                 </li>
                 <li>
-                  <Link href="/pages/delivery-information" className="hover:text-primary transition-colors">Stockholm Delivery</Link>
+                  <Link href="/delivery-information" className="hover:text-primary transition-colors">Stockholm Delivery</Link>
                 </li>
               </ul>
             </div>

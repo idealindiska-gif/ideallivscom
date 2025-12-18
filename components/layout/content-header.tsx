@@ -101,7 +101,7 @@ export function ContentHeader() {
               <div className="absolute left-0 mt-2 w-64 bg-card border border-border rounded-lg shadow-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50">
                 <div className="py-2">
                   <Link
-                    href="/pages/delivery-information"
+                    href="/delivery-information"
                     className="block px-4 py-2 text-sm text-foreground hover:bg-primary/10 hover:text-primary transition-colors"
                   >
                     Stockholm & Sweden Delivery
@@ -113,7 +113,7 @@ export function ContentHeader() {
                     Europe Delivery
                   </Link>
                   <Link
-                    href="/delivery/goteborg-malmo"
+                    href="/delivery-goteborg-malmo"
                     className="block px-4 py-2 text-sm text-foreground hover:bg-primary/10 hover:text-primary transition-colors"
                   >
                     Göteborg & Malmö Delivery

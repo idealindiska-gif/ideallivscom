@@ -39,9 +39,21 @@ export async function generateMetadata({ params }: DynamicPageProps): Promise<Me
   try {
     const page = await getPageBySlug(resolvedParams.slug);
     if (page) {
+      const description = page.excerpt?.rendered?.replace(/<[^>]*>/g, '').substring(0, 160) || page.title.rendered;
       return {
         title: page.title.rendered,
-        description: page.excerpt?.rendered?.replace(/<[^>]*>/g, '').substring(0, 160) || page.title.rendered,
+        description: description,
+        openGraph: {
+          title: page.title.rendered,
+          description: description,
+          type: 'website',
+          url: `https://ideallivs.com/${page.slug}`,
+        },
+        twitter: {
+          card: 'summary_large_image',
+          title: page.title.rendered,
+          description: description,
+        }
       };
     }
   } catch {

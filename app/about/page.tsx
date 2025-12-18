@@ -49,17 +49,24 @@ export default function AboutPage() {
               </h2>
               <div className="space-y-4 text-muted-foreground">
                 <p>
-                  {brandProfile.name} was born from a deep-rooted love for the authentic flavours of our homeland and a desire to share them with the vibrant community in Stockholm. We noticed a need for a dedicated space where people could find high-quality, genuine Indian and Pakistani groceries without compromise.
+                  Ideal Indiska was born from a deep-rooted love for the authentic flavours of our homeland and a desire to share them with the vibrant community in Stockholm. We noticed a need for a dedicated space where people could find high-quality, genuine Indian and Pakistani groceries without compromise.
                 </p>
                 <p>
-                  What started as a small idea has grown into a cherished local store in {brandProfile.address.area}, driven by our commitment to bringing you the best ingredients for your traditional recipes and culinary explorations.
+                  What started as a small idea has grown into a cherished local store in Bandhagen, driven by our commitment to bringing you the best ingredients for your traditional recipes and culinary explorations.
+                </p>
+                <p>
+                  We carefully select our products to ensure you find everything you need to create authentic Indian and Pakistani meals, from everyday staples to special occasion delicacies.
                 </p>
               </div>
             </div>
             <div className="relative aspect-[4/3] rounded-2xl overflow-hidden shadow-xl">
-              <div className="w-full h-full bg-gradient-to-br from-primary/20 to-secondary/20 flex items-center justify-center">
-                <ShoppingBag className="w-32 h-32 text-primary/30" />
-              </div>
+              <Image
+                src="https://crm.ideallivs.com/wp-content/uploads/2025/05/whatsapp-image-2025-05-06-at-23.02.51-90cce80c.jpeg"
+                alt="Ideal Indiska Store"
+                fill
+                className="object-cover"
+                unoptimized
+              />
             </div>
           </div>
         </Container>
@@ -73,24 +80,35 @@ export default function AboutPage() {
               A World of Authentic Ingredients
             </h2>
             <p className="text-muted-foreground">
-              At {brandProfile.name}, you'll discover an extensive selection of premium South Asian groceries
+              At Ideal Indiska, you'll discover an extensive selection of:
             </p>
           </div>
 
-          <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
-            {brandProfile.productCategories.map((category, index) => (
-              <div
-                key={index}
-                className="bg-card p-6 rounded-xl shadow-sm hover:shadow-md transition-shadow border border-border"
-              >
-                <h3 className="font-heading font-bold text-lg mb-2">
-                  {category}
-                </h3>
-                <p className="text-sm text-muted-foreground">
-                  Carefully selected for authenticity and quality
-                </p>
-              </div>
-            ))}
+          <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
+            <div className="bg-card p-6 rounded-xl shadow-sm border border-border">
+              <h3 className="font-heading font-bold text-lg mb-2">Aromatic Spices & Masalas</h3>
+              <p className="text-sm text-muted-foreground">Whole and ground, sourced for freshness and potency from brands like Shan, MDH, and TRS.</p>
+            </div>
+            <div className="bg-card p-6 rounded-xl shadow-sm border border-border">
+              <h3 className="font-heading font-bold text-lg mb-2">Premium Grains & Dals</h3>
+              <p className="text-sm text-muted-foreground">The finest Basmati rice (India Gate, Guard), Atta, various flours, and diverse lentils.</p>
+            </div>
+            <div className="bg-card p-6 rounded-xl shadow-sm border border-border">
+              <h3 className="font-heading font-bold text-lg mb-2">Fresh Produce</h3>
+              <p className="text-sm text-muted-foreground">Seasonal vegetables and herbs (karela, bhindi, tinda) essential for South Asian cooking.</p>
+            </div>
+            <div className="bg-card p-6 rounded-xl shadow-sm border border-border">
+              <h3 className="font-heading font-bold text-lg mb-2">Delicious Snacks & Sweets</h3>
+              <p className="text-sm text-muted-foreground">Your favourite brands like Haldiram&apos;s and traditional South Asian treats.</p>
+            </div>
+            <div className="bg-card p-6 rounded-xl shadow-sm border border-border">
+              <h3 className="font-heading font-bold text-lg mb-2">Halal Meat & Chicken</h3>
+              <p className="text-sm text-muted-foreground">Fresh and quality halal meat products for your everyday needs.</p>
+            </div>
+            <div className="bg-card p-6 rounded-xl shadow-sm border border-border">
+              <h3 className="font-heading font-bold text-lg mb-2">Frozen Foods & Essentials</h3>
+              <p className="text-sm text-muted-foreground">From parathas to paneer and convenient ready-to-cook items.</p>
+            </div>
           </div>
         </Container>
       </section>
