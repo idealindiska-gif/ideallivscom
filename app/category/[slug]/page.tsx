@@ -1,3 +1,5 @@
+import Link from 'next/link';
+import Image from 'next/image';
 import { notFound } from 'next/navigation';
 import { getCategoryBySlug, getPostsByCategoryPaginated } from '@/lib/wordpress';
 import type { Metadata } from 'next';
@@ -64,7 +66,7 @@ export default async function CategoryPage({ params, searchParams }: CategoryPag
             {/* Category Header */}
             <div className="mb-12">
                 <div className="flex items-center gap-2 text-sm text-muted-foreground mb-4">
-                    <a href="/blog" className="hover:text-primary">Blog</a>
+                    <Link href="/blog" className="hover:text-primary">Blog</Link>
                     <span>/</span>
                     <span>Category</span>
                 </div>
@@ -80,17 +82,19 @@ export default async function CategoryPage({ params, searchParams }: CategoryPag
             {posts && posts.length > 0 ? (
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
                     {posts.map((post: any) => (
-                        <a
+                        <Link
                             key={post.id}
                             href={`/${post.slug}`}
                             className="group block border border-border rounded-lg overflow-hidden hover:shadow-lg transition-all"
                         >
                             {post._embedded?.['wp:featuredmedia']?.[0]?.source_url && (
                                 <div className="aspect-video relative bg-muted">
-                                    <img
+                                    <Image
                                         src={post._embedded['wp:featuredmedia'][0].source_url}
                                         alt={post.title.rendered}
-                                        className="w-full h-full object-cover group-hover:scale-105 transition-transform"
+                                        fill
+                                        className="object-cover group-hover:scale-105 transition-transform"
+                                        unoptimized
                                     />
                                 </div>
                             )}
@@ -105,7 +109,7 @@ export default async function CategoryPage({ params, searchParams }: CategoryPag
                                 />
                                 <p className="text-primary text-sm mt-4 font-semibold">Read more →</p>
                             </div>
-                        </a>
+                        </Link>
                     ))}
                 </div>
             ) : (
@@ -118,28 +122,28 @@ export default async function CategoryPage({ params, searchParams }: CategoryPag
             {headers.totalPages > 1 && (
                 <div className="flex justify-center gap-2 mt-12">
                     {Array.from({ length: headers.totalPages }, (_, i) => i + 1).map((pageNum) => (
-                        <a
+                        <Link
                             key={pageNum}
                             href={`?page=${pageNum}`}
                             className={`px-4 py-2 rounded ${pageNum === page
-                                    ? 'bg-primary text-primary-foreground'
-                                    : 'bg-muted hover:bg-muted/80'
+                                ? 'bg-primary text-primary-foreground'
+                                : 'bg-muted hover:bg-muted/80'
                                 }`}
                         >
                             {pageNum}
-                        </a>
+                        </Link>
                     ))}
                 </div>
             )}
 
             {/* Navigation */}
             <div className="mt-12">
-                <a
+                <Link
                     href="/blog"
                     className="inline-flex items-center text-primary hover:underline"
                 >
                     ← Back to all articles
-                </a>
+                </Link>
             </div>
         </div>
     );

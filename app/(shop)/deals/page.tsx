@@ -1,3 +1,4 @@
+import Link from 'next/link';
 import { Metadata } from 'next';
 import { Suspense } from 'react';
 import { getOnSaleProducts } from '@/lib/woocommerce/products-direct';
@@ -87,12 +88,12 @@ async function DealsContent() {
                         <p className="text-muted-foreground max-w-md mb-6">
                             We don't have any special offers at the moment, but check back soon for amazing deals!
                         </p>
-                        <a
+                        <Link
                             href="/shop"
                             className="inline-flex items-center justify-center px-6 py-3 bg-primary text-primary-foreground font-semibold rounded-lg hover:bg-primary/90 transition-colors"
                         >
                             Browse All Products
-                        </a>
+                        </Link>
                     </div>
                 )}
             </div>

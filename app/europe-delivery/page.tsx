@@ -1,3 +1,4 @@
+import Link from 'next/link';
 import { Metadata } from 'next';
 import {
     StaticPageLayout,
@@ -162,9 +163,9 @@ export default function EuropeDeliveryPage() {
                         <p className="text-muted-foreground mb-6">
                             Don't let distance stop you from enjoying the authentic flavors you love. Explore our online store, fill your cart with your favourite brands, and let us bring a piece of India and Pakistan to you.
                         </p>
-                        <a href="/shop" className="inline-flex items-center justify-center px-8 py-3 bg-primary text-primary-foreground font-semibold rounded-lg hover:bg-primary/90 transition-colors">
+                        <Link href="/shop" className="inline-flex items-center justify-center px-8 py-3 bg-primary text-primary-foreground font-semibold rounded-lg hover:bg-primary/90 transition-colors">
                             Start Shopping
-                        </a>
+                        </Link>
                     </div>
                 </section>
 

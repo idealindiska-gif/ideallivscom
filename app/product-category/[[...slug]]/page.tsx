@@ -1,3 +1,5 @@
+import Link from 'next/link';
+import Image from 'next/image';
 import { notFound } from 'next/navigation';
 import { getProductCategoryBySlug, getProducts } from '@/lib/woocommerce';
 import type { Metadata } from 'next';
@@ -101,9 +103,9 @@ export default async function ProductCategoryPage({ params, searchParams }: Prod
                     <div key={index} className="flex items-center gap-2">
                         {index > 0 && <span>/</span>}
                         {crumb.href ? (
-                            <a href={crumb.href} className="hover:text-primary">
+                            <Link href={crumb.href} className="hover:text-primary">
                                 {crumb.label}
-                            </a>
+                            </Link>
                         ) : (
                             <span className="text-foreground font-medium">{crumb.label}</span>
                         )}
@@ -126,17 +128,19 @@ export default async function ProductCategoryPage({ params, searchParams }: Prod
             {products && products.length > 0 ? (
                 <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
                     {products.map((product) => (
-                        <a
+                        <Link
                             key={product.id}
                             href={`/product/${product.slug}`}
                             className="group block border border-border rounded-lg overflow-hidden hover:shadow-lg transition-all"
                         >
                             {product.images && product.images[0] && (
                                 <div className="aspect-square relative bg-muted">
-                                    <img
+                                    <Image
                                         src={product.images[0].src}
                                         alt={product.name}
+                                        fill
                                         className="w-full h-full object-cover group-hover:scale-105 transition-transform"
+                                        unoptimized
                                     />
                                 </div>
                             )}
@@ -144,7 +148,7 @@ export default async function ProductCategoryPage({ params, searchParams }: Prod
                                 <h3 className="font-semibold text-sm mb-2 line-clamp-2">{product.name}</h3>
                                 <p className="text-primary font-bold">{product.price} SEK</p>
                             </div>
-                        </a>
+                        </Link>
                     ))}
                 </div>
             ) : (
@@ -157,16 +161,16 @@ export default async function ProductCategoryPage({ params, searchParams }: Prod
             {totalPages > 1 && (
                 <div className="flex justify-center gap-2 mt-12">
                     {Array.from({ length: totalPages }, (_, i) => i + 1).map((pageNum) => (
-                        <a
+                        <Link
                             key={pageNum}
                             href={`?page=${pageNum}`}
                             className={`px-4 py-2 rounded ${pageNum === page
-                                    ? 'bg-primary text-primary-foreground'
-                                    : 'bg-muted hover:bg-muted/80'
+                                ? 'bg-primary text-primary-foreground'
+                                : 'bg-muted hover:bg-muted/80'
                                 }`}
                         >
                             {pageNum}
-                        </a>
+                        </Link>
                     ))}
                 </div>
             )}
