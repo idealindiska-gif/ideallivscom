@@ -34,7 +34,7 @@ export async function submitReservation(data: ReservationFormData) {
                 requireTLS: true,
             });
 
-            const adminEmail = process.env.ADMIN_EMAIL || 'social@royalbr.se';
+            const adminEmail = process.env.ADMIN_EMAIL || 'info@ideallivs.com';
             const secondaryEmail = process.env.SECONDARY_ADMIN_EMAIL;
             const recipients = secondaryEmail ? [adminEmail, secondaryEmail] : [adminEmail];
             const fromEmail = process.env.SMTP_USER;
