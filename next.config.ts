@@ -18,24 +18,17 @@ const nextConfig: NextConfig = {
         port: "",
         pathname: "/**",
       },
-      // Backend WordPress domain (primary)
+      // Backend WordPress domain (CRM)
       {
         protocol: "https",
-        hostname: "backend.royalbr.se",
+        hostname: "crm.ideallivs.com",
         port: "",
         pathname: "/**",
       },
-      // Frontend domain (for any local images)
+      // Wildcard for any subdomains
       {
         protocol: "https",
-        hostname: "royalbr.se",
-        port: "",
-        pathname: "/**",
-      },
-      // Wildcard for any other subdomains
-      {
-        protocol: "https",
-        hostname: "*.royalbr.se",
+        hostname: "*.ideallivs.com",
         port: "",
         pathname: "/**",
       },
