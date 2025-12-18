@@ -305,7 +305,7 @@ export function UnifiedSearchChat({ className }: UnifiedSearchChatProps) {
                                             {searchResults.map((result) => (
                                                 <Link
                                                     key={result.id}
-                                                    href={`/shop/${result.slug}`}
+                                                    href={`/product/${result.slug}`}
                                                     onClick={() => setIsOpen(false)}
                                                     className="flex items-center gap-3 rounded-lg p-3 transition-colors hover:bg-muted"
                                                 >

@@ -3,7 +3,6 @@ import {
   getFeaturedMediaById,
   getAuthorById,
   getCategoryById,
-  getAllPostSlugs,
 } from "@/lib/wordpress";
 
 import { Section, Container, Article, Prose } from "@/components/craft";
@@ -16,9 +15,9 @@ import Balancer from "react-wrap-balancer";
 
 import type { Metadata } from "next";
 
-export async function generateStaticParams() {
-  return await getAllPostSlugs();
-}
+// Make this route dynamic to prevent build failures when WordPress API is unavailable
+export const dynamic = 'force-dynamic';
+export const revalidate = 3600;
 
 export async function generateMetadata({
   params,

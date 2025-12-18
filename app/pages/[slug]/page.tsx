@@ -1,20 +1,13 @@
-import { getPageBySlug, getAllPages } from "@/lib/wordpress";
+import { getPageBySlug } from "@/lib/wordpress";
 import { PageTemplate } from "@/components/templates";
 import { siteConfig } from "@/site.config";
 import { notFound } from "next/navigation";
 
 import type { Metadata } from "next";
 
-// Revalidate pages every hour
+// Make this route dynamic to prevent build failures when WordPress API is unavailable
+export const dynamic = 'force-dynamic';
 export const revalidate = 3600;
-
-export async function generateStaticParams() {
-  const pages = await getAllPages();
-
-  return pages.map((page) => ({
-    slug: page.slug,
-  }));
-}
 
 export async function generateMetadata({
   params,

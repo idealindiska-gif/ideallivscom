@@ -29,7 +29,7 @@ export function ProductCard({ product, className }: ProductCardProps) {
 
     // For variable products, redirect to product page to select variation
     if (hasVariations(product)) {
-      window.location.href = `/${product.slug}`;
+      window.location.href = `/product/${product.slug}`;
       return;
     }
 
@@ -50,7 +50,7 @@ export function ProductCard({ product, className }: ProductCardProps) {
       transition={{ duration: 0.4 }}
       className={cn("group relative h-full", className)}
     >
-      <Link href={`/${product.slug}`} className="block h-full">
+      <Link href={`/product/${product.slug}`} className="block h-full">
         <article className="relative flex h-full flex-col overflow-hidden rounded-2xl bg-card shadow-sm transition-all duration-300 hover:shadow-md hover:-translate-y-1">
 
           {/* Image Container */}

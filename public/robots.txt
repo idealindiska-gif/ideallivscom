@@ -1,4 +1,4 @@
-# robots.txt for Royal Sweets & Restaurant
+# robots.txt for Ideal Indiska LIVS
 
 User-agent: *
 Allow: /
@@ -6,17 +6,19 @@ Allow: /
 # Disallow cart and checkout (no need to index)
 Disallow: /cart
 Disallow: /checkout
+Disallow: /my-account
 
 # Allow all product and content pages
 Allow: /shop
-Allow: /menu
+Allow: /product
+Allow: /product-category
+Allow: /brand
 Allow: /posts
 Allow: /about
 Allow: /contact
-Allow: /reservations
 
 # Sitemap
-Sitemap: https://royalbr.se/sitemap.xml
+Sitemap: https://ideallivs.com/sitemap.xml
 
 # Crawl-delay (optional, helps prevent server overload)
 Crawl-delay: 1

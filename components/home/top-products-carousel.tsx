@@ -87,7 +87,7 @@ function ProductCard({ product }: { product: Product }) {
   const cleanName = product.name.replace(/<[^>]*>/g, '').trim();
 
   return (
-    <Link href={`/shop/${product.slug}`}>
+    <Link href={`/product/${product.slug}`}>
       <motion.div
         className="w-[320px] flex-shrink-0 group cursor-pointer"
         onMouseEnter={() => setIsHovered(true)}

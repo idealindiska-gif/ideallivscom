@@ -22,6 +22,7 @@ export async function Footer() {
                   alt={brandProfile.name}
                   fill
                   className="object-contain"
+                  unoptimized
                 />
               </div>
             </Link>
@@ -79,6 +80,7 @@ export async function Footer() {
                         fill
                         className="object-cover group-hover:scale-110 transition-transform duration-300"
                         sizes="40px"
+                        unoptimized
                       />
                     ) : (
                       <div className="w-full h-full flex items-center justify-center text-[8px] text-muted-foreground">

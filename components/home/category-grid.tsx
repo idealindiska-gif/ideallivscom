@@ -62,7 +62,7 @@ export function CategoryGrid({ categories }: CategoryGridProps) {
                             viewport={{ once: true }}
                             transition={{ delay: index * 0.05, duration: 0.4 }}
                         >
-                            <Link href={`/shop/${category.slug}`} className="group block h-full">
+                            <Link href={`/product-category/${category.slug}`} className="group block h-full">
                                 <div className="relative overflow-hidden rounded-2xl bg-muted/30 aspect-[4/5] border border-border/50 transition-all duration-300 group-hover:shadow-lg group-hover:-translate-y-1">
 
                                     {/* Image Background or Colored Gradient */}

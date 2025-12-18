@@ -514,7 +514,7 @@ export default function CheckoutPage() {
                       size="lg"
                       className="rounded-full"
                       onClick={() => {
-                        const form = document.querySelector('form') as HTMLFormElement;
+                        const form = document.getElementById('shipping-form') as HTMLFormElement;
                         form?.requestSubmit();
                       }}
                     >

@@ -41,14 +41,14 @@ export async function POST(request: NextRequest) {
           ...(smtpPort !== 465 && { requireTLS: true }), // Only use requireTLS for non-SSL ports
         });
 
-        const adminEmail = process.env.ADMIN_EMAIL || 'social@royalbr.se';
+        const adminEmail = process.env.ADMIN_EMAIL || 'info@ideallivs.com';
         const secondaryEmail = process.env.SECONDARY_ADMIN_EMAIL;
         const recipients = secondaryEmail ? [adminEmail, secondaryEmail] : [adminEmail];
         const fromEmail = process.env.SMTP_USER;
 
         // Send email to admin
         await transporter.sendMail({
-          from: `"Anmol Sweets Contact" <${fromEmail}>`,
+          from: `"IDeal Indiska livs Contact" <${fromEmail}>`,
           to: recipients,
           replyTo: email,
           subject: `Contact Form: ${subject}`,
@@ -108,7 +108,7 @@ export async function POST(request: NextRequest) {
                         <tr>
                           <td style="padding-top: 20px; border-top: 1px solid #e0e0e0;">
                             <p style="margin: 0; color: #999999; font-size: 12px; text-align: center;">
-                              This email was sent from the contact form at <a href="https://anmolsweets.se" style="color: #8B1538; text-decoration: none;">anmolsweets.se</a>
+                              This email was sent from the contact form at <a href="https://ideallivs.com" style="color: #8B1538; text-decoration: none;">ideallivs.com</a>
                             </p>
                             <p style="margin: 10px 0 0 0; color: #999999; font-size: 12px; text-align: center;">
                               Received on ${new Date().toLocaleString('en-US', {

@@ -55,7 +55,7 @@ export function ShippingForm({ onSubmit, defaultValues, className }: ShippingFor
     const selectedCountry = watch('country');
 
     return (
-        <form onSubmit={handleSubmit(onSubmit)} className={cn('space-y-6', className)}>
+        <form id="shipping-form" onSubmit={handleSubmit(onSubmit)} className={cn('space-y-6', className)}>
             <div className="space-y-4">
                 <h2 className="font-heading text-2xl font-bold text-primary-950 dark:text-primary-50">
                     Shipping Information

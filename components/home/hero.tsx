@@ -61,7 +61,7 @@ export function Hero({
                         className="text-2xl sm:text-3xl md:text-5xl lg:text-6xl xl:text-7xl font-heading font-bold text-foreground tracking-normal"
                         style={{ lineHeight: 1.2 }}
                     >
-                        Authentic Indian & Pakistani <br className="hidden sm:block" />
+                        Authentic Indian & Pakistani{' '}
                         <span className="text-primary">Groceries in Stockholm</span>
                     </motion.h1>
 

@@ -188,36 +188,42 @@ export async function getAllPosts(filterParams?: {
   category?: string;
   search?: string;
 }): Promise<Post[]> {
-  const query: Record<string, any> = {
-    _embed: true,
-    per_page: 100,
-  };
+  try {
+    const query: Record<string, any> = {
+      _embed: true,
+      per_page: 100,
+    };
 
-  if (filterParams?.search) {
-    query.search = filterParams.search;
+    if (filterParams?.search) {
+      query.search = filterParams.search;
 
-    if (filterParams?.author) {
-      query.author = filterParams.author;
+      if (filterParams?.author) {
+        query.author = filterParams.author;
+      }
+      if (filterParams?.tag) {
+        query.tags = filterParams.tag;
+      }
+      if (filterParams?.category) {
+        query.categories = filterParams.category;
+      }
+    } else {
+      if (filterParams?.author) {
+        query.author = filterParams.author;
+      }
+      if (filterParams?.tag) {
+        query.tags = filterParams.tag;
+      }
+      if (filterParams?.category) {
+        query.categories = filterParams.category;
+      }
     }
-    if (filterParams?.tag) {
-      query.tags = filterParams.tag;
-    }
-    if (filterParams?.category) {
-      query.categories = filterParams.category;
-    }
-  } else {
-    if (filterParams?.author) {
-      query.author = filterParams.author;
-    }
-    if (filterParams?.tag) {
-      query.tags = filterParams.tag;
-    }
-    if (filterParams?.category) {
-      query.categories = filterParams.category;
-    }
+
+    return await wordpressFetch<Post[]>("/wp-json/wp/v2/posts", query);
+  } catch (error) {
+    // Posts endpoint may fail during build - return empty array
+    console.warn('WordPress posts endpoint unavailable:', error instanceof Error ? error.message : 'Unknown error');
+    return [];
   }
-
-  return wordpressFetch<Post[]>("/wp-json/wp/v2/posts", query);
 }
 
 export async function getPostById(id: number): Promise<Post> {
@@ -231,7 +237,13 @@ export async function getPostBySlug(slug: string): Promise<Post> {
 }
 
 export async function getAllCategories(): Promise<Category[]> {
-  return wordpressFetch<Category[]>("/wp-json/wp/v2/categories");
+  try {
+    return await wordpressFetch<Category[]>("/wp-json/wp/v2/categories", { per_page: 100 });
+  } catch (error) {
+    // Categories endpoint may fail during build - return empty array
+    console.warn('WordPress categories endpoint unavailable:', error instanceof Error ? error.message : 'Unknown error');
+    return [];
+  }
 }
 
 export async function getCategoryById(id: number): Promise<Category> {
@@ -259,7 +271,13 @@ export async function getTagsByPost(postId: number): Promise<Tag[]> {
 }
 
 export async function getAllTags(): Promise<Tag[]> {
-  return wordpressFetch<Tag[]>("/wp-json/wp/v2/tags");
+  try {
+    return await wordpressFetch<Tag[]>("/wp-json/wp/v2/tags", { per_page: 100 });
+  } catch (error) {
+    // Tags endpoint may fail during build - return empty array
+    console.warn('WordPress tags endpoint unavailable:', error instanceof Error ? error.message : 'Unknown error');
+    return [];
+  }
 }
 
 export async function getTagById(id: number): Promise<Tag> {
@@ -273,7 +291,13 @@ export async function getTagBySlug(slug: string): Promise<Tag> {
 }
 
 export async function getAllPages(): Promise<Page[]> {
-  return wordpressFetch<Page[]>("/wp-json/wp/v2/pages");
+  try {
+    return await wordpressFetch<Page[]>("/wp-json/wp/v2/pages", { per_page: 100 });
+  } catch (error) {
+    // Pages endpoint may fail during build - return empty array
+    console.warn('WordPress pages endpoint unavailable:', error instanceof Error ? error.message : 'Unknown error');
+    return [];
+  }
 }
 
 export async function getPageById(id: number): Promise<Page> {
