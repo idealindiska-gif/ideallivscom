@@ -34,6 +34,7 @@ export function Hero({
                             fill
                             className="object-cover object-center"
                             priority
+                            unoptimized
                         />
                     </div>
                 </div>
@@ -57,7 +58,8 @@ export function Hero({
                         initial={{ opacity: 0, y: 20 }}
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ duration: 0.8, delay: 0.2, ease: "easeOut" }}
-                        className="text-2xl sm:text-3xl md:text-5xl lg:text-6xl xl:text-7xl font-heading font-bold text-foreground leading-[1.15] tracking-tight"
+                        className="text-2xl sm:text-3xl md:text-5xl lg:text-6xl xl:text-7xl font-heading font-bold text-foreground tracking-normal"
+                        style={{ lineHeight: 1.2 }}
                     >
                         Authentic Indian & Pakistani <br className="hidden sm:block" />
                         <span className="text-primary">Groceries in Stockholm</span>

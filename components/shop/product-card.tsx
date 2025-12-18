@@ -65,6 +65,7 @@ export function ProductCard({ product, className }: ProductCardProps) {
                 priority={false}
                 loading="lazy"
                 onError={() => setImageError(true)}
+                unoptimized
               />
             ) : (
               <div className="flex h-full items-center justify-center bg-muted/30">
