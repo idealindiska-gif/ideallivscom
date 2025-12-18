@@ -85,7 +85,7 @@ export function ProductTemplate({
                     {relatedProducts.slice(0, 4).map((relatedProduct) => (
                       <a
                         key={relatedProduct.id}
-                        href={`/shop/${relatedProduct.slug}`}
+                        href={`/product/${relatedProduct.slug}`}
                         className="group block bg-background border border-border hover:border-primary/30 rounded-lg p-3 transition-all duration-300 hover:shadow-md"
                       >
                         <div className="flex gap-3">

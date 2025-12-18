@@ -344,7 +344,7 @@ export default async function BlogPostPage({ params }: Props) {
                       {promotionProducts.map((product) => (
                         <Link
                           key={product.id}
-                          href={`/shop/${product.slug}`}
+                          href={`/product/${product.slug}`}
                           className="flex gap-3 group"
                         >
                           {product.images[0] && (

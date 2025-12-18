@@ -183,7 +183,7 @@ export function SearchModal() {
                                                 {searchResults.map((result) => (
                                                     <Link
                                                         key={result.id}
-                                                        href={`/shop/${result.slug}`}
+                                                        href={`/product/${result.slug}`}
                                                         onClick={() => setIsOpen(false)}
                                                         className="flex items-center gap-4 rounded-lg p-3 transition-all hover:bg-muted group border border-border"
                                                     >
