@@ -1,2 +1,74 @@
+# ==================================================
+# robots.txt for ideallivs.com
+# Ecommerce + AI-ready (Next.js + WooCommerce API)
+# ==================================================
+
 User-agent: *
+# --- Block transactional & private areas ---
+Disallow: /cart/
+Disallow: /checkout/
+Disallow: /my-account/
+Disallow: /order-received/
+Disallow: /add-to-cart/
+Disallow: /*add-to-cart=*
+Disallow: /*?add-to-cart=*
+
+# --- Block internal system paths ---
+Disallow: /api/
+Disallow: /_next/
+Disallow: /cdn-cgi/
+
+# --- Allow assets ---
+Allow: /_next/static/
+Allow: /images/
+Allow: /wp-content/uploads/
+
+# --------------------------------------------------
+# Sitemap
+# --------------------------------------------------
+Sitemap: https://ideallivs.com/sitemap.xml
+
+# --------------------------------------------------
+# Explicit allow for major crawlers & AI systems
+# --------------------------------------------------
+
+# Google
+User-agent: Googlebot
 Allow: /
+
+User-agent: Googlebot-Image
+Allow: /
+
+# Bing / Copilot
+User-agent: Bingbot
+Allow: /
+
+# OpenAI / ChatGPT
+User-agent: GPTBot
+Allow: /
+
+# Anthropic / Claude
+User-agent: ClaudeBot
+Allow: /
+
+# Perplexity
+User-agent: PerplexityBot
+Allow: /
+
+# Apple / Spotlight / Siri
+User-agent: Applebot
+Allow: /
+
+# DuckDuckGo / Brave
+User-agent: DuckDuckBot
+Allow: /
+User-agent: BraveBot
+Allow: /
+
+# Archive.org (optional)
+User-agent: ia_archiver
+Disallow: /
+
+# ==================================================
+# End of file
+# ==================================================
