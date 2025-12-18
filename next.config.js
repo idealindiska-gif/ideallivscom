@@ -20,6 +20,14 @@ const nextConfig = {
             },
         ],
     },
+    async rewrites() {
+        return [
+            {
+                source: '/sitemap-products-:page.xml',
+                destination: '/sitemap-products/:page',
+            },
+        ];
+    },
 };
 
 module.exports = nextConfig;
