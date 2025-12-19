@@ -16,6 +16,7 @@ import { QuantitySelector } from '@/components/shop/quantity-selector';
 import { ProductRecommendations } from '@/components/ai/product-recommendations';
 import { formatPrice, getDiscountPercentage } from '@/lib/woocommerce';
 import { decodeHtmlEntities } from '@/lib/utils';
+import { trackViewContent } from '@/lib/analytics';
 import type { Product, ProductReview, ProductVariation } from '@/types/woocommerce';
 
 interface ProductTemplateProps {
@@ -39,6 +40,11 @@ export function ProductTemplate({
   const [isLoadingVariations, setIsLoadingVariations] = useState(false);
   const [selectedVariation, setSelectedVariation] = useState<ProductVariation | null>(null);
   const [quantity, setQuantity] = useState(1);
+
+  // Track product view event
+  useEffect(() => {
+    trackViewContent(product);
+  }, [product.id]);
 
   // Fetch variations if product has them
   useEffect(() => {

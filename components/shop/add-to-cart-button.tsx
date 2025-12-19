@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { useCartStore } from '@/store/cart-store';
+import { trackAddToCart } from '@/lib/analytics';
 import type { Product, ProductVariation } from '@/types/woocommerce';
 import { ShoppingCart, Check } from 'lucide-react';
 
@@ -29,6 +30,10 @@ export function AddToCartButton({
   const handleAddToCart = () => {
     // Add item to cart with variation if provided
     addItem(product, quantity, variation || undefined);
+
+    // Track add to cart event
+    trackAddToCart(product, quantity, variation?.id);
+
     setIsAdded(true);
 
     // Reset the "added" state after 2 seconds

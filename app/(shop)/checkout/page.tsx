@@ -25,6 +25,7 @@ import { Separator } from '@/components/ui/separator';
 import { motion, AnimatePresence } from 'framer-motion';
 import { StripeProvider } from '@/components/providers/stripe-provider';
 import { StripePaymentForm } from '@/components/checkout/stripe-payment-form';
+import { trackInitiateCheckout } from '@/lib/analytics';
 
 type CheckoutStep = 'shipping' | 'shipping-method' | 'billing' | 'payment' | 'review';
 
@@ -54,6 +55,13 @@ export default function CheckoutPage() {
   const [pendingOrderId, setPendingOrderId] = useState<number | null>(null);
   const [stripeClientSecret, setStripeClientSecret] = useState<string | null>(null);
   const [isStripePayment, setIsStripePayment] = useState(false);
+
+  // Track initiate checkout event on mount
+  useEffect(() => {
+    if (items.length > 0) {
+      trackInitiateCheckout(items, getTotalPrice());
+    }
+  }, []);
 
   // Fetch minimum order amount on mount
   useEffect(() => {

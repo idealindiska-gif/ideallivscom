@@ -7,6 +7,7 @@ import { Separator } from '@/components/ui/separator';
 import { getOrder } from '@/lib/woocommerce/orders';
 import { formatPrice } from '@/lib/woocommerce';
 import { CheckCircle2, Package, Mail, ArrowRight } from 'lucide-react';
+import { OrderSuccessTracking } from '@/components/checkout/order-success-tracking';
 import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
@@ -24,6 +25,17 @@ async function OrderDetails({ orderId }: { orderId: string }) {
 
         return (
             <div className="space-y-6">
+                {/* Analytics Tracking and Google Customer Reviews */}
+                <OrderSuccessTracking
+                    orderId={order.id.toString()}
+                    orderNumber={order.number}
+                    total={order.total}
+                    shippingTotal={order.shipping_total}
+                    lineItems={order.line_items}
+                    customerEmail={order.billing.email}
+                    deliveryCountry={order.shipping.country || 'SE'}
+                />
+
                 <Card className="p-6">
                     <div className="mb-4 flex items-start justify-between">
                         <div>
