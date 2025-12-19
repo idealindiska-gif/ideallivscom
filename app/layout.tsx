@@ -5,6 +5,8 @@ import { ThemeProvider } from "@/components/theme/theme-provider";
 import { Analytics } from "@vercel/analytics/react";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 import { TopInfoBar } from "@/components/layout/top-info-bar";
+import { SchemaScript } from "@/lib/schema/schema-script";
+import { websiteSchema } from "@/lib/schema";
 import { VerticalSidebar } from "@/components/layout/vertical-sidebar";
 import { ContentHeader } from "@/components/layout/content-header";
 import { Footer } from "@/components/layout/footer";
@@ -94,6 +96,24 @@ export default async function RootLayout({
         <Analytics />
         <SpeedInsights />
         <AiChatWidget />
+
+        {/* Global WebSite Schema */}
+        <SchemaScript
+          id="website-schema"
+          schema={websiteSchema({
+            name: siteConfig.site_name,
+            url: siteConfig.site_domain,
+            description: siteConfig.site_description,
+            potentialAction: {
+              '@type': 'SearchAction',
+              target: {
+                '@type': 'EntryPoint',
+                urlTemplate: `${siteConfig.site_domain}/shop?s={search_term_string}`,
+              },
+              'query-input': 'required name=search_term_string',
+            },
+          })}
+        />
       </body>
     </html>
   );

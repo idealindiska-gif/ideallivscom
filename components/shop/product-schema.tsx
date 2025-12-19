@@ -1,47 +1,26 @@
 import type { Product, ProductReview } from '@/types/woocommerce';
+import { wooCommerceProductSchema, breadcrumbSchema, productBreadcrumbs } from '@/lib/schema';
+import { siteConfig } from '@/site.config';
 
 interface ProductSchemaProps {
   product: Product;
   reviews?: ProductReview[];
+  breadcrumbs?: Array<{ label: string; href?: string }>;
 }
 
-export function ProductSchema({ product, reviews = [] }: ProductSchemaProps) {
-  const schema = {
-    '@context': 'https://schema.org',
-    '@type': 'Product',
-    name: product.name,
-    description: product.short_description?.replace(/<[^>]*>/g, '') || product.description?.replace(/<[^>]*>/g, ''),
-    image: product.images?.map((img) => img.src) || [],
-    sku: product.sku,
-    offers: {
-      '@type': 'Offer',
-      url: product.permalink,
-      priceCurrency: 'SEK',
-      price: product.price,
-      priceValidUntil: product.date_on_sale_to || undefined,
-      availability:
-        product.stock_status === 'instock'
-          ? 'https://schema.org/InStock'
-          : product.stock_status === 'onbackorder'
-          ? 'https://schema.org/BackOrder'
-          : 'https://schema.org/OutOfStock',
-      itemCondition: 'https://schema.org/NewCondition',
-      seller: {
-        '@type': 'Organization',
-        name: 'Royal Sweets & Restaurant',
-      },
-    },
-    aggregateRating:
-      product.rating_count > 0
-        ? {
-            '@type': 'AggregateRating',
-            ratingValue: product.average_rating,
-            reviewCount: product.rating_count,
-            bestRating: '5',
-            worstRating: '1',
-          }
-        : undefined,
-    review: reviews.map((review) => ({
+export function ProductSchema({ product, reviews = [], breadcrumbs }: ProductSchemaProps) {
+  const baseUrl = siteConfig.site_domain;
+
+  // Generate product schema using standardized function
+  const productSchema = wooCommerceProductSchema(product, {
+    baseUrl,
+    brandName: 'Ideal Indiska LIVS',
+    sellerName: 'Ideal Indiska LIVS',
+  });
+
+  // Add reviews to schema if available
+  if (reviews && reviews.length > 0) {
+    productSchema.review = reviews.map((review) => ({
       '@type': 'Review',
       author: {
         '@type': 'Person',
@@ -51,20 +30,48 @@ export function ProductSchema({ product, reviews = [] }: ProductSchemaProps) {
       reviewBody: review.review.replace(/<[^>]*>/g, ''),
       reviewRating: {
         '@type': 'Rating',
-        ratingValue: review.rating,
+        ratingValue: review.rating.toString(),
         bestRating: '5',
         worstRating: '1',
       },
-    })),
-  };
+    }));
+  }
 
-  // Remove undefined fields
-  const cleanedSchema = JSON.parse(JSON.stringify(schema));
+  // Generate breadcrumb schema if breadcrumbs provided
+  let breadcrumbJsonLd = null;
+  if (breadcrumbs && breadcrumbs.length > 0) {
+    const breadcrumbItems = breadcrumbs.map(crumb => ({
+      name: crumb.label,
+      url: crumb.href ? `${baseUrl}${crumb.href}` : undefined,
+    }));
+    breadcrumbJsonLd = breadcrumbSchema(breadcrumbItems);
+  } else if (product.categories && product.categories.length > 0) {
+    // Fallback to product breadcrumbs
+    const productBreadcrumbItems = productBreadcrumbs(
+      {
+        name: product.name,
+        category: {
+          name: product.categories[0].name,
+          slug: product.categories[0].slug,
+        },
+      },
+      baseUrl
+    );
+    breadcrumbJsonLd = breadcrumbSchema(productBreadcrumbItems);
+  }
 
   return (
-    <script
-      type="application/ld+json"
-      dangerouslySetInnerHTML={{ __html: JSON.stringify(cleanedSchema) }}
-    />
+    <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(productSchema) }}
+      />
+      {breadcrumbJsonLd && (
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd) }}
+        />
+      )}
+    </>
   );
 }

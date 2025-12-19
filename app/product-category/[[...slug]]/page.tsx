@@ -2,6 +2,8 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { notFound } from 'next/navigation';
 import { getProductCategoryBySlug, getProducts } from '@/lib/woocommerce';
+import { wooCategorySchema, breadcrumbSchema, categoryBreadcrumbs } from '@/lib/schema';
+import { siteConfig } from '@/site.config';
 import type { Metadata } from 'next';
 
 interface ProductCategoryPageProps {
@@ -174,6 +176,28 @@ export default async function ProductCategoryPage({ params, searchParams }: Prod
                     ))}
                 </div>
             )}
+
+            {/* SEO Structured Data */}
+            <script
+                type="application/ld+json"
+                dangerouslySetInnerHTML={{
+                    __html: JSON.stringify(wooCategorySchema(category, products, {
+                        baseUrl: siteConfig.site_domain,
+                        websiteId: `${siteConfig.site_domain}/#website`,
+                    }))
+                }}
+            />
+            <script
+                type="application/ld+json"
+                dangerouslySetInnerHTML={{
+                    __html: JSON.stringify(breadcrumbSchema(
+                        categoryBreadcrumbs(
+                            { name: category.name },
+                            siteConfig.site_domain
+                        )
+                    ))
+                }}
+            />
         </div>
     );
 }

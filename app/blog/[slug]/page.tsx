@@ -7,6 +7,8 @@ import { getPostBySlug, getAllPosts } from '@/lib/wordpress';
 import { getProducts } from '@/lib/woocommerce/products-direct';
 import { brandProfile } from '@/config/brand-profile';
 import { decodeHtmlEntities } from '@/lib/utils';
+import { wordPressArticleSchema, breadcrumbSchema, postBreadcrumbs } from '@/lib/schema';
+import { siteConfig } from '@/site.config';
 
 type Props = {
   params: Promise<{ slug: string }>;
@@ -440,6 +442,31 @@ export default async function BlogPostPage({ params }: Props) {
           </div>
         </div>
       </section>
+
+      {/* SEO Structured Data */}
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify(wordPressArticleSchema(post, siteConfig.site_domain))
+        }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify(breadcrumbSchema(
+            postBreadcrumbs(
+              {
+                title: decodedTitle,
+                category: categories[0] ? {
+                  name: categories[0].name,
+                  slug: categories[0].slug
+                } : { name: 'Blog', slug: 'blog' },
+              },
+              siteConfig.site_domain
+            )
+          ))
+        }}
+      />
     </div>
   );
 }

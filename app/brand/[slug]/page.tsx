@@ -7,6 +7,8 @@ import { Suspense } from 'react';
 import { Skeleton } from '@/components/ui/skeleton';
 import Image from 'next/image';
 import { decodeHtmlEntities } from '@/lib/utils';
+import { brandSchema, breadcrumbSchema, productListItem } from '@/lib/schema';
+import { siteConfig } from '@/site.config';
 
 interface BrandArchivePageProps {
     params: Promise<{
@@ -134,6 +136,61 @@ export default async function BrandArchivePage({ params, searchParams }: BrandAr
                     />
                 </div>
             </section>
+
+            {/* SEO Structured Data */}
+            <script
+                type="application/ld+json"
+                dangerouslySetInnerHTML={{
+                    __html: JSON.stringify({
+                        '@context': 'https://schema.org',
+                        '@type': 'CollectionPage',
+                        '@id': `${siteConfig.site_domain}/brand/${brand.slug}`,
+                        name: `${brand.name} Products`,
+                        description: brand.description || `Browse all products from ${brand.name}`,
+                        url: `${siteConfig.site_domain}/brand/${brand.slug}`,
+                        about: brandSchema(brand.name, {
+                            url: `${siteConfig.site_domain}/brand/${brand.slug}`,
+                            logo: brand.image?.src,
+                            description: brand.description,
+                        }),
+                        mainEntity: {
+                            '@type': 'ItemList',
+                            numberOfItems: total,
+                            itemListElement: paginatedProducts.map((product, index) =>
+                                productListItem(
+                                    {
+                                        name: product.name,
+                                        description: product.short_description,
+                                        images: product.images,
+                                        sku: product.sku,
+                                        price: product.price,
+                                        currency: 'SEK',
+                                        url: `${siteConfig.site_domain}/product/${product.slug}`,
+                                        brand: brand.name,
+                                        availability: product.stock_status === 'instock' ? 'InStock' : 'OutOfStock',
+                                    },
+                                    index + 1,
+                                    {
+                                        brandName: brand.name,
+                                        sellerName: 'Ideal Indiska LIVS',
+                                    }
+                                )
+                            ),
+                        },
+                    })
+                }}
+            />
+            <script
+                type="application/ld+json"
+                dangerouslySetInnerHTML={{
+                    __html: JSON.stringify(breadcrumbSchema([
+                        { name: 'Home', url: siteConfig.site_domain },
+                        { name: 'Shop', url: `${siteConfig.site_domain}/shop` },
+                        { name: 'Brands', url: `${siteConfig.site_domain}/brands` },
+                        { name: brand.name },
+                    ]))
+                }}
+            />
         </div>
     );
 }
