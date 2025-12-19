@@ -117,14 +117,7 @@ export default async function RootLayout({
             name: siteConfig.site_name,
             url: siteConfig.site_domain,
             description: siteConfig.site_description,
-            potentialAction: {
-              '@type': 'SearchAction',
-              target: {
-                '@type': 'EntryPoint',
-                urlTemplate: `${siteConfig.site_domain}/shop?s={search_term_string}`,
-              },
-              'query-input': 'required name=search_term_string',
-            },
+            searchUrl: `${siteConfig.site_domain}/shop`,
           })}
         />
       </body>

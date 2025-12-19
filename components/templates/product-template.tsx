@@ -44,6 +44,7 @@ export function ProductTemplate({
   // Track product view event
   useEffect(() => {
     trackViewContent(product);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [product.id]);
 
   // Fetch variations if product has them
