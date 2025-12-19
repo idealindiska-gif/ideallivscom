@@ -17,7 +17,7 @@ export async function GET(
 
     try {
         const productsRes = await getProducts({
-            per_page: 200,
+            per_page: 100,
             page: page,
             status: "publish",
         });

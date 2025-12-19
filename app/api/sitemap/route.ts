@@ -8,7 +8,7 @@ export async function GET() {
   // Fetch products to calculate how many product sitemaps we need
   const productsRes = await getProducts({ per_page: 1 });
   const totalProducts = productsRes.total;
-  const productSitemapCount = Math.ceil(totalProducts / 200);
+  const productSitemapCount = Math.ceil(totalProducts / 100);
 
   const sitemaps = [
     `${baseUrl}/sitemap-pages.xml`,
