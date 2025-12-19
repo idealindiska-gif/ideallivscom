@@ -1,19 +1,15 @@
 import { Metadata } from "next";
 import Link from "next/link";
-import { Container } from "@/components/craft";
 import { brandProfile } from "@/config/brand-profile";
-import { MapPin, Phone, Mail, Clock, MessageSquare } from "lucide-react";
+import { MapPin, Phone, Mail, Clock, MessageSquare, ExternalLink } from "lucide-react";
+import { ContactForm } from "@/components/forms/contact-form";
 
 export const metadata: Metadata = {
   title: `Contact Us - ${brandProfile.name} | ${brandProfile.address.city}`,
-  description: `Get in touch with ${brandProfile.name}. Visit our store in ${brandProfile.address.area}, call us at ${brandProfile.contact.phone}, or send us a message.We're here to help with all your Indian & Pakistani grocery needs in Stockholm.`,
-  keywords: [
-    `contact ${brandProfile.name}`,
-    "Indian grocery store Stockholm contact",
-    "Bandhagen grocery store hours",
-    "Pakistani grocery delivery Stockholm",
-    ...brandProfile.seo.keywords,
-  ].join(", "),
+  description: `Get in touch with ${brandProfile.name}. Visit our store in ${brandProfile.address.area}, call us at ${brandProfile.contact.phone}, or send us a message. We're here to help with all your Indian & Pakistani grocery needs in Stockholm.`,
+  alternates: {
+    canonical: '/contact',
+  },
 };
 
 export default function ContactPage() {
@@ -22,219 +18,208 @@ export default function ContactPage() {
   return (
     <main className="min-h-screen bg-background">
       {/* Hero Section */}
-      <section className="relative bg-gradient-to-br from-primary/10 via-background to-secondary/5 py-16 md:py-24">
-        <Container>
-          <div className="max-w-3xl mx-auto text-center">
-            <h1 className="text-4xl md:text-5xl lg:text-6xl font-heading font-bold mb-6">
+      <section className="bg-gradient-to-br from-muted/30 via-background to-background border-b">
+        <div className="container mx-auto px-4 py-16 md:py-20">
+          <div className="max-w-3xl">
+            <h1 style={{
+              fontSize: '31.25px',
+              fontWeight: 700,
+              lineHeight: 1.47,
+              letterSpacing: '0.02em'
+            }} className="mb-4">
               Contact Us & Get in Touch
             </h1>
-            <p className="text-xl text-muted-foreground">
-              At Ideal Indiska, we are more than just a grocery store; we are a community hub for lovers of authentic Indian and Pakistani food in Stockholm. We love connecting with our customers, whether you visit us in person at our welcoming store in Bandhagen Centrum or have a question about your online order. This is your direct line to us.
+            <p className="text-muted-foreground" style={{
+              fontSize: '16px',
+              fontWeight: 400,
+              lineHeight: 1.52,
+              letterSpacing: '0.03em'
+            }}>
+              We love connecting with our customers! Whether you visit us in person at our store in Bandhagen Centrum or have a question about your online order, we&apos;re here to help.
             </p>
           </div>
-        </Container>
+        </div>
       </section>
 
-      {/* Contact Information Grid */}
-      <section className="py-16 md:py-24">
-        <Container>
-          <div className="grid lg:grid-cols-2 gap-12">
-            {/* Left Column - Store Info */}
-            <div>
-              <h2 className="text-3xl font-heading font-bold mb-8">
-                Our Home in Stockholm
-              </h2>
-              <p className="text-muted-foreground mb-8">
-                We invite you to step into our store and explore a world of authentic flavours. Our physical location is the heart of our business, where you can browse our curated selection of products, discover new ingredients, and get a real taste of home.
-              </p>
-
-              <div className="space-y-6">
-                {/* Address */}
-                <div className="flex gap-4">
-                  <div className="flex-shrink-0 w-12 h-12 bg-primary/10 rounded-lg flex items-center justify-center">
-                    <MapPin className="w-6 h-6 text-primary" />
-                  </div>
-                  <div>
-                    <h3 className="font-bold mb-1">Store Location</h3>
-                    <p className="text-muted-foreground">{brandProfile.name}</p>
-                    <p className="text-muted-foreground">{brandProfile.address.street}</p>
-                    <p className="text-muted-foreground">
-                      {brandProfile.address.postalCode} {brandProfile.address.area}
-                    </p>
-                    <p className="text-muted-foreground">
-                      {brandProfile.address.city}, {brandProfile.address.country}
-                    </p>
-                  </div>
-                </div>
-
-                {/* Phone */}
-                <div className="flex gap-4">
-                  <div className="flex-shrink-0 w-12 h-12 bg-primary/10 rounded-lg flex items-center justify-center">
-                    <Phone className="w-6 h-6 text-primary" />
-                  </div>
-                  <div>
-                    <h3 className="font-bold mb-1">Phone</h3>
-                    <a
-                      href={`tel:${brandProfile.contact.phone}`}
-                      className="text-primary hover:underline"
-                    >
-                      {brandProfile.contact.phoneFormatted}
-                    </a>
-                  </div>
-                </div>
-
-                {/* Email */}
-                <div className="flex gap-4">
-                  <div className="flex-shrink-0 w-12 h-12 bg-primary/10 rounded-lg flex items-center justify-center">
-                    <Mail className="w-6 h-6 text-primary" />
-                  </div>
-                  <div>
-                    <h3 className="font-bold mb-1">Email</h3>
-                    <a
-                      href={`mailto:${brandProfile.contact.email}`}
-                      className="text-primary hover:underline"
-                    >
-                      {brandProfile.contact.email}
-                    </a>
-                  </div>
-                </div>
-
-                {/* WhatsApp */}
-                <div className="flex gap-4">
-                  <div className="flex-shrink-0 w-12 h-12 bg-primary/10 rounded-lg flex items-center justify-center">
-                    <MessageSquare className="w-6 h-6 text-primary" />
-                  </div>
-                  <div>
-                    <h3 className="font-bold mb-1">WhatsApp for Quick Questions</h3>
-                    <p className="text-sm text-muted-foreground mb-2">
-                      For the fastest response, especially regarding an order or product availability. It&apos;s the perfect way to get a quick answer.
+      {/* Main Content & Sidebar */}
+      <section className="py-16">
+        <div className="container mx-auto px-4">
+          <div className="grid lg:grid-cols-3 gap-12">
+            {/* Main Content Area (2/3) */}
+            <div className="lg:col-span-2 space-y-12">
+              {/* Direct Lines */}
+              <div>
+                <h2 style={{
+                  fontSize: '25px',
+                  fontWeight: 600,
+                  lineHeight: 1.47,
+                  letterSpacing: '0.02em'
+                }} className="mb-8">
+                  Get in Touch Directly
+                </h2>
+                <div className="grid sm:grid-cols-2 gap-6">
+                  {/* WhatsApp */}
+                  <div className="p-6 rounded-xl border bg-card/50">
+                    <div className="w-10 h-10 bg-primary/10 rounded-lg flex items-center justify-center mb-4">
+                      <MessageSquare className="w-5 h-5 text-primary" />
+                    </div>
+                    <h3 style={{ fontSize: '18.91px', fontWeight: 500 }} className="mb-2">WhatsApp</h3>
+                    <p style={{ fontSize: '15.13px' }} className="text-muted-foreground mb-4">
+                      Fastest response for order status or product availability.
                     </p>
                     <a
                       href="https://wa.me/46728494801"
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="text-primary hover:underline font-bold"
+                      className="text-primary hover:underline font-medium inline-flex items-center gap-1"
+                      style={{ fontSize: '15.13px' }}
                     >
-                      WhatsApp +46 728 494 801
+                      +46 728 494 801 <ExternalLink className="w-3 h-3" />
+                    </a>
+                  </div>
+
+                  {/* Phone */}
+                  <div className="p-6 rounded-xl border bg-card/50">
+                    <div className="w-10 h-10 bg-primary/10 rounded-lg flex items-center justify-center mb-4">
+                      <Phone className="w-5 h-5 text-primary" />
+                    </div>
+                    <h3 style={{ fontSize: '18.91px', fontWeight: 500 }} className="mb-2">Call Us</h3>
+                    <p style={{ fontSize: '15.13px' }} className="text-muted-foreground mb-4">
+                      Give us a call during store hours for immediate help.
+                    </p>
+                    <a
+                      href={`tel:${brandProfile.contact.phone}`}
+                      className="text-primary hover:underline font-medium"
+                      style={{ fontSize: '15.13px' }}
+                    >
+                      {brandProfile.contact.phoneFormatted}
+                    </a>
+                  </div>
+
+                  {/* Email */}
+                  <div className="p-6 rounded-xl border bg-card/50">
+                    <div className="w-10 h-10 bg-primary/10 rounded-lg flex items-center justify-center mb-4">
+                      <Mail className="w-5 h-5 text-primary" />
+                    </div>
+                    <h3 style={{ fontSize: '18.91px', fontWeight: 500 }} className="mb-2">Email</h3>
+                    <p style={{ fontSize: '15.13px' }} className="text-muted-foreground mb-4">
+                      For detailed inquiries or feedback, send us an email.
+                    </p>
+                    <a
+                      href={`mailto:${brandProfile.contact.email}`}
+                      className="text-primary hover:underline font-medium"
+                      style={{ fontSize: '15.13px' }}
+                    >
+                      {brandProfile.contact.email}
+                    </a>
+                  </div>
+
+                  {/* Visit */}
+                  <div className="p-6 rounded-xl border bg-card/50">
+                    <div className="w-10 h-10 bg-primary/10 rounded-lg flex items-center justify-center mb-4">
+                      <MapPin className="w-5 h-5 text-primary" />
+                    </div>
+                    <h3 style={{ fontSize: '18.91px', fontWeight: 500 }} className="mb-2">Visit Store</h3>
+                    <p style={{ fontSize: '15.13px' }} className="text-muted-foreground mb-4">
+                      Bandhagsplan 4, 12432 Stockholm.
+                    </p>
+                    <a
+                      href="https://maps.google.com/?q=Bandhagsplan+4,+12432+Bandhagen"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-primary hover:underline font-medium inline-flex items-center gap-1"
+                      style={{ fontSize: '15.13px' }}
+                    >
+                      Get Directions <ExternalLink className="w-3 h-3" />
                     </a>
                   </div>
                 </div>
+              </div>
 
+              {/* Message Form */}
+              <div className="p-8 rounded-2xl border bg-card">
+                <h2 style={{ fontSize: '22.36px', fontWeight: 600 }} className="mb-6">Send us a message</h2>
+                <ContactForm />
+              </div>
+            </div>
+
+            {/* Sidebar (1/3) */}
+            <div className="lg:col-span-1">
+              <div className="sticky top-24 space-y-6">
                 {/* Opening Hours */}
-                <div className="flex gap-4">
-                  <div className="flex-shrink-0 w-12 h-12 bg-primary/10 rounded-lg flex items-center justify-center">
-                    <Clock className="w-6 h-6 text-primary" />
+                <div className="border rounded-lg p-6 bg-card">
+                  <div className="flex items-center gap-2 mb-4">
+                    <Clock className="w-5 h-5 text-primary" />
+                    <h3 style={{
+                      fontSize: '18.91px',
+                      fontWeight: 500,
+                      lineHeight: 1.52,
+                      letterSpacing: '0.03em'
+                    }}>
+                      Opening Hours
+                    </h3>
                   </div>
-                  <div className="flex-1">
-                    <h3 className="font-bold mb-3">Opening Hours</h3>
-                    <div className="space-y-2">
-                      {daysOfWeek.map((day) => {
-                        const hours = brandProfile.hours[day];
-                        return (
-                          <div key={day} className="flex justify-between text-sm">
-                            <span className="font-medium capitalize">{day}</span>
-                            <span className="text-muted-foreground">{hours.display}</span>
-                          </div>
-                        );
-                      })}
+                  <div className="space-y-3">
+                    {daysOfWeek.map((day) => {
+                      const hours = brandProfile.hours[day];
+                      return (
+                        <div key={day} className="flex justify-between items-center py-1 border-b border-dashed last:border-0">
+                          <span style={{ fontSize: '14.31px', fontWeight: 500 }} className="capitalize">{day}</span>
+                          <span style={{ fontSize: '13.53px' }} className="text-muted-foreground">{hours.display}</span>
+                        </div>
+                      );
+                    })}
+                  </div>
+                </div>
+
+                {/* FAQ Quick Link */}
+                <div className="border rounded-lg p-6 bg-muted/30">
+                  <h3 style={{
+                    fontSize: '18.91px',
+                    fontWeight: 500,
+                    lineHeight: 1.52,
+                    letterSpacing: '0.03em'
+                  }} className="mb-2">
+                    Finding Answers?
+                  </h3>
+                  <p className="text-muted-foreground mb-4" style={{ fontSize: '13.53px' }}>
+                    Check our FAQ for quick answers about delivery, payments, and products.
+                  </p>
+                  <Link
+                    href="/faq"
+                    className="inline-block w-full text-center px-4 py-2 border border-primary text-primary rounded-lg hover:bg-primary/5 transition-colors"
+                    style={{ fontSize: '13.53px', fontWeight: 500 }}
+                  >
+                    View FAQ
+                  </Link>
+                </div>
+
+                {/* Store Location Map (Minimal) */}
+                <div className="border rounded-lg overflow-hidden bg-card">
+                  <div className="relative h-48 bg-muted flex items-center justify-center p-4 text-center">
+                    <div>
+                      <MapPin className="w-8 h-8 text-primary/30 mx-auto mb-2" />
+                      <p style={{ fontSize: '12.8px' }} className="text-muted-foreground">
+                        {brandProfile.address.street}<br />
+                        {brandProfile.address.postalCode} {brandProfile.address.area}
+                      </p>
                     </div>
+                  </div>
+                  <div className="p-4 bg-muted/10">
+                    <a
+                      href="https://maps.google.com/?q=Bandhagsplan+4,+12432+Bandhagen"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-xs font-medium text-primary hover:underline flex items-center justify-center gap-1"
+                    >
+                      Open in Google Maps <ExternalLink className="w-3 h-3" />
+                    </a>
                   </div>
                 </div>
               </div>
             </div>
-
-            {/* Right Column - Contact Form */}
-            <div>
-              <div className="bg-muted/30 p-8 rounded-2xl border border-border">
-                <h2 className="text-2xl font-heading font-bold mb-6">
-                  Send Us a Message
-                </h2>
-                <p className="text-muted-foreground mb-6">
-                  Whether you have a question about a product, need help with your delivery, or just want to share a recipe, we're here for you.
-                </p>
-
-                <form className="space-y-4">
-                  <div>
-                    <label htmlFor="name" className="block text-sm font-medium mb-2">
-                      Your Name *
-                    </label>
-                    <input
-                      type="text"
-                      id="name"
-                      name="name"
-                      required
-                      className="w-full px-4 py-3 rounded-lg border border-border bg-background focus:outline-none focus:ring-2 focus:ring-primary"
-                      placeholder="John Doe"
-                    />
-                  </div>
-
-                  <div>
-                    <label htmlFor="email" className="block text-sm font-medium mb-2">
-                      Email Address *
-                    </label>
-                    <input
-                      type="email"
-                      id="email"
-                      name="email"
-                      required
-                      className="w-full px-4 py-3 rounded-lg border border-border bg-background focus:outline-none focus:ring-2 focus:ring-primary"
-                      placeholder="john@example.com"
-                    />
-                  </div>
-
-                  <div>
-                    <label htmlFor="subject" className="block text-sm font-medium mb-2">
-                      Subject *
-                    </label>
-                    <input
-                      type="text"
-                      id="subject"
-                      name="subject"
-                      required
-                      className="w-full px-4 py-3 rounded-lg border border-border bg-background focus:outline-none focus:ring-2 focus:ring-primary"
-                      placeholder="Product inquiry"
-                    />
-                  </div>
-
-                  <div>
-                    <label htmlFor="message" className="block text-sm font-medium mb-2">
-                      Message *
-                    </label>
-                    <textarea
-                      id="message"
-                      name="message"
-                      required
-                      rows={6}
-                      className="w-full px-4 py-3 rounded-lg border border-border bg-background focus:outline-none focus:ring-2 focus:ring-primary resize-none"
-                      placeholder="Your message here..."
-                    />
-                  </div>
-
-                  <button
-                    type="submit"
-                    className="w-full px-6 py-3 bg-primary text-primary-foreground rounded-lg font-bold hover:bg-primary/90 transition-colors"
-                  >
-                    Send Message
-                  </button>
-                </form>
-              </div>
-            </div>
           </div>
-        </Container>
-      </section>
-
-      {/* Map Section (Placeholder) */}
-      <section className="py-16 md:py-24 bg-muted/30">
-        <Container>
-          <div className="aspect-[21/9] rounded-2xl overflow-hidden border border-border bg-gradient-to-br from-primary/5 to-secondary/5 flex items-center justify-center">
-            <div className="text-center">
-              <MapPin className="w-16 h-16 text-primary/30 mx-auto mb-4" />
-              <p className="text-muted-foreground">
-                Map integration placeholder - {brandProfile.address.formatted}
-              </p>
-            </div>
-          </div>
-        </Container>
+        </div>
       </section>
     </main>
   );

@@ -102,37 +102,138 @@
     max-width: 100vw;
   }
 
-  /* Type Scale System - Montserrat (Heading) & Inter (Body) */
+  /* ==========================================
+     TYPOGRAPHY SYSTEM - Approved Scale
+     Based on Inter font with precise sizing
+     ========================================== */
 
-  h1 {
-    @apply font-heading text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight text-foreground mb-6;
+  /* Display Styles */
+  h1,
+  .display-large {
+    font-size: 39.06px;
+    font-weight: 800;
+    line-height: 1.47;
+    letter-spacing: 0.015em;
+    @apply mb-6;
   }
 
-  h2 {
-    @apply font-heading text-3xl md:text-4xl font-bold tracking-tight text-foreground mb-4;
+  .display-medium {
+    font-size: 34.94px;
+    font-weight: 800;
+    line-height: 1.47;
+    letter-spacing: 0.015em;
   }
 
-  h3 {
-    @apply font-heading text-2xl md:text-3xl font-semibold tracking-tight text-foreground mb-3;
+  /* Heading Styles */
+  h1,
+  .h1 {
+    font-size: 31.25px;
+    font-weight: 700;
+    line-height: 1.47;
+    letter-spacing: 0.02em;
+    @apply mb-6;
   }
 
-  h4 {
-    @apply font-heading text-xl md:text-2xl font-semibold tracking-tight text-foreground mb-2;
+  h2,
+  .h2 {
+    font-size: 25px;
+    font-weight: 600;
+    line-height: 1.47;
+    letter-spacing: 0.02em;
+    @apply mb-4;
   }
 
-  h5 {
-    @apply font-heading text-lg font-semibold tracking-tight text-foreground mb-2;
+  h3,
+  .h3 {
+    font-size: 22.36px;
+    font-weight: 600;
+    line-height: 1.52;
+    letter-spacing: 0.025em;
+    @apply mb-3;
   }
 
-  h6 {
-    @apply font-heading text-base font-semibold tracking-tight text-foreground mb-1;
+  h4,
+  .h4 {
+    font-size: 20px;
+    font-weight: 500;
+    line-height: 1.52;
+    letter-spacing: 0.025em;
+    @apply mb-2;
   }
 
-  p {
-    @apply font-sans text-base leading-relaxed text-muted-foreground mb-4;
+  h5,
+  .h5 {
+    font-size: 18.91px;
+    font-weight: 500;
+    line-height: 1.52;
+    letter-spacing: 0.03em;
+    @apply mb-2;
   }
 
-  /* Utilities for "Wow" text */
+  h6,
+  .h6 {
+    font-size: 17.89px;
+    font-weight: 500;
+    line-height: 1.52;
+    letter-spacing: 0.03em;
+    @apply mb-1;
+  }
+
+  /* Body Styles */
+  .body-xl {
+    font-size: 16.92px;
+    font-weight: 400;
+    line-height: 1.52;
+    letter-spacing: 0.03em;
+  }
+
+  p,
+  .body {
+    font-size: 16px;
+    font-weight: 400;
+    line-height: 1.52;
+    letter-spacing: 0.03em;
+    @apply text-muted-foreground mb-4;
+  }
+
+  .body-small {
+    font-size: 15.13px;
+    font-weight: 400;
+    line-height: 1.57;
+    letter-spacing: 0.03em;
+  }
+
+  /* Caption Styles */
+  .caption-large {
+    font-size: 14.31px;
+    font-weight: 400;
+    line-height: 1.57;
+    letter-spacing: 0.03em;
+  }
+
+  .caption {
+    font-size: 13.53px;
+    font-weight: 400;
+    line-height: 1.57;
+    letter-spacing: 0.03em;
+  }
+
+  .caption-small {
+    font-size: 12.8px;
+    font-weight: 300;
+    line-height: 1.57;
+    letter-spacing: 0.03em;
+  }
+
+  .overline {
+    font-size: 12.11px;
+    font-weight: 500;
+    line-height: 1.57;
+    letter-spacing: 0.03em;
+    text-transform: uppercase;
+  }
+
+  /* Utilities for special text */
   .text-gradient-gold {
     @apply text-secondary;
   }

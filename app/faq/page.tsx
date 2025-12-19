@@ -116,13 +116,23 @@ export default function FAQPage() {
     return (
         <div className="min-h-screen bg-background">
             {/* Hero Section */}
-            <section className="bg-gradient-to-br from-primary/5 via-background to-background border-b">
+            <section className="bg-gradient-to-br from-muted/30 via-background to-background border-b">
                 <div className="container mx-auto px-4 py-16 md:py-20">
                     <div className="max-w-3xl">
-                        <h1 className="text-4xl md:text-5xl font-heading font-bold mb-4 tracking-tight">
+                        <h1 style={{
+                            fontSize: '31.25px',
+                            fontWeight: 700,
+                            lineHeight: 1.47,
+                            letterSpacing: '0.02em'
+                        }} className="mb-4">
                             Frequently Asked Questions
                         </h1>
-                        <p className="text-lg text-muted-foreground">
+                        <p className="text-muted-foreground" style={{
+                            fontSize: '16px',
+                            fontWeight: 400,
+                            lineHeight: 1.52,
+                            letterSpacing: '0.03em'
+                        }}>
                             Everything you need to know about ordering authentic Indian and Pakistani groceries in Stockholm. Can't find your answer? We're here to help.
                         </p>
                     </div>
@@ -138,7 +148,12 @@ export default function FAQPage() {
                             <div className="space-y-12">
                                 {faqs.map((category, idx) => (
                                     <div key={idx}>
-                                        <h2 className="text-2xl font-heading font-semibold mb-6 tracking-tight">
+                                        <h2 style={{
+                                            fontSize: '25px',
+                                            fontWeight: 600,
+                                            lineHeight: 1.47,
+                                            letterSpacing: '0.02em'
+                                        }} className="mb-6">
                                             {category.category}
                                         </h2>
                                         <Accordion type="single" collapsible className="space-y-4">
@@ -149,9 +164,19 @@ export default function FAQPage() {
                                                     className="border rounded-lg px-6 bg-card"
                                                 >
                                                     <AccordionTrigger className="text-left hover:no-underline py-4">
-                                                        <span className="font-medium">{faq.q}</span>
+                                                        <span style={{
+                                                            fontSize: '16px',
+                                                            fontWeight: 500,
+                                                            lineHeight: 1.52,
+                                                            letterSpacing: '0.03em'
+                                                        }}>{faq.q}</span>
                                                     </AccordionTrigger>
-                                                    <AccordionContent className="text-muted-foreground pb-4">
+                                                    <AccordionContent className="text-muted-foreground pb-4" style={{
+                                                        fontSize: '16px',
+                                                        fontWeight: 400,
+                                                        lineHeight: 1.52,
+                                                        letterSpacing: '0.03em'
+                                                    }}>
                                                         {faq.a}
                                                     </AccordionContent>
                                                 </AccordionItem>
@@ -166,10 +191,20 @@ export default function FAQPage() {
                         <div className="lg:col-span-1">
                             <div className="sticky top-24 space-y-6">
                                 <div className="border rounded-lg p-6 bg-card">
-                                    <h3 className="text-lg font-heading font-semibold mb-4">
+                                    <h3 style={{
+                                        fontSize: '18.91px',
+                                        fontWeight: 500,
+                                        lineHeight: 1.52,
+                                        letterSpacing: '0.03em'
+                                    }} className="mb-4">
                                         Still have questions?
                                     </h3>
-                                    <p className="text-sm text-muted-foreground mb-6">
+                                    <p className="text-muted-foreground mb-6" style={{
+                                        fontSize: '13.53px',
+                                        fontWeight: 400,
+                                        lineHeight: 1.57,
+                                        letterSpacing: '0.03em'
+                                    }}>
                                         Can't find the answer you're looking for? Our customer support team is ready to help.
                                     </p>
                                     <div className="space-y-4">
@@ -179,27 +214,57 @@ export default function FAQPage() {
                                             rel="noopener noreferrer"
                                             className="flex items-start gap-3 p-3 rounded-lg border hover:bg-muted/50 transition-colors group"
                                         >
-                                            <MessageCircle className="h-5 w-5 text-primary mt-0.5 flex-shrink-0" />
+                                            <MessageCircle className="h-5 w-5 mt-0.5 flex-shrink-0" />
                                             <div>
-                                                <p className="text-sm font-medium group-hover:text-primary transition-colors">WhatsApp</p>
-                                                <p className="text-xs text-muted-foreground">Chat with us instantly</p>
+                                                <p style={{
+                                                    fontSize: '13.53px',
+                                                    fontWeight: 500,
+                                                    lineHeight: 1.57,
+                                                    letterSpacing: '0.03em'
+                                                }}>WhatsApp</p>
+                                                <p className="text-muted-foreground" style={{
+                                                    fontSize: '12.8px',
+                                                    fontWeight: 300,
+                                                    lineHeight: 1.57,
+                                                    letterSpacing: '0.03em'
+                                                }}>Chat with us instantly</p>
                                             </div>
                                         </a>
                                         <a
                                             href="mailto:info@ideallivs.com"
                                             className="flex items-start gap-3 p-3 rounded-lg border hover:bg-muted/50 transition-colors group"
                                         >
-                                            <Mail className="h-5 w-5 text-primary mt-0.5 flex-shrink-0" />
+                                            <Mail className="h-5 w-5 mt-0.5 flex-shrink-0" />
                                             <div>
-                                                <p className="text-sm font-medium group-hover:text-primary transition-colors">Email</p>
-                                                <p className="text-xs text-muted-foreground">info@ideallivs.com</p>
+                                                <p style={{
+                                                    fontSize: '13.53px',
+                                                    fontWeight: 500,
+                                                    lineHeight: 1.57,
+                                                    letterSpacing: '0.03em'
+                                                }}>Email</p>
+                                                <p className="text-muted-foreground" style={{
+                                                    fontSize: '12.8px',
+                                                    fontWeight: 300,
+                                                    lineHeight: 1.57,
+                                                    letterSpacing: '0.03em'
+                                                }}>info@ideallivs.com</p>
                                             </div>
                                         </a>
                                         <div className="flex items-start gap-3 p-3 rounded-lg border bg-muted/30">
-                                            <MapPin className="h-5 w-5 text-primary mt-0.5 flex-shrink-0" />
+                                            <MapPin className="h-5 w-5 mt-0.5 flex-shrink-0" />
                                             <div>
-                                                <p className="text-sm font-medium">Visit Our Store</p>
-                                                <p className="text-xs text-muted-foreground">
+                                                <p style={{
+                                                    fontSize: '13.53px',
+                                                    fontWeight: 500,
+                                                    lineHeight: 1.57,
+                                                    letterSpacing: '0.03em'
+                                                }}>Visit Our Store</p>
+                                                <p className="text-muted-foreground" style={{
+                                                    fontSize: '12.8px',
+                                                    fontWeight: 300,
+                                                    lineHeight: 1.57,
+                                                    letterSpacing: '0.03em'
+                                                }}>
                                                     Bandhagsplan 4<br />
                                                     12432 Bandhagen Centrum<br />
                                                     Stockholm
@@ -209,16 +274,32 @@ export default function FAQPage() {
                                     </div>
                                 </div>
 
-                                <div className="border rounded-lg p-6 bg-primary/5">
-                                    <h3 className="text-lg font-heading font-semibold mb-2">
+                                <div className="border rounded-lg p-6 bg-muted/30">
+                                    <h3 style={{
+                                        fontSize: '18.91px',
+                                        fontWeight: 500,
+                                        lineHeight: 1.52,
+                                        letterSpacing: '0.03em'
+                                    }} className="mb-2">
                                         New Customer?
                                     </h3>
-                                    <p className="text-sm text-muted-foreground mb-4">
+                                    <p className="text-muted-foreground mb-4" style={{
+                                        fontSize: '13.53px',
+                                        fontWeight: 400,
+                                        lineHeight: 1.57,
+                                        letterSpacing: '0.03em'
+                                    }}>
                                         Create an account for exclusive offers and faster checkout.
                                     </p>
                                     <Link
                                         href="/shop"
-                                        className="inline-block w-full text-center px-4 py-2 bg-primary text-primary-foreground rounded-lg hover:bg-primary/90 transition-colors text-sm font-medium"
+                                        className="inline-block w-full text-center px-4 py-2 bg-primary text-primary-foreground rounded-lg hover:bg-primary/90 transition-colors"
+                                        style={{
+                                            fontSize: '13.53px',
+                                            fontWeight: 500,
+                                            lineHeight: 1.57,
+                                            letterSpacing: '0.03em'
+                                        }}
                                     >
                                         Start Shopping
                                     </Link>

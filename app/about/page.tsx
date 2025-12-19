@@ -1,24 +1,14 @@
 import { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
-import { Container } from "@/components/craft";
 import { brandProfile } from "@/config/brand-profile";
-import { ShoppingBag, Heart, Users, Award } from "lucide-react";
+import { ShoppingBag, Heart, Users, Award, MessageCircle, Mail, MapPin } from "lucide-react";
 
 export const metadata: Metadata = {
   title: `About ${brandProfile.name} - ${brandProfile.tagline}`,
   description: `Learn about ${brandProfile.name}, your trusted source for authentic Indian and Pakistani groceries in Stockholm. Discover our story, commitment to quality, and dedication to serving the South Asian community in Sweden.`,
-  keywords: [
-    `about ${brandProfile.name}`,
-    "Indian grocery store Stockholm",
-    "Pakistani grocery Bandhagen",
-    "authentic South Asian groceries",
-    ...brandProfile.seo.keywords,
-  ].join(", "),
-  openGraph: {
-    title: `About Us - ${brandProfile.name}`,
-    description: `Discover ${brandProfile.name}'s story and commitment to bringing authentic Indian & Pakistani groceries to Stockholm.`,
-    type: "website",
+  alternates: {
+    canonical: '/about',
   },
 };
 
@@ -26,230 +16,228 @@ export default function AboutPage() {
   return (
     <main className="min-h-screen bg-background">
       {/* Hero Section */}
-      <section className="relative bg-gradient-to-br from-primary/10 via-background to-secondary/5 py-16 md:py-24">
-        <Container>
-          <div className="max-w-3xl mx-auto text-center">
-            <h1 className="text-4xl md:text-5xl lg:text-6xl font-heading font-bold mb-6">
+      <section className="bg-gradient-to-br from-muted/30 via-background to-background border-b">
+        <div className="container mx-auto px-4 py-16 md:py-20 text-left">
+          <div className="max-w-3xl">
+            <h1 style={{
+              fontSize: '31.25px',
+              fontWeight: 700,
+              lineHeight: 1.47,
+              letterSpacing: '0.02em'
+            }} className="mb-4">
               About {brandProfile.name}
             </h1>
-            <p className="text-xl text-muted-foreground">
-              {brandProfile.tagline}
+            <p className="text-muted-foreground" style={{
+              fontSize: '16px',
+              fontWeight: 400,
+              lineHeight: 1.52,
+              letterSpacing: '0.03em'
+            }}>
+              {brandProfile.tagline} Discover why we&apos;re Stockholm&apos;s premier destination for authentic South Asian flavours.
             </p>
           </div>
-        </Container>
+        </div>
       </section>
 
-      {/* Our Story */}
-      <section className="py-16 md:py-24">
-        <Container>
-          <div className="grid md:grid-cols-2 gap-12 items-center">
-            <div>
-              <h2 className="text-3xl md:text-4xl font-heading font-bold mb-6">
-                From a Passion for Flavour to Your Local Grocery Store
-              </h2>
-              <div className="space-y-4 text-muted-foreground">
-                <p>
-                  Ideal Indiska was born from a deep-rooted love for the authentic flavours of our homeland and a desire to share them with the vibrant community in Stockholm. We noticed a need for a dedicated space where people could find high-quality, genuine Indian and Pakistani groceries without compromise.
-                </p>
-                <p>
-                  What started as a small idea has grown into a cherished local store in Bandhagen, driven by our commitment to bringing you the best ingredients for your traditional recipes and culinary explorations.
-                </p>
-                <p>
-                  We carefully select our products to ensure you find everything you need to create authentic Indian and Pakistani meals, from everyday staples to special occasion delicacies.
-                </p>
-              </div>
-            </div>
-            <div className="relative aspect-[4/3] rounded-2xl overflow-hidden shadow-xl">
-              <Image
-                src="https://crm.ideallivs.com/wp-content/uploads/2025/05/whatsapp-image-2025-05-06-at-23.02.51-90cce80c.jpeg"
-                alt="Ideal Indiska Store"
-                fill
-                className="object-cover"
-                unoptimized
-              />
-            </div>
-          </div>
-        </Container>
-      </section>
-
-      {/* What We Offer */}
-      <section className="py-16 md:py-24 bg-muted/30">
-        <Container>
-          <div className="max-w-3xl mx-auto text-center mb-12">
-            <h2 className="text-3xl md:text-4xl font-heading font-bold mb-4">
-              A World of Authentic Ingredients
-            </h2>
-            <p className="text-muted-foreground">
-              At Ideal Indiska, you'll discover an extensive selection of:
-            </p>
-          </div>
-
-          <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
-            <div className="bg-card p-6 rounded-xl shadow-sm border border-border">
-              <h3 className="font-heading font-bold text-lg mb-2">Aromatic Spices & Masalas</h3>
-              <p className="text-sm text-muted-foreground">Whole and ground, sourced for freshness and potency from brands like Shan, MDH, and TRS.</p>
-            </div>
-            <div className="bg-card p-6 rounded-xl shadow-sm border border-border">
-              <h3 className="font-heading font-bold text-lg mb-2">Premium Grains & Dals</h3>
-              <p className="text-sm text-muted-foreground">The finest Basmati rice (India Gate, Guard), Atta, various flours, and diverse lentils.</p>
-            </div>
-            <div className="bg-card p-6 rounded-xl shadow-sm border border-border">
-              <h3 className="font-heading font-bold text-lg mb-2">Fresh Produce</h3>
-              <p className="text-sm text-muted-foreground">Seasonal vegetables and herbs (karela, bhindi, tinda) essential for South Asian cooking.</p>
-            </div>
-            <div className="bg-card p-6 rounded-xl shadow-sm border border-border">
-              <h3 className="font-heading font-bold text-lg mb-2">Delicious Snacks & Sweets</h3>
-              <p className="text-sm text-muted-foreground">Your favourite brands like Haldiram&apos;s and traditional South Asian treats.</p>
-            </div>
-            <div className="bg-card p-6 rounded-xl shadow-sm border border-border">
-              <h3 className="font-heading font-bold text-lg mb-2">Halal Meat & Chicken</h3>
-              <p className="text-sm text-muted-foreground">Fresh and quality halal meat products for your everyday needs.</p>
-            </div>
-            <div className="bg-card p-6 rounded-xl shadow-sm border border-border">
-              <h3 className="font-heading font-bold text-lg mb-2">Frozen Foods & Essentials</h3>
-              <p className="text-sm text-muted-foreground">From parathas to paneer and convenient ready-to-cook items.</p>
-            </div>
-          </div>
-        </Container>
-      </section>
-
-      {/* Our Values */}
-      <section className="py-16 md:py-24">
-        <Container>
-          <div className="max-w-3xl mx-auto text-center mb-12">
-            <h2 className="text-3xl md:text-4xl font-heading font-bold mb-4">
-              Our Commitment to You & the Stockholm Community
-            </h2>
-            <p className="text-muted-foreground">
-              Our customers are at the heart of everything we do
-            </p>
-          </div>
-
-          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
-            <div className="text-center">
-              <div className="w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-4">
-                <Award className="w-8 h-8 text-primary" />
-              </div>
-              <h3 className="font-heading font-bold text-lg mb-2">
-                Quality & Authenticity
-              </h3>
-              <p className="text-sm text-muted-foreground">
-                Sourcing genuine products you can trust
-              </p>
-            </div>
-
-            <div className="text-center">
-              <div className="w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-4">
-                <Heart className="w-8 h-8 text-primary" />
-              </div>
-              <h3 className="font-heading font-bold text-lg mb-2">
-                Freshness
-              </h3>
-              <p className="text-sm text-muted-foreground">
-                High standards for all produce and perishables
-              </p>
-            </div>
-
-            <div className="text-center">
-              <div className="w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-4">
-                <Users className="w-8 h-8 text-primary" />
-              </div>
-              <h3 className="font-heading font-bold text-lg mb-2">
-                Friendly Service
-              </h3>
-              <p className="text-sm text-muted-foreground">
-                Welcoming atmosphere and helpful assistance
-              </p>
-            </div>
-
-            <div className="text-center">
-              <div className="w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-4">
-                <ShoppingBag className="w-8 h-8 text-primary" />
-              </div>
-              <h3 className="font-heading font-bold text-lg mb-2">
-                Community Connection
-              </h3>
-              <p className="text-sm text-muted-foreground">
-                Active part of Stockholm's South Asian community
-              </p>
-            </div>
-          </div>
-        </Container>
-      </section>
-
-      {/* Testimonials */}
-      <section className="py-16 md:py-24 bg-muted/30">
-        <Container>
-          <div className="max-w-3xl mx-auto text-center mb-12">
-            <h2 className="text-3xl md:text-4xl font-heading font-bold mb-4">
-              What Customers Say
-            </h2>
-            <p className="text-muted-foreground">
-              Hear from our valued customers in Stockholm
-            </p>
-          </div>
-
-          <div className="grid md:grid-cols-3 gap-8">
-            <div className="bg-card p-6 rounded-xl shadow-sm border border-border">
-              <p className="text-muted-foreground mb-4">
-                "Glad att jag hittade denna butik! Bra sortiment, hittade allt jag behövde och mer. Vänlig och hjälpsam personal."
-              </p>
+      {/* Main Content & Sidebar */}
+      <section className="py-16">
+        <div className="container mx-auto px-4">
+          <div className="grid lg:grid-cols-3 gap-12">
+            {/* Main Content Area (2/3) */}
+            <div className="lg:col-span-2 space-y-12">
+              {/* Our Story */}
               <div>
-                <p className="font-bold">Linda</p>
-                <p className="text-sm text-muted-foreground">Google Reviews</p>
+                <h2 style={{
+                  fontSize: '25px',
+                  fontWeight: 600,
+                  lineHeight: 1.47,
+                  letterSpacing: '0.02em'
+                }} className="mb-6">
+                  From Passion to Your Local Grocery Store
+                </h2>
+                <div className="space-y-6 text-muted-foreground" style={{
+                  fontSize: '16px',
+                  fontWeight: 400,
+                  lineHeight: 1.52,
+                  letterSpacing: '0.03em'
+                }}>
+                  <p>
+                    Ideal Indiska was born from a deep-rooted love for the authentic flavours of our homeland and a desire to share them with the vibrant community in Stockholm. We noticed a need for a dedicated space where people could find high-quality, genuine Indian and Pakistani groceries without compromise.
+                  </p>
+                  <p>
+                    What started as a small idea has grown into a cherished local store in Bandhagen, driven by our commitment to bringing you the best ingredients for your traditional recipes and culinary explorations.
+                  </p>
+                  <div className="relative aspect-video rounded-2xl overflow-hidden shadow-sm border mt-8">
+                    <Image
+                      src="https://crm.ideallivs.com/wp-content/uploads/2025/05/whatsapp-image-2025-05-06-at-23.02.51-90cce80c.jpeg"
+                      alt="Ideal Indiska Store"
+                      fill
+                      className="object-cover"
+                      unoptimized
+                    />
+                  </div>
+                  <p className="mt-8">
+                    We carefully select our products to ensure you find everything you need to create authentic Indian and Pakistani meals, from everyday staples to special occasion delicacies.
+                  </p>
+                </div>
               </div>
+
+              {/* What We Offer */}
+              <div>
+                <h2 style={{
+                  fontSize: '25px',
+                  fontWeight: 600,
+                  lineHeight: 1.47,
+                  letterSpacing: '0.02em'
+                }} className="mb-6">
+                  A World of Authentic Ingredients
+                </h2>
+                <div className="grid sm:grid-cols-2 gap-6">
+                  {[
+                    { title: "Aromatic Spices", desc: "Whole and ground, sourced for freshness from brands like Shan, MDH, and TRS.", icon: Award },
+                    { title: "Premium Grains", desc: "The finest Basmati rice (India Gate, Guard), Atta, and diverse lentils.", icon: ShoppingBag },
+                    { title: "Fresh Produce", desc: "Seasonal vegetables and herbs (karela, bhindi, tinda) essential for cooking.", icon: Heart },
+                    { title: "South Asian Treats", desc: "Favourite snacks from brands like Haldiram&apos;s and traditional sweets.", icon: Users },
+                  ].map((item, i) => (
+                    <div key={i} className="p-6 rounded-xl border bg-card/50">
+                      <div className="w-10 h-10 bg-primary/10 rounded-lg flex items-center justify-center mb-4">
+                        <item.icon className="w-5 h-5 text-primary" />
+                      </div>
+                      <h3 style={{ fontSize: '18.91px', fontWeight: 500 }} className="mb-2">{item.title}</h3>
+                      <p style={{ fontSize: '15.13px' }} className="text-muted-foreground">{item.desc}</p>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              {/* Testimonials */}
+              <section className="space-y-6 pt-12 border-t">
+                <h2 style={{ fontSize: '25px', fontWeight: 600 }}>What Our Customers Say</h2>
+                <div className="grid sm:grid-cols-2 gap-4">
+                  {[
+                    {
+                      text: "Glad att jag hittade denna butik! Bra sortiment, hittade allt jag behövde och mer. Vänlig och hjälpsam personal.",
+                      author: "Linda",
+                      source: "Google Reviews"
+                    },
+                    {
+                      text: "Kul med ett annat sortiment än det som finns på vanliga matbutikskedjorna. Kommer tveklöst återkomma!",
+                      author: "Michaela Svanberg",
+                      source: "Google Reviews"
+                    }
+                  ].map((t, i) => (
+                    <div key={i} className="p-6 rounded-2xl border bg-muted/10 italic">
+                      <p className="text-muted-foreground mb-4" style={{ fontSize: '15.13px' }}>&quot;{t.text}&quot;</p>
+                      <div className="not-italic">
+                        <p className="font-semibold" style={{ fontSize: '14.31px' }}>{t.author}</p>
+                        <p className="text-xs text-muted-foreground">{t.source}</p>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </section>
             </div>
 
-            <div className="bg-card p-6 rounded-xl shadow-sm border border-border">
-              <p className="text-muted-foreground mb-4">
-                "Trevlig personal och jag är helnöjd med de produkter jag hittills köpt. Kul med ett annat sortiment än det som finns på vanliga matbutikskedjorna. Kommer tveklöst återkomma!"
-              </p>
-              <div>
-                <p className="font-bold">Michaela Svanberg</p>
-                <p className="text-sm text-muted-foreground">Google Reviews</p>
-              </div>
-            </div>
+            {/* Sidebar (1/3) */}
+            <div className="lg:col-span-1">
+              <div className="sticky top-24 space-y-6">
+                {/* Store Values */}
+                <div className="border rounded-lg p-6 bg-card">
+                  <h3 style={{
+                    fontSize: '18.91px',
+                    fontWeight: 500,
+                    lineHeight: 1.52,
+                    letterSpacing: '0.03em'
+                  }} className="mb-4">
+                    Our Values
+                  </h3>
+                  <div className="space-y-6">
+                    {[
+                      { title: "Authenticity", desc: "Genuine products you can trust.", icon: Award },
+                      { title: "Freshness", desc: "High standards for all produce.", icon: Heart },
+                      { title: "Friendly Service", desc: "Welcoming and helpful assistance.", icon: Users },
+                    ].map((value, i) => (
+                      <div key={i} className="flex gap-4">
+                        <div className="w-8 h-8 bg-muted rounded flex items-center justify-center flex-shrink-0">
+                          <value.icon className="w-4 h-4 text-muted-foreground" />
+                        </div>
+                        <div>
+                          <p style={{ fontSize: '13.53px', fontWeight: 500 }}>{value.title}</p>
+                          <p style={{ fontSize: '12.8px' }} className="text-muted-foreground">{value.desc}</p>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
 
-            <div className="bg-card p-6 rounded-xl shadow-sm border border-border">
-              <p className="text-muted-foreground mb-4">
-                "Upptäckte denna pärla av en indisk butik idag, bra urval med allt man behöver. Frågade efter en viss masala-paste och den mycket trevliga mannen i butiken beställde den direkt, toppen bra service."
-              </p>
-              <div>
-                <p className="font-bold">Sos Jytte Kronstrom</p>
-                <p className="text-sm text-muted-foreground">Stockholm</p>
+                {/* Contact Sidebar Card */}
+                <div className="border rounded-lg p-6 bg-card">
+                  <h3 style={{
+                    fontSize: '18.91px',
+                    fontWeight: 500,
+                    lineHeight: 1.52,
+                    letterSpacing: '0.03em'
+                  }} className="mb-4">
+                    Contact Us
+                  </h3>
+                  <div className="space-y-4">
+                    <a
+                      href="https://wa.me/46728494801"
+                      className="flex items-start gap-3 p-3 rounded-lg border hover:bg-muted/50 transition-colors"
+                    >
+                      <MessageCircle className="h-5 w-5 mt-0.5 flex-shrink-0" />
+                      <div>
+                        <p style={{ fontSize: '13.53px', fontWeight: 500 }}>WhatsApp</p>
+                        <p className="text-muted-foreground" style={{ fontSize: '12.8px' }}>Chat with us</p>
+                      </div>
+                    </a>
+                    <a
+                      href="mailto:info@ideallivs.com"
+                      className="flex items-start gap-3 p-3 rounded-lg border hover:bg-muted/50 transition-colors"
+                    >
+                      <Mail className="h-5 w-5 mt-0.5 flex-shrink-0" />
+                      <div>
+                        <p style={{ fontSize: '13.53px', fontWeight: 500 }}>Email</p>
+                        <p className="text-muted-foreground" style={{ fontSize: '12.8px' }}>info@ideallivs.com</p>
+                      </div>
+                    </a>
+                    <div className="flex items-start gap-3 p-3 rounded-lg border bg-muted/30">
+                      <MapPin className="h-5 w-5 mt-0.5 flex-shrink-0" />
+                      <div>
+                        <p style={{ fontSize: '13.53px', fontWeight: 500 }}>Visit Store</p>
+                        <p className="text-muted-foreground" style={{ fontSize: '12.8px' }}>
+                          Bandhagsplan 4, Stockholm
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                {/* New Customer? CTA */}
+                <div className="border rounded-lg p-6 bg-muted/30">
+                  <h3 style={{
+                    fontSize: '18.91px',
+                    fontWeight: 500,
+                    lineHeight: 1.52,
+                    letterSpacing: '0.03em'
+                  }} className="mb-2">
+                    Ready to Shop?
+                  </h3>
+                  <p className="text-muted-foreground mb-4" style={{ fontSize: '13.53px' }}>
+                    Explore our full range of 150+ brands online.
+                  </p>
+                  <Link
+                    href="/shop"
+                    className="inline-block w-full text-center px-4 py-2 bg-primary text-primary-foreground rounded-lg hover:bg-primary/90 transition-colors"
+                    style={{ fontSize: '13.53px', fontWeight: 500 }}
+                  >
+                    Start Shopping
+                  </Link>
+                </div>
               </div>
             </div>
           </div>
-        </Container>
-      </section>
-
-      {/* Visit Us CTA */}
-      <section className="py-16 md:py-24">
-        <Container>
-          <div className="max-w-3xl mx-auto text-center bg-primary/5 p-12 rounded-2xl border border-primary/20">
-            <h2 className="text-3xl md:text-4xl font-heading font-bold mb-4">
-              Visit Us or Shop Online
-            </h2>
-            <p className="text-muted-foreground mb-8">
-              Experience the {brandProfile.name} difference for yourself. Visit our store at{" "}
-              {brandProfile.address.formatted}, or explore our full range and shop conveniently online.
-            </p>
-            <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <Link
-                href="/shop"
-                className="px-8 py-3 bg-primary text-primary-foreground rounded-lg font-bold hover:bg-primary/90 transition-colors"
-              >
-                Shop Online
-              </Link>
-              <Link
-                href="/contact"
-                className="px-8 py-3 bg-card border-2 border-primary text-primary rounded-lg font-bold hover:bg-primary/5 transition-colors"
-              >
-                Contact Us
-              </Link>
-            </div>
-          </div>
-        </Container>
+        </div>
       </section>
     </main>
   );
