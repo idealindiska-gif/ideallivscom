@@ -5,6 +5,8 @@ import {
 } from '@/components/layout/static-page-layout';
 import { brandProfile } from '@/config/brand-profile';
 import { Truck, MapPin, Package, Clock, Euro, ShieldCheck } from 'lucide-react';
+import { SchemaScript } from '@/lib/schema/schema-script';
+import { europeDeliveryServiceSchema } from '@/lib/schema';
 
 export const metadata: Metadata = {
     title: 'Europe Delivery | Ideal Indiska LIVS',
@@ -166,6 +168,12 @@ export default function EuropeDeliveryPage() {
                 </section>
 
             </div>
+
+            {/* SEO Structured Data */}
+            <SchemaScript
+                id="europe-delivery-schema"
+                schema={europeDeliveryServiceSchema()}
+            />
         </StaticPageLayout>
     );
 }

@@ -22,6 +22,7 @@ export * from './website';
 export * from './article';
 export * from './faq';
 export * from './collection';
+export * from './delivery';
 
 /**
  * QUICK START EXAMPLES

@@ -1,5 +1,7 @@
 import { Metadata } from "next";
 import { PageTemplate } from "@/components/templates";
+import { SchemaScript } from "@/lib/schema/schema-script";
+import { stockholmDeliveryServiceSchema, deliveryFAQSchema } from "@/lib/schema";
 
 export const metadata: Metadata = {
     title: "Grocery Delivery Stockholm & Sweden | Ideal Indiska Livs",
@@ -100,15 +102,27 @@ export default function DeliveryInformationPage() {
     `;
 
     return (
-        <PageTemplate
-            title="Grocery Delivery Information for Stockholm & Sweden"
-            content={content}
-            breadcrumbs={[
-                { label: 'Home', href: '/' },
-                { label: 'Delivery Information' }
-            ]}
-            layout="two-column"
-            showHero={true}
-        />
+        <>
+            <PageTemplate
+                title="Grocery Delivery Information for Stockholm & Sweden"
+                content={content}
+                breadcrumbs={[
+                    { label: 'Home', href: '/' },
+                    { label: 'Delivery Information' }
+                ]}
+                layout="two-column"
+                showHero={true}
+            />
+
+            {/* SEO Structured Data */}
+            <SchemaScript
+                id="delivery-service-schema"
+                schema={stockholmDeliveryServiceSchema()}
+            />
+            <SchemaScript
+                id="delivery-faq-schema"
+                schema={deliveryFAQSchema()}
+            />
+        </>
     );
 }

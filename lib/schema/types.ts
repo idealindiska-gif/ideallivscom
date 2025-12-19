@@ -323,3 +323,29 @@ export interface CategoryInput {
   products?: ProductInput[];
   websiteId?: string;
 }
+
+// Service Schema
+export interface Service {
+  '@context'?: 'https://schema.org';
+  '@type': 'Service';
+  '@id'?: string;
+  name: string;
+  description?: string;
+  provider?: {
+    '@type': 'Organization';
+    '@id'?: string;
+    name: string;
+  };
+  serviceType?: string;
+  areaServed?: unknown;
+  offers?: unknown;
+  availableChannel?: {
+    '@type': 'ServiceChannel';
+    serviceUrl?: string;
+    servicePhone?: string;
+    availableLanguage?: string[];
+  };
+  additionalType?: string;
+  hoursAvailable?: unknown;
+  [key: string]: unknown;
+}

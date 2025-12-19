@@ -1,5 +1,7 @@
 import { Metadata } from "next";
 import { PageTemplate } from "@/components/templates";
+import { SchemaScript } from "@/lib/schema/schema-script";
+import { goteborgMalmoDeliveryServiceSchema } from "@/lib/schema";
 
 export const metadata: Metadata = {
     title: "Grocery Delivery Göteborg & Malmö | Ideal Indiska Livs",
@@ -61,16 +63,24 @@ export default function GoteborgMalmoDeliveryPage() {
     `;
 
     return (
-        <PageTemplate
-            title="Indian & Pakistani Grocery Delivery in Göteborg & Malmö"
-            content={content}
-            breadcrumbs={[
-                { label: 'Home', href: '/' },
-                { label: 'Delivery Information', href: '/delivery-information' },
-                { label: 'Göteborg & Malmö' }
-            ]}
-            layout="two-column"
-            showHero={true}
-        />
+        <>
+            <PageTemplate
+                title="Indian & Pakistani Grocery Delivery in Göteborg & Malmö"
+                content={content}
+                breadcrumbs={[
+                    { label: 'Home', href: '/' },
+                    { label: 'Delivery Information', href: '/delivery-information' },
+                    { label: 'Göteborg & Malmö' }
+                ]}
+                layout="two-column"
+                showHero={true}
+            />
+
+            {/* SEO Structured Data */}
+            <SchemaScript
+                id="goteborg-malmo-delivery-schema"
+                schema={goteborgMalmoDeliveryServiceSchema()}
+            />
+        </>
     );
 }
