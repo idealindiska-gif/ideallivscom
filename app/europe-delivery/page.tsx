@@ -4,6 +4,7 @@ import { Truck, MapPin, Package, Clock, Euro, ShieldCheck, Globe, MessageCircle,
 import Link from 'next/link';
 import { SchemaScript } from '@/lib/schema/schema-script';
 import { europeDeliveryServiceSchema } from '@/lib/schema';
+import { GoogleMapCompact } from "@/components/shared/google-map";
 
 export const metadata: Metadata = {
     title: 'Europe Delivery | Ideal Indiska LIVS',
@@ -154,6 +155,16 @@ export default function EuropeDeliveryPage() {
                                             </div>
                                         </li>
                                     </ul>
+                                </div>
+
+                                {/* Store Location Map */}
+                                <div className="bg-card">
+                                    <GoogleMapCompact />
+                                    <div className="p-4 border border-t-0 rounded-b-lg bg-muted/10">
+                                        <p className="text-xs text-center text-muted-foreground">
+                                            Shipping from: {brandProfile.address.street}, {brandProfile.address.postalCode} {brandProfile.address.area}
+                                        </p>
+                                    </div>
                                 </div>
 
                                 {/* WhatsApp Help */}

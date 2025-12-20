@@ -4,6 +4,7 @@ import { Truck, MapPin, Package, Clock, Info, MessageCircle, ExternalLink, Shiel
 import Link from "next/link";
 import { SchemaScript } from "@/lib/schema/schema-script";
 import { goteborgMalmoDeliveryServiceSchema } from "@/lib/schema";
+import { GoogleMapCompact } from "@/components/shared/google-map";
 
 export const metadata: Metadata = {
   title: "Grocery Delivery Göteborg & Malmö | Ideal Indiska Livs",
@@ -145,6 +146,16 @@ export default function GoteborgMalmoDeliveryPage() {
                       </div>
                     </li>
                   </ul>
+                </div>
+
+                {/* Store Location Map */}
+                <div className="bg-card">
+                  <GoogleMapCompact />
+                  <div className="p-4 border border-t-0 rounded-b-lg bg-muted/10">
+                    <p className="text-xs text-center text-muted-foreground">
+                      Our Store: {brandProfile.address.street}, {brandProfile.address.postalCode} {brandProfile.address.area}
+                    </p>
+                  </div>
                 </div>
 
                 {/* Support */}

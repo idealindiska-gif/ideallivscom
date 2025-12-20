@@ -4,6 +4,7 @@ import { Truck, Package, Clock, ShieldCheck, MapPin, ExternalLink, Globe, Info, 
 import Link from 'next/link';
 import { SchemaScript } from "@/lib/schema/schema-script";
 import { stockholmDeliveryServiceSchema, deliveryFAQSchema } from "@/lib/schema";
+import { GoogleMapCompact } from "@/components/shared/google-map";
 
 export const metadata: Metadata = {
     title: "Grocery Delivery Stockholm & Sweden | Ideal Indiska Livs",
@@ -189,6 +190,16 @@ export default function DeliveryInformationPage() {
                                         <Link href="/europe-delivery" className="flex items-center justify-between p-2 rounded hover:bg-muted transition-colors text-sm">
                                             European Shipping <ExternalLink className="w-3 h-3" />
                                         </Link>
+                                    </div>
+                                </div>
+
+                                {/* Store Location Map */}
+                                <div className="bg-card">
+                                    <GoogleMapCompact />
+                                    <div className="p-4 border border-t-0 rounded-b-lg bg-muted/10">
+                                        <p className="text-xs text-center text-muted-foreground">
+                                            Pickup from: {brandProfile.address.street}, {brandProfile.address.postalCode} {brandProfile.address.area}
+                                        </p>
                                     </div>
                                 </div>
 

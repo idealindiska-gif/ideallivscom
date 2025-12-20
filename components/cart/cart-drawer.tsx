@@ -6,11 +6,22 @@ import { useCartStore } from '@/store/cart-store';
 import { Button } from '@/components/ui/button';
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetFooter } from '@/components/ui/sheet';
 import { formatPrice } from '@/lib/woocommerce';
-import { Minus, Plus, X } from 'lucide-react';
+import { Minus, Plus, X, AlertCircle } from 'lucide-react';
 import { CartThresholdMessages } from './cart-threshold-messages';
+import { useEffect } from 'react';
 
 export function CartDrawer() {
-  const { items, isOpen, closeCart, updateQuantity, removeItem, getTotalPrice, getTotalItems } = useCartStore();
+  const { items, isOpen, closeCart, updateQuantity, removeItem, getTotalPrice, getTotalItems, notification, clearNotification } = useCartStore();
+
+  // Auto-clear notification after 5 seconds
+  useEffect(() => {
+    if (notification) {
+      const timer = setTimeout(() => {
+        clearNotification();
+      }, 5000);
+      return () => clearTimeout(timer);
+    }
+  }, [notification, clearNotification]);
 
   return (
     <Sheet open={isOpen} onOpenChange={closeCart}>
@@ -18,6 +29,26 @@ export function CartDrawer() {
         <SheetHeader>
           <SheetTitle>Shopping Cart ({getTotalItems()} items)</SheetTitle>
         </SheetHeader>
+
+        {/* Notification Banner */}
+        {notification && (
+          <div className="mx-4 mt-4 rounded-lg border border-yellow-500/50 bg-yellow-500/10 p-3">
+            <div className="flex items-start gap-2">
+              <AlertCircle className="h-5 w-5 flex-shrink-0 text-yellow-600" />
+              <div className="flex-1">
+                <p className="text-sm text-yellow-800 dark:text-yellow-200">{notification.message}</p>
+              </div>
+              <Button
+                variant="ghost"
+                size="icon"
+                onClick={clearNotification}
+                className="h-6 w-6 flex-shrink-0"
+              >
+                <X className="h-3 w-3" />
+              </Button>
+            </div>
+          </div>
+        )}
 
         {items.length === 0 ? (
           <div className="flex flex-1 flex-col items-center justify-center">

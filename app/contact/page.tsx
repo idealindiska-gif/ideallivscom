@@ -3,6 +3,7 @@ import Link from "next/link";
 import { brandProfile } from "@/config/brand-profile";
 import { MapPin, Phone, Mail, Clock, MessageSquare, ExternalLink } from "lucide-react";
 import { ContactForm } from "@/components/forms/contact-form";
+import { GoogleMapCompact } from "@/components/shared/google-map";
 
 export const metadata: Metadata = {
   title: `Contact Us - ${brandProfile.name} | ${brandProfile.address.city}`,
@@ -194,18 +195,13 @@ export default function ContactPage() {
                   </Link>
                 </div>
 
-                {/* Store Location Map (Minimal) */}
-                <div className="border rounded-lg overflow-hidden bg-card">
-                  <div className="relative h-48 bg-muted flex items-center justify-center p-4 text-center">
-                    <div>
-                      <MapPin className="w-8 h-8 text-primary/30 mx-auto mb-2" />
-                      <p style={{ fontSize: '12.8px' }} className="text-muted-foreground">
-                        {brandProfile.address.street}<br />
-                        {brandProfile.address.postalCode} {brandProfile.address.area}
-                      </p>
-                    </div>
-                  </div>
-                  <div className="p-4 bg-muted/10">
+                {/* Store Location Map */}
+                <div className="bg-card">
+                  <GoogleMapCompact />
+                  <div className="p-4 border border-t-0 rounded-b-lg bg-muted/10">
+                    <p className="text-xs text-muted-foreground mb-2">
+                      {brandProfile.address.street}, {brandProfile.address.postalCode} {brandProfile.address.area}
+                    </p>
                     <a
                       href="https://maps.google.com/?q=Bandhagsplan+4,+12432+Bandhagen"
                       target="_blank"

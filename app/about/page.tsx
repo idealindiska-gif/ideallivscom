@@ -3,6 +3,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { brandProfile } from "@/config/brand-profile";
 import { ShoppingBag, Heart, Users, Award, MessageCircle, Mail, MapPin } from "lucide-react";
+import { GoogleMapCompact } from "@/components/shared/google-map";
 
 export const metadata: Metadata = {
   title: `About ${brandProfile.name} - ${brandProfile.tagline}`,
@@ -210,6 +211,16 @@ export default function AboutPage() {
                         </p>
                       </div>
                     </div>
+                  </div>
+                </div>
+
+                {/* Store Location Map */}
+                <div className="bg-card">
+                  <GoogleMapCompact />
+                  <div className="p-4 border border-t-0 rounded-b-lg bg-muted/10">
+                    <p className="text-xs text-center text-muted-foreground">
+                      {brandProfile.address.street}, {brandProfile.address.postalCode} {brandProfile.address.area}
+                    </p>
                   </div>
                 </div>
 

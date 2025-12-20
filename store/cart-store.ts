@@ -6,6 +6,7 @@ import {
   type ShippingMethod,
   type RestrictedProduct,
 } from '@/lib/shipping-service';
+import { CommerceRules } from '@/config/commerce-rules';
 
 export interface CartItem {
   key: string;
@@ -23,9 +24,18 @@ export interface ShippingAddress {
   country: string;
 }
 
+export interface CartNotification {
+  message: string;
+  type: 'error' | 'warning' | 'info';
+  timestamp: number;
+}
+
 interface CartState {
   items: CartItem[];
   isOpen: boolean;
+
+  // Notification state
+  notification: CartNotification | null;
 
   // Shipping state
   shippingAddress: ShippingAddress | null;
@@ -46,6 +56,7 @@ interface CartState {
   toggleCart: () => void;
   openCart: () => void;
   closeCart: () => void;
+  clearNotification: () => void;
 
   // Shipping actions
   setShippingAddress: (address: ShippingAddress) => void;
@@ -72,6 +83,9 @@ export const useCartStore = create<CartState>()(
       items: [],
       isOpen: false,
 
+      // Notification state
+      notification: null,
+
       // Shipping state initialization
       shippingAddress: null,
       availableShippingMethods: [],
@@ -84,10 +98,37 @@ export const useCartStore = create<CartState>()(
       minimumOrderMet: false,
 
       addItem: (product, quantity = 1, variation) => {
-        set((state) => {
-          const key = generateCartKey(product.id, variation?.id);
-          const existingItem = state.items.find((item) => item.key === key);
+        const key = generateCartKey(product.id, variation?.id);
+        const state = get();
+        const existingItem = state.items.find((item) => item.key === key);
 
+        // Get current quantity in cart
+        const currentQuantity = existingItem ? existingItem.quantity : 0;
+
+        // Check quantity limit
+        const validation = CommerceRules.canAddQuantity(product.id, currentQuantity, quantity);
+
+        if (!validation.allowed) {
+          // Set notification
+          set({
+            notification: {
+              message: validation.message || 'Cannot add more of this item',
+              type: 'warning',
+              timestamp: Date.now(),
+            },
+          });
+
+          // Cap at maximum allowed
+          const maxAllowed = validation.maxQuantity;
+          if (maxAllowed !== null && currentQuantity < maxAllowed) {
+            quantity = maxAllowed - currentQuantity;
+          } else {
+            // Already at max, don't add
+            return;
+          }
+        }
+
+        set((state) => {
           const price = variation
             ? parseFloat(variation.price)
             : parseFloat(product.price);
@@ -132,6 +173,28 @@ export const useCartStore = create<CartState>()(
           return;
         }
 
+        const state = get();
+        const item = state.items.find((i) => i.key === key);
+
+        if (item) {
+          // Check quantity limit
+          const maxQuantity = CommerceRules.getQuantityLimit(item.productId);
+
+          if (maxQuantity !== null && quantity > maxQuantity) {
+            // Set notification
+            set({
+              notification: {
+                message: `Maximum ${maxQuantity} units allowed for this product.`,
+                type: 'warning',
+                timestamp: Date.now(),
+              },
+            });
+
+            // Cap at maximum
+            quantity = maxQuantity;
+          }
+        }
+
         set((state) => ({
           items: state.items.map((item) =>
             item.key === key ? { ...item, quantity } : item
@@ -153,6 +216,10 @@ export const useCartStore = create<CartState>()(
 
       closeCart: () => {
         set({ isOpen: false });
+      },
+
+      clearNotification: () => {
+        set({ notification: null });
       },
 
       getTotalPrice: () => {

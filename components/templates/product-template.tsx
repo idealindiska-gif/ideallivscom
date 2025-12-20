@@ -17,6 +17,7 @@ import { ProductRecommendations } from '@/components/ai/product-recommendations'
 import { formatPrice, getDiscountPercentage } from '@/lib/woocommerce';
 import { decodeHtmlEntities } from '@/lib/utils';
 import { trackViewContent } from '@/lib/analytics';
+import { CommerceRules } from '@/config/commerce-rules';
 import type { Product, ProductReview, ProductVariation } from '@/types/woocommerce';
 
 interface ProductTemplateProps {
@@ -335,10 +336,35 @@ export function ProductTemplate({
                   <QuantitySelector
                     initialQuantity={1}
                     min={1}
-                    max={selectedVariation?.stock_quantity || product.stock_quantity || 99}
+                    max={(() => {
+                      // Check commerce rules quantity limit
+                      const commerceLimit = CommerceRules.getQuantityLimit(product.id);
+                      const stockLimit = selectedVariation?.stock_quantity || product.stock_quantity || 99;
+
+                      // Use the lower of commerce limit or stock limit
+                      return commerceLimit !== null ? Math.min(commerceLimit, stockLimit) : stockLimit;
+                    })()}
                     onChange={setQuantity}
                   />
                 </div>
+
+                {/* Quantity Limit Notice */}
+                {(() => {
+                  const quantityLimit = CommerceRules.getQuantityLimit(product.id);
+                  if (quantityLimit !== null) {
+                    return (
+                      <div className="flex items-center gap-2 text-yellow-700 dark:text-yellow-500 bg-yellow-50 dark:bg-yellow-900/20 px-3 py-2 rounded-lg">
+                        <svg className="h-4 w-4 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                        </svg>
+                        <span style={{ fontSize: '13.53px', fontWeight: 400 }}>
+                          Limited to {quantityLimit} unit{quantityLimit > 1 ? 's' : ''} per order
+                        </span>
+                      </div>
+                    );
+                  }
+                  return null;
+                })()}
 
                 {/* Add to Cart Button */}
                 <AddToCartButton
