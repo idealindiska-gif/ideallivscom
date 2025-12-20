@@ -18,7 +18,7 @@ Allow: /about
 Allow: /contact
 
 # Sitemap
-Sitemap: https://ideallivs.com/sitemap.xml
+Sitemap: https://www.ideallivs.com/sitemap.xml
 
 # Crawl-delay (optional, helps prevent server overload)
 Crawl-delay: 1

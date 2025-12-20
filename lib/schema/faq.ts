@@ -54,7 +54,7 @@ export function faqSchema(config: FAQInput): FAQPage {
  * Pre-configured FAQ for Ideal Indiska LIVS
  * Common questions about delivery, products, and services
  */
-export function idealIndiskaFAQSchema(baseUrl: string = 'https://ideallivs.com'): FAQPage {
+export function idealIndiskaFAQSchema(baseUrl: string = 'https://www.ideallivs.com'): FAQPage {
     return faqSchema({
         pageUrl: `${baseUrl}/faq`,
         name: 'Frequently Asked Questions - Ideal Indiska LIVS',

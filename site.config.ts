@@ -8,6 +8,6 @@ type SiteConfig = {
 export const siteConfig: SiteConfig = {
   site_name: "Ideal Indiska LIVS",
   site_description: "Your trusted source for authentic Indian and Pakistani groceries in Stockholm. Fresh produce, aromatic spices, and premium grains delivered to your door.",
-  site_domain: "https://ideallivs.com",
+  site_domain: "https://www.ideallivs.com",
   site_tagline: "Everything You Need. Just Around the Corner.",
 };

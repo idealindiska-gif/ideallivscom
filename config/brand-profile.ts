@@ -44,8 +44,8 @@ export const brandProfile = {
 
     // Website & Online Presence
     website: {
-        url: "https://ideallivs.com",
-        domain: "ideallivs.com",
+        url: "https://www.ideallivs.com",
+        domain: "www.ideallivs.com",
     },
 
     // Social Media

@@ -69,7 +69,7 @@ export function collectionPageSchema(config: CollectionPageInput): CollectionPag
 export function blogCategorySchema(
     category: { name: string; slug: string; description?: string },
     posts: Array<{ slug: string; title: string; excerpt?: string; featuredImage?: string }>,
-    baseUrl: string = 'https://ideallivs.com'
+    baseUrl: string = 'https://www.ideallivs.com'
 ): CollectionPage {
     return collectionPageSchema({
         name: category.name,
@@ -96,7 +96,7 @@ export function blogCategorySchema(
 export function productCategorySchema(
     category: { name: string; slug: string; description?: string },
     products: Array<{ slug: string; name: string; short_description?: string; images?: any[] }>,
-    baseUrl: string = 'https://ideallivs.com'
+    baseUrl: string = 'https://www.ideallivs.com'
 ): CollectionPage {
     return collectionPageSchema({
         name: category.name,

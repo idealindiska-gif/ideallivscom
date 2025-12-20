@@ -95,7 +95,7 @@ export function organizationSchema(config: OrganizationInput): Organization {
  * Pre-configured Ideal Indiska LIVS Organization Schema
  * Grocery Store focused schema with delivery services
  */
-export function idealIndiskaOrganizationSchema(baseUrl: string = 'https://ideallivs.com'): Organization {
+export function idealIndiskaOrganizationSchema(baseUrl: string = 'https://www.ideallivs.com'): Organization {
   return organizationSchema({
     name: 'Ideal Indiska LIVS',
     alternateName: 'Ideal Livs',
@@ -136,7 +136,7 @@ export function idealIndiskaOrganizationSchema(baseUrl: string = 'https://ideall
  * Full-featured Ideal Indiska LIVS Organization Schema
  * Includes delivery services, payment methods, and service areas
  */
-export function idealIndiskaOrganizationSchemaFull(baseUrl: string = 'https://ideallivs.com'): Organization {
+export function idealIndiskaOrganizationSchemaFull(baseUrl: string = 'https://www.ideallivs.com'): Organization {
   const baseSchema = idealIndiskaOrganizationSchema(baseUrl);
 
   return {
@@ -424,10 +424,10 @@ export function idealIndiskaOrganizationSchemaFull(baseUrl: string = 'https://id
 export { anmolOrganizationSchema, anmolOrganizationSchemaFull };
 
 // Legacy function - kept for backward compatibility but updated to use Ideal Indiska
-function anmolOrganizationSchema(baseUrl: string = 'https://ideallivs.com'): Organization {
+function anmolOrganizationSchema(baseUrl: string = 'https://www.ideallivs.com'): Organization {
   return idealIndiskaOrganizationSchema(baseUrl);
 }
 
-function anmolOrganizationSchemaFull(baseUrl: string = 'https://ideallivs.com'): Organization {
+function anmolOrganizationSchemaFull(baseUrl: string = 'https://www.ideallivs.com'): Organization {
   return idealIndiskaOrganizationSchemaFull(baseUrl);
 }

@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import {
@@ -29,6 +29,7 @@ import {
     SheetHeader,
     SheetTrigger,
 } from '@/components/ui/sheet';
+import { getStoreStatus, type StoreStatus } from '@/lib/store-hours';
 
 const menuItems = [
     { href: '/', label: 'Home', icon: Home },
@@ -44,6 +45,16 @@ const menuItems = [
 
 export function MobileMenu() {
     const [open, setOpen] = useState(false);
+    const [storeStatus, setStoreStatus] = useState<StoreStatus | null>(null);
+
+    useEffect(() => {
+        // Update store status on mount and every minute
+        const updateStatus = () => setStoreStatus(getStoreStatus());
+        updateStatus();
+
+        const interval = setInterval(updateStatus, 60000);
+        return () => clearInterval(interval);
+    }, []);
 
     return (
         <Sheet open={open} onOpenChange={setOpen}>
@@ -181,10 +192,14 @@ export function MobileMenu() {
                             <span>Bandhagen</span>
                         </a>
                         <div className="w-1 h-1 rounded-full bg-primary/30" />
-                        <div className="flex items-center gap-1.5">
-                            <Clock className="h-3.5 w-3.5 text-primary" />
-                            <span>Open Daily</span>
-                        </div>
+                        {storeStatus && (
+                            <div className="flex items-center gap-1.5">
+                                <Clock className="h-3.5 w-3.5 text-primary" />
+                                <span className={storeStatus.isOpen ? 'text-green-600 font-medium' : 'text-red-600'}>
+                                    {storeStatus.statusText}
+                                </span>
+                            </div>
+                        )}
                     </div>
                 </div>
             </SheetContent>

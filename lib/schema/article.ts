@@ -87,7 +87,7 @@ export function articleSchema(article: ArticleInput): BlogPosting {
  * @param baseUrl - Base URL of the site
  * @returns Complete Article schema object
  */
-export function wordPressArticleSchema(post: any, baseUrl: string = 'https://ideallivs.com'): BlogPosting {
+export function wordPressArticleSchema(post: any, baseUrl: string = 'https://www.ideallivs.com'): BlogPosting {
     const url = `${baseUrl}/${post.slug}`;
 
     // Extract featured image
