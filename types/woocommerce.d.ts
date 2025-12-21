@@ -599,6 +599,7 @@ export interface ProductQueryParams {
   max_price?: string;
   stock_status?: StockStatus;
   product_brand?: string;
+  brand?: string;
 }
 
 export interface CategoryQueryParams {

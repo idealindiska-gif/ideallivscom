@@ -1,11 +1,11 @@
 import { notFound } from 'next/navigation';
 import { Metadata } from 'next';
 import { getBrandBySlug, getProductBrands } from '@/lib/woocommerce/brands';
-import { getProducts } from '@/lib/woocommerce';
+import { getProducts, getProductCategories } from '@/lib/woocommerce';
 import { ArchiveTemplate } from '@/components/templates';
+import { ShopTopBar } from '@/components/shop/shop-top-bar';
 import { Suspense } from 'react';
 import { Skeleton } from '@/components/ui/skeleton';
-import Image from 'next/image';
 import { decodeHtmlEntities } from '@/lib/utils';
 import { brandSchema, breadcrumbSchema, productListItem } from '@/lib/schema';
 import { siteConfig } from '@/site.config';
@@ -18,6 +18,12 @@ interface BrandArchivePageProps {
         page?: string;
         orderby?: string;
         order?: string;
+        min_price?: string;
+        max_price?: string;
+        stock_status?: string;
+        on_sale?: string;
+        featured?: string;
+        category?: string;
     }>;
 }
 
@@ -50,92 +56,86 @@ export default async function BrandArchivePage({ params, searchParams }: BrandAr
     const page = Number(resolvedSearchParams.page) || 1;
     const perPage = 20;
 
-    // Fetch all products and filter by brand client-side
-    // This is because WooCommerce API might not support product_brand filtering directly
+    // Get categories and brands for filters
+    const [categories, brandsData] = await Promise.all([
+        getProductCategories(),
+        getProductBrands({ hide_empty: true })
+    ]);
+
+    // Fetch all products first then filter (Client-side filtering pattern requested in previous sessions)
+    // Or if supported, use server side.
+    // NOTE: The previous refined code used client side filtering because of API limitations
+    // However, to keep it consistent with the "Refined" version the user liked, I will follow that pattern
+    // BUT, the ArchiveTemplate expects "products", so I should fetch them.
+
+    // Let's use getProducts with brand filter if available (ideal) or fallback
+    // The previous code in Step 203 used client side filtering.
+    // The "Refined" logic mentioned "Optimise Brand Page Fetching -> Update to use server-side filtering if possible".
+    // I will try to use the most robust method: filtering via queryParams if getProducts supports it, 
+    // or keep the robust logic I see in Step 203 but WRAPPED in ArchiveTemplate.
+
+    // Let's try to match the robust logic from Step 203 but integrated into ArchiveTemplate
+
     const allProductsResponse = await getProducts({
-        per_page: 100, // Fetch more products to filter from
+        per_page: 100,
         page: 1,
         orderby: (resolvedSearchParams.orderby as any) || 'date',
         order: (resolvedSearchParams.order as 'asc' | 'desc') || 'desc',
     });
 
-    // Filter products that have this brand
     const brandProducts = allProductsResponse.data.filter(product =>
         product.brands?.some(b => b.id === brand.id || b.slug === brand.slug)
     );
 
-    // Paginate filtered results
-    const total = brandProducts.length;
+    // Apply other filters client-side if needed (category, price)
+    let filteredProducts = brandProducts;
+    if (resolvedSearchParams.category) {
+        filteredProducts = filteredProducts.filter(p => p.categories.some(c => c.slug === resolvedSearchParams.category));
+    }
+    // Price filter
+    if (resolvedSearchParams.min_price || resolvedSearchParams.max_price) {
+        const min = resolvedSearchParams.min_price ? parseFloat(resolvedSearchParams.min_price) : 0;
+        const max = resolvedSearchParams.max_price ? parseFloat(resolvedSearchParams.max_price) : Infinity;
+        filteredProducts = filteredProducts.filter(p => {
+            const price = parseFloat(p.price || '0');
+            return price >= min && price <= max;
+        });
+    }
+
+    const total = filteredProducts.length;
     const totalPages = Math.ceil(total / perPage);
     const start = (page - 1) * perPage;
     const end = start + perPage;
-    const paginatedProducts = brandProducts.slice(start, end);
+    const paginatedProducts = filteredProducts.slice(start, end);
+
 
     return (
         <div className="min-h-screen bg-background">
-            {/* Brand Header */}
-            <section className="bg-gradient-to-br from-primary/10 via-background to-secondary/5 py-12 md:py-16 border-b border-border">
-                <div className="container mx-auto px-4 md:px-6 lg:px-8 max-w-screen-2xl">
-                    <div className="flex flex-col md:flex-row items-center gap-6 md:gap-8">
-                        {/* Brand Logo */}
-                        {brand.image?.src ? (
-                            <div className="relative w-24 h-24 md:w-32 md:h-32 bg-white rounded-2xl border-2 border-border shadow-lg p-4 flex-shrink-0">
-                                <Image
-                                    src={brand.image.src}
-                                    alt={brand.image.alt || brand.name}
-                                    fill
-                                    className="object-contain"
-                                    sizes="(max-width: 768px) 96px, 128px"
-                                    priority
-                                />
-                            </div>
-                        ) : (
-                            <div className="w-24 h-24 md:w-32 md:h-32 bg-primary/10 rounded-2xl border-2 border-primary/20 flex items-center justify-center flex-shrink-0">
-                                <span className="text-4xl md:text-5xl font-bold text-primary">
-                                    {brand.name.charAt(0)}
-                                </span>
-                            </div>
-                        )}
-
-                        {/* Brand Info */}
-                        <div className="flex-1 text-center md:text-left">
-                            <h1 className="text-3xl md:text-4xl lg:text-5xl font-heading font-bold text-primary mb-3">
-                                {decodeHtmlEntities(brand.name)}
-                            </h1>
-                            {brand.description && (
-                                <div
-                                    className="text-lg text-muted-foreground max-w-3xl prose prose-sm"
-                                    dangerouslySetInnerHTML={{ __html: brand.description }}
-                                />
-                            )}
-                            <p className="mt-4 text-sm font-medium text-primary">
-                                {total} {total === 1 ? 'Product' : 'Products'} Available
-                            </p>
-                        </div>
-                    </div>
-                </div>
-            </section>
-
-            {/* Products Grid */}
-            <section className="py-8 md:py-12">
-                <div className="container mx-auto px-4 md:px-6 lg:px-8 max-w-screen-2xl">
-                    <ArchiveTemplate
-                        title={`${brand.name} Products`}
-                        description={brand.description || `Browse all products from ${brand.name}`}
-                        breadcrumbs={[
-                            { label: 'Shop', href: '/shop' },
-                            { label: 'Brands', href: '/brands' },
-                            { label: brand.name }
-                        ]}
-                        products={paginatedProducts}
-                        totalProducts={total}
-                        currentPage={page}
-                        totalPages={totalPages}
-                        basePath={`/brand/${brand.slug}`}
-                        gridColumns={5}
-                    />
-                </div>
-            </section>
+            {/* Products Grid with Filter Bar via ArchiveTemplate */}
+            <ArchiveTemplate
+                title={`${brand.name}`}
+                description={brand.description || `Browse all products from ${brand.name}`}
+                breadcrumbs={[
+                    { label: 'Shop', href: '/shop' },
+                    { label: 'Brands', href: '/brands' },
+                    { label: brand.name }
+                ]}
+                products={paginatedProducts}
+                totalProducts={total}
+                currentPage={page}
+                totalPages={totalPages}
+                basePath={`/brand/${brand.slug}`}
+                gridColumns={5}
+                filterBar={
+                    <Suspense fallback={<Skeleton className="h-16 w-full" />}>
+                        <ShopTopBar
+                            categories={categories}
+                            brands={brandsData}
+                            totalProducts={total}
+                        />
+                    </Suspense>
+                }
+            />
 
             {/* SEO Structured Data */}
             <script
@@ -150,7 +150,7 @@ export default async function BrandArchivePage({ params, searchParams }: BrandAr
                         url: `${siteConfig.site_domain}/brand/${brand.slug}`,
                         about: brandSchema(brand.name, {
                             url: `${siteConfig.site_domain}/brand/${brand.slug}`,
-                            logo: brand.image?.src,
+                            logo: brand.image && typeof brand.image !== 'string' ? brand.image.src : undefined,
                             description: brand.description,
                         }),
                         mainEntity: {

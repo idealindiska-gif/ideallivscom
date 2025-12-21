@@ -18,17 +18,22 @@ export const metadata: Metadata = {
 
 export default async function HomePage() {
   // Fetch data in parallel
-  const [categoriesRes, trendingRes, newArrivalsRes, dealsRes] = await Promise.all([
+  const [categoriesRes, trendingRes, newArrivalsRes, dealsRes, haldiramRes, freshProduceRes] = await Promise.all([
     getProductCategories({ per_page: 6, orderby: 'count', order: 'desc', parent: 0 }),
     getProducts({ per_page: 8, orderby: 'popularity' }),
     getProducts({ per_page: 8, orderby: 'date' }),
     getProducts({ per_page: 8, on_sale: true }),
+    getProducts({ per_page: 8, brand: 'haldiram' }),
+    getProducts({ per_page: 8, category: 'fresh-produce' }),
   ]);
 
   const categories = categoriesRes || [];
   const trendingProducts = trendingRes.data || [];
   const newProducts = newArrivalsRes.data || [];
   const dealProducts = dealsRes.data || [];
+  const haldiramProducts = haldiramRes?.data || [];
+  const freshProduceProducts = freshProduceRes?.data || [];
+
 
   return (
     <main className="flex min-h-screen flex-col bg-background pb-20 overflow-x-hidden max-w-full">
@@ -62,11 +67,25 @@ export default async function HomePage() {
         moreLink="/shop?sort=bestsellers"
       />
 
+      {/* 5a. Haldiram Section */}
+      <ProductShowcase
+        title="Haldiram's - Authentic Indian Snacks"
+        products={haldiramProducts}
+        moreLink="/brand/haldiram"
+      />
+
       {/* 6. New Arrivals */}
       <ProductShowcase
         title="Fresh Arrivals - New Stock Just In"
         products={newProducts}
         moreLink="/shop?sort=new"
+      />
+
+      {/* 7. Fresh Produce Section */}
+      <ProductShowcase
+        title="Fresh Produce - Fruits & Vegetables"
+        products={freshProduceProducts}
+        moreLink="/product-category/fresh-produce"
       />
 
       {/* SEO Structured Data */}

@@ -132,12 +132,12 @@ export function ProductVariationSelector({
   };
 
   // Use extracted attributes if product.attributes is empty
-  const attributesToDisplay = product.attributes && product.attributes.length > 0
+  const attributesToDisplay = (product.attributes && product.attributes.length > 0
     ? product.attributes
-    : variationAttributes;
+    : variationAttributes).filter(attr => attr.variation);
 
   if (!attributesToDisplay || attributesToDisplay.length === 0) {
-    console.log('⚠️ No attributes to display');
+    console.log('⚠️ No variation attributes to display');
     return null;
   }
 

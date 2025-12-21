@@ -83,6 +83,7 @@ export async function getProducts(params: ProductQueryParams = {}): Promise<{
     if (params.min_price) queryParams.min_price = params.min_price;
     if (params.max_price) queryParams.max_price = params.max_price;
     if (params.stock_status) queryParams.stock_status = params.stock_status;
+    if (params.brand) queryParams.brand = params.brand;
 
     if (process.env.NODE_ENV === 'development') {
       console.log('🔍 Fetching products with params:', queryParams);

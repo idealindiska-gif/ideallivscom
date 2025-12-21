@@ -1,10 +1,13 @@
-import Link from 'next/link';
-import Image from 'next/image';
 import { notFound } from 'next/navigation';
-import { getProductCategoryBySlug, getProducts } from '@/lib/woocommerce';
+import { Metadata } from 'next';
+import { getProductCategoryBySlug, getProducts, getProductCategories } from '@/lib/woocommerce';
+import { getProductBrands } from '@/lib/woocommerce/brands';
+import { ArchiveTemplate } from '@/components/templates';
+import { ShopTopBar } from '@/components/shop/shop-top-bar';
+import { Suspense } from 'react';
+import { Skeleton } from '@/components/ui/skeleton';
 import { wooCategorySchema, breadcrumbSchema, categoryBreadcrumbs } from '@/lib/schema';
 import { siteConfig } from '@/site.config';
-import type { Metadata } from 'next';
 
 interface ProductCategoryPageProps {
     params: Promise<{
@@ -40,7 +43,7 @@ export async function generateMetadata({ params }: ProductCategoryPageProps): Pr
                         alt: category.name,
                     }],
                 }),
-                url: `https://ideallivs.com/product-category/${resolvedParams.slug?.join('/')}`,
+                url: `${siteConfig.site_domain}/product-category/${resolvedParams.slug?.join('/')}`,
             },
         };
     } catch {
@@ -68,14 +71,26 @@ export default async function ProductCategoryPage({ params, searchParams }: Prod
         notFound();
     }
 
+    // Fetch categories and brands for filters
+    const [categories, brandsData] = await Promise.all([
+        getProductCategories(),
+        getProductBrands({ hide_empty: true })
+    ]);
+
+
     // Fetch products for this category
     const page = parseInt(resolvedSearchParams.page as string) || 1;
-    const perPage = 12;
+    const perPage = 20;
 
     const { data: products, total, totalPages } = await getProducts({
         category: category.id.toString(),
         page,
         per_page: perPage,
+        orderby: (resolvedSearchParams.orderby as any) || 'date',
+        order: (resolvedSearchParams.order as 'asc' | 'desc') || 'desc',
+        min_price: resolvedSearchParams.min_price as string,
+        max_price: resolvedSearchParams.max_price as string,
+        brand: resolvedSearchParams.brand as string, // Support brand filtering within category
     });
 
     // Build breadcrumbs from slug array
@@ -95,87 +110,30 @@ export default async function ProductCategoryPage({ params, searchParams }: Prod
     }
 
     // Add current category
-    breadcrumbs.push({ label: category.name, href: '' });
+    breadcrumbs.push({ label: category.name });
 
     return (
-        <div className="container mx-auto px-4 py-12">
-            {/* Breadcrumbs */}
-            <nav className="flex items-center gap-2 text-sm text-muted-foreground mb-8">
-                {breadcrumbs.map((crumb, index) => (
-                    <div key={index} className="flex items-center gap-2">
-                        {index > 0 && <span>/</span>}
-                        {crumb.href ? (
-                            <Link href={crumb.href} className="hover:text-primary">
-                                {crumb.label}
-                            </Link>
-                        ) : (
-                            <span className="text-foreground font-medium">{crumb.label}</span>
-                        )}
-                    </div>
-                ))}
-            </nav>
-
-            {/* Category Header */}
-            <div className="mb-12">
-                <h1 className="text-4xl font-heading font-bold mb-4">{category.name}</h1>
-                {category.description && (
-                    <div
-                        className="text-lg text-muted-foreground max-w-3xl prose"
-                        dangerouslySetInnerHTML={{ __html: category.description }}
-                    />
-                )}
-            </div>
-
-            {/* Products Grid */}
-            {products && products.length > 0 ? (
-                <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-                    {products.map((product) => (
-                        <Link
-                            key={product.id}
-                            href={`/product/${product.slug}`}
-                            className="group block border border-border rounded-lg overflow-hidden hover:shadow-lg transition-all"
-                        >
-                            {product.images && product.images[0] && (
-                                <div className="aspect-square relative bg-muted">
-                                    <Image
-                                        src={product.images[0].src}
-                                        alt={product.name}
-                                        fill
-                                        className="w-full h-full object-cover group-hover:scale-105 transition-transform"
-                                        sizes="(max-width: 768px) 50vw, (max-width: 1200px) 33vw, 25vw"
-                                    />
-                                </div>
-                            )}
-                            <div className="p-4">
-                                <h3 className="font-semibold text-sm mb-2 line-clamp-2">{product.name}</h3>
-                                <p className="text-primary font-bold">{product.price} SEK</p>
-                            </div>
-                        </Link>
-                    ))}
-                </div>
-            ) : (
-                <div className="text-center py-12">
-                    <p className="text-muted-foreground">No products found in this category.</p>
-                </div>
-            )}
-
-            {/* Pagination */}
-            {totalPages > 1 && (
-                <div className="flex justify-center gap-2 mt-12">
-                    {Array.from({ length: totalPages }, (_, i) => i + 1).map((pageNum) => (
-                        <Link
-                            key={pageNum}
-                            href={`?page=${pageNum}`}
-                            className={`px-4 py-2 rounded ${pageNum === page
-                                ? 'bg-primary text-primary-foreground'
-                                : 'bg-muted hover:bg-muted/80'
-                                }`}
-                        >
-                            {pageNum}
-                        </Link>
-                    ))}
-                </div>
-            )}
+        <>
+            <ArchiveTemplate
+                title={category.name}
+                description={category.description}
+                breadcrumbs={breadcrumbs}
+                products={products}
+                totalProducts={total}
+                currentPage={page}
+                totalPages={totalPages}
+                basePath={`/product-category/${resolvedParams.slug?.join('/')}`}
+                gridColumns={5}
+                filterBar={
+                    <Suspense fallback={<Skeleton className="h-16 w-full" />}>
+                        <ShopTopBar
+                            categories={categories}
+                            brands={brandsData}
+                            totalProducts={total}
+                        />
+                    </Suspense>
+                }
+            />
 
             {/* SEO Structured Data */}
             <script
@@ -191,13 +149,17 @@ export default async function ProductCategoryPage({ params, searchParams }: Prod
                 type="application/ld+json"
                 dangerouslySetInnerHTML={{
                     __html: JSON.stringify(breadcrumbSchema(
-                        categoryBreadcrumbs(
-                            { name: category.name },
-                            siteConfig.site_domain
-                        )
+                        [
+                            { name: 'Home', url: siteConfig.site_domain },
+                            { name: 'Shop', url: `${siteConfig.site_domain}/shop` },
+                            ...breadcrumbs.slice(1).map(b => ({
+                                name: b.label,
+                                url: b.href ? `${siteConfig.site_domain}${b.href}` : undefined
+                            }))
+                        ]
                     ))
                 }}
             />
-        </div>
+        </>
     );
 }
