@@ -4,6 +4,7 @@ import { getProductCategoryBySlug, getProducts, getProductCategories } from '@/l
 import { getProductBrands } from '@/lib/woocommerce/brands';
 import { ArchiveTemplate } from '@/components/templates';
 import { ShopTopBar } from '@/components/shop/shop-top-bar';
+import { BreadcrumbItem } from '@/components/layout/breadcrumbs';
 import { Suspense } from 'react';
 import { Skeleton } from '@/components/ui/skeleton';
 import { wooCategorySchema, breadcrumbSchema, categoryBreadcrumbs } from '@/lib/schema';
@@ -94,7 +95,7 @@ export default async function ProductCategoryPage({ params, searchParams }: Prod
     });
 
     // Build breadcrumbs from slug array
-    const breadcrumbs: { label: string; href?: string }[] = [
+    const breadcrumbs: BreadcrumbItem[] = [
         { label: 'Shop', href: '/shop' },
     ];
 
