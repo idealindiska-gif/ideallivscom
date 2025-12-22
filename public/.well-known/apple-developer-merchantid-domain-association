@@ -1,0 +1,7 @@
+PLACEHOLDER - Replace this file with the actual verification file from Stripe Dashboard.
+
+To get the real file:
+1. Go to https://dashboard.stripe.com/settings/payment_methods/apple_pay
+2. Add domain: www.ideallivs.com
+3. Download the verification file
+4. Replace THIS file with the downloaded file
