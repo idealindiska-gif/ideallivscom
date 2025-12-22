@@ -63,8 +63,13 @@ export default function CheckoutPage() {
     }
   }, []);
 
-  // Fetch minimum order amount on mount
+  // Fetch minimum order amount on mount - DISABLED (no minimum requirement)
   useEffect(() => {
+    // Minimum order amount disabled - users can checkout with any amount
+    setLoadingMinimum(false);
+    setMinimumOrderAmount(0);
+
+    /* Original code - disabled to remove minimum order requirement
     const fetchMinimumOrderAmount = async () => {
       setLoadingMinimum(true);
       try {
@@ -80,6 +85,7 @@ export default function CheckoutPage() {
     };
 
     fetchMinimumOrderAmount();
+    */
   }, []);
 
   // Check if cart meets minimum order amount
@@ -836,7 +842,7 @@ export default function CheckoutPage() {
 
           {/* Order Summary Sidebar */}
           <div className="lg:col-span-1">
-            <div className="sticky top-24">
+            <div className="sticky top-24 space-y-6">
               <OrderSummary
                 shippingCost={shippingCost}
                 taxRate={25}
@@ -844,6 +850,21 @@ export default function CheckoutPage() {
                 onApplyCoupon={setCoupon}
                 appliedCoupon={coupon?.code}
               />
+
+              {/* Swish Payment QR Code */}
+              <div className="rounded-lg border border-neutral-200 bg-white p-6 dark:border-neutral-800 dark:bg-neutral-900">
+                <h3 className="mb-4 text-center font-heading text-lg font-semibold text-primary-950 dark:text-primary-50">
+                  Scan and pay by Swish
+                </h3>
+                <div className="flex justify-center">
+                  <img
+                    src="https://crm.ideallivs.com/wp-content/uploads/2025/05/swish.jpg"
+                    alt="Swish QR Code"
+                    className="max-w-full rounded-lg"
+                    style={{ maxWidth: '250px' }}
+                  />
+                </div>
+              </div>
             </div>
           </div>
         </div>
