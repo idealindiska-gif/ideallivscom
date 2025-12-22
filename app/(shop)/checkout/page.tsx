@@ -311,11 +311,9 @@ export default function CheckoutPage() {
               },
               metadata: {
                 customer_name: `${billingData.first_name} ${billingData.last_name}`,
-                items: JSON.stringify(items.map(item => ({
-                  id: item.productId,
-                  name: item.product.name,
-                  quantity: item.quantity,
-                }))),
+                customer_email: billingData.email,
+                item_count: items.length.toString(),
+                // Note: Full items stored in sessionStorage for order creation
               },
             }),
           });
