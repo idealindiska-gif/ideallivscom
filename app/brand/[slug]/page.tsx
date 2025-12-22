@@ -64,14 +64,19 @@ export default async function BrandArchivePage({ params, searchParams }: BrandAr
 
     // Fetch products with brand filter
     // WooCommerce Brands plugin requires client-side filtering
-    // Fetch multiple pages to ensure we capture all brand products (up to 500)
+    // Fetch multiple pages to ensure we capture all brand products (up to 1000)
 
-    const [page1, page2, page3, page4, page5] = await Promise.all([
+    const [page1, page2, page3, page4, page5, page6, page7, page8, page9, page10] = await Promise.all([
         getProducts({ per_page: 100, page: 1, orderby: (resolvedSearchParams.orderby as any) || 'date', order: (resolvedSearchParams.order as 'asc' | 'desc') || 'desc' }),
         getProducts({ per_page: 100, page: 2 }),
         getProducts({ per_page: 100, page: 3 }),
         getProducts({ per_page: 100, page: 4 }),
         getProducts({ per_page: 100, page: 5 }),
+        getProducts({ per_page: 100, page: 6 }),
+        getProducts({ per_page: 100, page: 7 }),
+        getProducts({ per_page: 100, page: 8 }),
+        getProducts({ per_page: 100, page: 9 }),
+        getProducts({ per_page: 100, page: 10 }),
     ]);
 
     const allProducts = [
@@ -80,11 +85,62 @@ export default async function BrandArchivePage({ params, searchParams }: BrandAr
         ...page3.data,
         ...page4.data,
         ...page5.data,
+        ...page6.data,
+        ...page7.data,
+        ...page8.data,
+        ...page9.data,
+        ...page10.data,
     ];
 
-    const brandProducts = allProducts.filter(product =>
-        product.brands?.some(b => b.id === brand.id || b.slug === brand.slug)
-    );
+    console.log(`Fetched ${allProducts.length} total products for brand filtering`);
+
+    // Filter by brand - check multiple ways (brands array, attributes, meta_data)
+    const brandProducts = allProducts.filter(product => {
+        // Check the brands array (standard WooCommerce Brands plugin)
+        if (product.brands?.some((b: any) =>
+            b.id === brand.id ||
+            b.slug === brand.slug ||
+            b.name?.toLowerCase() === brand.name?.toLowerCase()
+        )) {
+            return true;
+        }
+
+        // Check meta_data for brand
+        if (product.meta_data) {
+            const brandMeta = product.meta_data.find((m: any) =>
+                m.key === 'product_brand' ||
+                m.key === '_product_brand' ||
+                m.key === 'brand' ||
+                m.key === '_brand'
+            );
+            if (brandMeta && (
+                brandMeta.value === brand.id.toString() ||
+                brandMeta.value === brand.slug ||
+                brandMeta.value === brand.name
+            )) {
+                return true;
+            }
+        }
+
+        // Check attributes for brand
+        if (product.attributes) {
+            const brandAttr = product.attributes.find((attr: any) =>
+                attr.name?.toLowerCase() === 'brand' ||
+                attr.name?.toLowerCase() === 'product brand' ||
+                attr.slug === 'pa_brand'
+            );
+            if (brandAttr && brandAttr.options?.some((opt: string) =>
+                opt.toLowerCase() === brand.name?.toLowerCase() ||
+                opt.toLowerCase() === brand.slug
+            )) {
+                return true;
+            }
+        }
+
+        return false;
+    });
+
+    console.log(`Found ${brandProducts.length} products for brand "${brand.slug}"`);
 
     // Apply other filters client-side if needed (category, price)
     let filteredProducts = brandProducts;
