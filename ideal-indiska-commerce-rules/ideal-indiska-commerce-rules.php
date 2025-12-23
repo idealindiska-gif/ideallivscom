@@ -24,7 +24,9 @@ define( 'IDEAL_ENABLE_SHIPPING_RULES', true );
  * Product quantity limits
  */
 define( 'IDEAL_PROMO_LIMITS', [
-    215 => 4, // India Gate Sona Masoori Rice
+    215 => 3,   // India Gate Sona Masoori Rice
+    193 => 2,   // Product ID 193
+    4943 => 3,  // Product ID 4943
 ] );
 
 /**
@@ -32,15 +34,8 @@ define( 'IDEAL_PROMO_LIMITS', [
  * product_id => [ qty, total_price ]
  */
 define( 'IDEAL_BULK_PRICING', [
-    // Shan – 2 for 18
-    925 => [ 'qty' => 2, 'total' => 18 ],
-    873 => [ 'qty' => 2, 'total' => 18 ],
-    849 => [ 'qty' => 2, 'total' => 18 ],
-
-    // National – 2 for 28
-    845 => [ 'qty' => 2, 'total' => 28 ],
-    418 => [ 'qty' => 2, 'total' => 28 ],
-    414 => [ 'qty' => 2, 'total' => 28 ],
+    // Bulk pricing promotions removed for Shan and National products
+    // Add new bulk pricing rules here if needed
 ] );
 
 /**
