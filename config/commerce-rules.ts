@@ -24,25 +24,22 @@ export interface ShippingRestriction {
 /**
  * Product quantity limits
  * These products have maximum purchase limits per order
+ * UPDATED: 2025-05-24 to match WordPress plugin
  */
 export const QUANTITY_LIMITS: QuantityLimit[] = [
-  { productId: 215, maxQuantity: 4 }, // India Gate Sona Masoori Rice
+  { productId: 215, maxQuantity: 3 },   // India Gate Sona Masoori Rice (changed from 4 to 3)
+  { productId: 193, maxQuantity: 2 },   // Product ID 193 (NEW)
+  { productId: 4943, maxQuantity: 3 },  // Product ID 4943 (NEW)
 ];
 
 /**
  * Bulk pricing rules
  * Products with special pricing when buying multiple units
+ * UPDATED: 2025-05-24 - Removed Shan and National promotions
  */
 export const BULK_PRICING_RULES: BulkPricingRule[] = [
-  // Shan – 2 for 18 SEK
-  { productId: 925, requiredQuantity: 2, totalPrice: 18 },
-  { productId: 873, requiredQuantity: 2, totalPrice: 18 },
-  { productId: 849, requiredQuantity: 2, totalPrice: 18 },
-
-  // National – 2 for 28 SEK
-  { productId: 845, requiredQuantity: 2, totalPrice: 28 },
-  { productId: 418, requiredQuantity: 2, totalPrice: 28 },
-  { productId: 414, requiredQuantity: 2, totalPrice: 28 },
+  // Bulk pricing promotions removed for Shan and National products
+  // Add new bulk pricing rules here if needed
 ];
 
 /**
