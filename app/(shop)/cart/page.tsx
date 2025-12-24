@@ -7,6 +7,7 @@ import { Container, Section } from '@/components/craft';
 import { Button } from '@/components/ui/button';
 import { formatPrice } from '@/lib/woocommerce';
 import { Minus, Plus, X, ShoppingBag } from 'lucide-react';
+import { StripeExpressCheckout } from '@/components/checkout/stripe-express-checkout';
 
 export default function CartPage() {
   const { items, updateQuantity, removeItem, getTotalPrice, clearCart } = useCartStore();
@@ -162,6 +163,19 @@ export default function CartPage() {
               </div>
 
               <div className="mt-6 space-y-3">
+                {/* Express Checkout - Apple Pay / Google Pay */}
+                <StripeExpressCheckout
+                  amount={getTotalPrice()}
+                  currency="SEK"
+                  showDebug={true}
+                  onSuccess={(result) => {
+                    console.log('Express checkout from cart success:', result);
+                  }}
+                  onError={(error) => {
+                    console.error('Express checkout from cart error:', error);
+                  }}
+                />
+
                 <Button asChild size="lg" className="w-full">
                   <Link href="/checkout">Proceed to Checkout</Link>
                 </Button>

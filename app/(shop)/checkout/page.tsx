@@ -573,6 +573,7 @@ export default function CheckoutPage() {
                   <StripeExpressCheckout
                     amount={getTotalPrice()}
                     currency="SEK"
+                    showDebug={true}  /* Enable debug mode to see why buttons aren't showing */
                     onSuccess={async (result) => {
                       console.log('Express checkout success:', result);
                       // Payment was processed via Express Checkout
