@@ -304,10 +304,22 @@ export const useCartStore = create<CartState>()(
               isCalculatingShipping: false,
             });
 
-            // Auto-select first available method or free shipping
+            // Auto-select shipping method intelligently
             const methods = result.available_methods || [];
             const freeShipping = methods.find((m) => m.method_id === 'free_shipping');
-            const defaultMethod = freeShipping || methods[0];
+            const cartSubtotal = result.cart_subtotal || get().getSubtotal();
+            const threshold = result.free_shipping_threshold || 500;
+
+            // Only auto-select free shipping if cart meets threshold
+            let defaultMethod = null;
+            if (freeShipping && cartSubtotal >= threshold) {
+              defaultMethod = freeShipping;
+              console.log('✅ Auto-selecting free shipping (cart:', cartSubtotal, '>= threshold:', threshold, ')');
+            } else {
+              // Otherwise, select the first available paid method
+              defaultMethod = methods[0];
+              console.log('ℹ️ Auto-selecting first method:', defaultMethod?.label);
+            }
 
             if (defaultMethod) {
               set({ selectedShippingMethod: defaultMethod });

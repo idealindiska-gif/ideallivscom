@@ -47,17 +47,33 @@ export function ShippingMethodSelector({
   const effectivePostcode = postcode || shippingAddress?.postcode;
   const subtotal = cartTotal !== undefined ? cartTotal : getSubtotal();
   const freeShippingProgress = Math.min((subtotal / freeShippingThreshold) * 100, 100);
+  const qualifiesForFreeShipping = subtotal >= freeShippingThreshold;
 
-  // FIX: Auto-notify parent when cart store selects a shipping method (e.g., free shipping)
+  // FIX: Auto-notify parent when cart store selects free shipping AND customer qualifies
   useEffect(() => {
     if (selectedShippingMethod && onMethodChange && !selectedMethod) {
-      console.log('✅ Auto-selecting shipping method for parent:', selectedShippingMethod.label);
-      onMethodChange(selectedShippingMethod);
-      if (onShippingCostChange) {
-        onShippingCostChange(selectedShippingMethod.cost);
+      // Only auto-select free shipping if customer qualifies (cart >= 500 SEK)
+      if (selectedShippingMethod.method_id === 'free_shipping') {
+        if (qualifiesForFreeShipping) {
+          console.log('✅ Auto-selecting free shipping (qualifies):', subtotal, '>=', freeShippingThreshold);
+          onMethodChange(selectedShippingMethod);
+          if (onShippingCostChange) {
+            onShippingCostChange(selectedShippingMethod.cost);
+          }
+        } else {
+          console.log('⚠️ Not auto-selecting free shipping (does not qualify):', subtotal, '<', freeShippingThreshold);
+          // Don't auto-select - let user choose another method
+        }
+      } else {
+        // For non-free shipping methods (like store pickup), auto-select them
+        console.log('✅ Auto-selecting shipping method:', selectedShippingMethod.label);
+        onMethodChange(selectedShippingMethod);
+        if (onShippingCostChange) {
+          onShippingCostChange(selectedShippingMethod.cost);
+        }
       }
     }
-  }, [selectedShippingMethod, onMethodChange, onShippingCostChange, selectedMethod]);
+  }, [selectedShippingMethod, onMethodChange, onShippingCostChange, selectedMethod, qualifiesForFreeShipping, subtotal, freeShippingThreshold]);
 
   const getMethodIcon = (methodId: string) => {
     switch (methodId) {
