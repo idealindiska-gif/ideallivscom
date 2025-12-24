@@ -26,7 +26,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { StripeProvider } from '@/components/providers/stripe-provider';
 import { StripePaymentForm } from '@/components/checkout/stripe-payment-form';
 import { PaymentRequestButton } from '@/components/checkout/payment-request-button';
-import { ExpressCheckoutButton } from '@/components/checkout/express-checkout-button';
+import { StripeExpressCheckout } from '@/components/checkout/stripe-express-checkout';
 import { trackInitiateCheckout } from '@/lib/analytics';
 
 type CheckoutStep = 'shipping' | 'shipping-method' | 'billing' | 'payment' | 'review';
@@ -570,23 +570,17 @@ export default function CheckoutPage() {
                   transition={{ duration: 0.3 }}
                 >
                   {/* Express Checkout - Shows Apple Pay/Google Pay BEFORE forms (like WordPress) */}
-                  <ExpressCheckoutButton
+                  <StripeExpressCheckout
                     amount={getTotalPrice()}
                     currency="SEK"
-                    label="Ideal Indiska LIVS"
-                    onSuccess={async (paymentMethod, shippingAddress) => {
-                      console.log('Express checkout payment method:', paymentMethod);
-                      console.log('Express checkout shipping address:', shippingAddress);
-                      // TODO: Create order with payment method and address
-                      // For now, show a success message
-                      alert('Express Checkout payment received! Order creation coming soon.');
+                    onSuccess={async (result) => {
+                      console.log('Express checkout success:', result);
+                      // Payment was processed via Express Checkout
+                      // The page will redirect to stripe-return for order creation
                     }}
                     onError={(error) => {
                       console.error('Express checkout error:', error);
                       setError(`Express checkout failed: ${error}`);
-                    }}
-                    onShippingAddress={(address) => {
-                      console.log('Express checkout shipping address selected:', address);
                     }}
                   />
 

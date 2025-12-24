@@ -14,6 +14,7 @@ import { ProductSchema } from '@/components/shop/product-schema';
 import { StockIndicator } from '@/components/shop/stock-indicator';
 import { QuantitySelector } from '@/components/shop/quantity-selector';
 import { ProductRecommendations } from '@/components/ai/product-recommendations';
+import { StripeExpressCheckout } from '@/components/checkout/stripe-express-checkout';
 import { formatPrice, getDiscountPercentage } from '@/lib/woocommerce';
 import { decodeHtmlEntities } from '@/lib/utils';
 import { trackViewContent } from '@/lib/analytics';
@@ -374,6 +375,19 @@ export function ProductTemplate({
                   size="lg"
                   className="w-full bg-primary hover:bg-primary/90 text-primary-foreground rounded-full py-5"
                   style={{ fontSize: '17.89px', fontWeight: 500, lineHeight: 1.52, letterSpacing: '0.03em' }}
+                />
+
+                {/* Express Checkout - Apple Pay / Google Pay (like WordPress) */}
+                <StripeExpressCheckout
+                  amount={parseFloat(selectedVariation?.price || product.price || '0') * quantity}
+                  currency="SEK"
+                  onSuccess={(result) => {
+                    console.log('Express checkout success:', result);
+                    // Redirect to order confirmation or handle success
+                  }}
+                  onError={(error) => {
+                    console.error('Express checkout error:', error);
+                  }}
                 />
 
                 {/* Additional Info */}
