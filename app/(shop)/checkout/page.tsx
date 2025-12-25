@@ -189,9 +189,13 @@ export default function CheckoutPage() {
       // Build customer note
       let customerNote = orderNotes || '';
 
+      // Only pass customer_id if it's a real WooCommerce customer (not a temporary profile)
+      // Temporary profiles have _meta.is_temporary = true (created when WC fetch fails)
+      const isRealCustomer = user?.id && !(user as any)?._meta?.is_temporary;
+
       // Create WooCommerce order with payment details
       const result = await createOrderAction({
-        customer_id: user?.id || undefined, // Link order to customer
+        customer_id: isRealCustomer ? user.id : undefined, // Only link if real WC customer
         billing: billingData,
         shipping: shippingData,
         line_items: items.map((item) => ({
@@ -392,9 +396,12 @@ export default function CheckoutPage() {
       // Build customer note
       let customerNote = orderNotes || '';
 
+      // Only pass customer_id if it's a real WooCommerce customer (not a temporary profile)
+      const isRealCustomer = user?.id && !(user as any)?._meta?.is_temporary;
+
       // For non-Stripe payments (COD, etc.), create order immediately
       const result = await createOrderAction({
-        customer_id: user?.id || undefined, // Link order to customer
+        customer_id: isRealCustomer ? user.id : undefined, // Only link if real WC customer
         billing: billingData,
         shipping: shippingData,
         line_items: items.map((item) => ({
