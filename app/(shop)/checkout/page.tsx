@@ -9,6 +9,7 @@ import { Checkbox } from '@/components/ui/checkbox';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { useCartStore } from '@/store/cart-store';
+import { useAuthStore } from '@/store/auth-store';
 import { ShippingForm, type ShippingFormData } from '@/components/checkout/shipping-form';
 import { BillingForm, type BillingFormData } from '@/components/checkout/billing-form';
 import { PaymentMethodSelector } from '@/components/checkout/payment-method-selector';
@@ -34,6 +35,7 @@ type CheckoutStep = 'shipping' | 'shipping-method' | 'billing' | 'payment' | 're
 export default function CheckoutPage() {
   const router = useRouter();
   const { items, getTotalPrice, clearCart, setShippingAddress } = useCartStore();
+  const { user } = useAuthStore(); // Get logged-in user for customer linking
 
   const [currentStep, setCurrentStep] = useState<CheckoutStep>('shipping');
   const [shippingData, setShippingData] = useState<ShippingFormData | null>(null);
@@ -189,6 +191,7 @@ export default function CheckoutPage() {
 
       // Create WooCommerce order with payment details
       const result = await createOrderAction({
+        customer_id: user?.id || undefined, // Link order to customer
         billing: billingData,
         shipping: shippingData,
         line_items: items.map((item) => ({
@@ -391,6 +394,7 @@ export default function CheckoutPage() {
 
       // For non-Stripe payments (COD, etc.), create order immediately
       const result = await createOrderAction({
+        customer_id: user?.id || undefined, // Link order to customer
         billing: billingData,
         shipping: shippingData,
         line_items: items.map((item) => ({

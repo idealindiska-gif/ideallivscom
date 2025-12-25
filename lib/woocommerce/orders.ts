@@ -34,6 +34,7 @@ async function parseJsonResponse(response: Response): Promise<any> {
 }
 
 export interface CreateOrderData {
+    customer_id?: number;  // Link order to WooCommerce customer
     billing: BillingAddress;
     shipping: ShippingAddress;
     line_items: {
