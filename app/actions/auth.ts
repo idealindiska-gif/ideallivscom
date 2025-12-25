@@ -212,39 +212,57 @@ export async function getCurrentUserAction(token: string, userEmail?: string) {
 
         // Fetch WC customer details using email
         if (consumerKey && consumerSecret) {
-            const customerUrl = `${baseUrl}/customers?email=${email}`;
-            console.log('Fetching WC customer from:', customerUrl);
+            const customerUrl = `${baseUrl}/customers?email=${encodeURIComponent(email)}`;
+            console.log('🔍 Fetching WC customer from:', customerUrl);
 
-            const customerResponse = await fetch(
-                customerUrl,
-                {
-                    headers: {
-                        'Authorization': 'Basic ' + Buffer.from(`${consumerKey}:${consumerSecret}`).toString('base64'),
-                    },
-                }
-            );
+            try {
+                // Add timeout to prevent hanging requests
+                const controller = new AbortController();
+                const timeoutId = setTimeout(() => controller.abort(), 10000); // 10 second timeout
 
-            console.log('WC Customer Response Status:', customerResponse.status);
+                const customerResponse = await fetch(
+                    customerUrl,
+                    {
+                        headers: {
+                            'Authorization': 'Basic ' + Buffer.from(`${consumerKey}:${consumerSecret}`).toString('base64'),
+                        },
+                        signal: controller.signal,
+                    }
+                );
 
-            if (customerResponse.ok) {
-                const customers = await customerResponse.json();
-                if (customers.length > 0) {
-                    console.log('WC Customer found:', customers[0].id);
-                    return { success: true, data: customers[0] };
+                clearTimeout(timeoutId);
+                console.log('✅ WC Customer Response Status:', customerResponse.status);
+
+                if (customerResponse.ok) {
+                    const customers = await customerResponse.json();
+                    if (customers.length > 0) {
+                        console.log('✅ WC Customer found:', customers[0].id, customers[0].email);
+                        return { success: true, data: customers[0] };
+                    } else {
+                        console.log('⚠️ No WC customer found with email:', email);
+                    }
                 } else {
-                    console.log('No WC customer found with email:', email);
+                    let errorDetails = 'Unknown error';
+                    try {
+                        const errorText = await customerResponse.text();
+                        errorDetails = errorText;
+                        console.error('❌ Failed to fetch WC customer. Status:', customerResponse.status);
+                        console.error('❌ Error details:', errorText.substring(0, 500));
+                    } catch (e) {
+                        console.error('❌ Failed to fetch WC customer. Status:', customerResponse.status);
+                        console.error('❌ Could not read error response');
+                    }
                 }
-            } else {
-                let errorDetails = 'Unknown error';
-                try {
-                    const errorText = await customerResponse.text();
-                    errorDetails = errorText;
-                    console.error('Failed to fetch WC customer. Status:', customerResponse.status);
-                    console.error('Error details:', errorText.substring(0, 500));
-                } catch (e) {
-                    console.error('Failed to fetch WC customer. Status:', customerResponse.status);
-                    console.error('Could not read error response');
+            } catch (fetchError: any) {
+                // Catch network errors, timeouts, socket closures, etc.
+                console.error('❌ NETWORK ERROR fetching WC customer:', fetchError.message);
+                console.error('❌ Error type:', fetchError.name);
+                if (fetchError.cause) {
+                    console.error('❌ Error cause:', fetchError.cause);
                 }
+
+                // Don't continue to create - the customer likely exists but we can't reach WC
+                console.warn('⚠️ WooCommerce API unreachable. Will use fallback profile.');
             }
         } else {
             console.warn('Missing Consumer Key/Secret, skipping WC customer fetch');
