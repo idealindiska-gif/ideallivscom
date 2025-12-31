@@ -10,13 +10,16 @@ import type { Post as AppPost } from '@/types/wordpress';
  * Transform a WordPress API Post to application Post format
  */
 export function transformPost(wpPost: WPPost): AppPost {
-  return {
+  // Transform the WordPress API post structure to match our app's Post type
+  const transformed = {
     ...wpPost,
     title: wpPost.title.rendered,
     content: wpPost.content?.rendered,
     excerpt: wpPost.excerpt?.rendered,
-    // Keep other properties as-is since they don't have .rendered structure
-  } as AppPost;
+  };
+
+  // Use type assertion since we know the structure matches after transformation
+  return transformed as unknown as AppPost;
 }
 
 /**
