@@ -266,7 +266,7 @@ export function VerticalSidebar({ categories = [] }: VerticalSidebarProps) {
               </div>
             </Link>
             <Link
-              href="/my-account/orders"
+              href="/my-account?tab=orders"
               className="flex items-center gap-3 p-2 rounded-lg hover:bg-muted transition-colors"
             >
               <Package className="h-4 w-4 text-muted-foreground" />

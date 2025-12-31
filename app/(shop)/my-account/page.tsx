@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { useRouter } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 import Image from 'next/image';
 import { useAuthStore } from '@/store/auth-store';
 import { Section, Container } from '@/components/craft';
@@ -20,9 +20,11 @@ import { toast } from 'sonner';
 export default function MyAccountPage() {
   const { user, isAuthenticated, logout, setUser } = useAuthStore();
   const router = useRouter();
+  const searchParams = useSearchParams();
   const [orders, setOrders] = useState<Order[]>([]);
   const [isLoadingOrders, setIsLoadingOrders] = useState(true);
   const [ordersError, setOrdersError] = useState<string | null>(null);
+  const [activeTab, setActiveTab] = useState('dashboard');
 
   // Profile editing state
   const [isEditingProfile, setIsEditingProfile] = useState(false);
@@ -62,6 +64,14 @@ export default function MyAccountPage() {
       router.push('/login');
     }
   }, [isAuthenticated, router]);
+
+  // Handle tab query parameter
+  useEffect(() => {
+    const tab = searchParams.get('tab');
+    if (tab && ['dashboard', 'orders', 'downloads', 'addresses', 'payment', 'profile'].includes(tab)) {
+      setActiveTab(tab);
+    }
+  }, [searchParams]);
 
   // Initialize form data from user
   useEffect(() => {
@@ -265,7 +275,7 @@ export default function MyAccountPage() {
           </Button>
         </div>
 
-        <Tabs defaultValue="dashboard" className="space-y-6">
+        <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
           <TabsList className="grid w-full grid-cols-3 lg:grid-cols-6">
             <TabsTrigger value="dashboard" className="gap-2">
               <LayoutDashboard className="h-4 w-4" />
