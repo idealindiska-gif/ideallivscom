@@ -131,7 +131,6 @@ export async function loginUserAction(credentials: LoginCredentials) {
     // IMPORTANT: This requires a custom WordPress endpoint that verifies passwords
     // The previous method was insecure as it didn't verify passwords
     console.log('Attempting WordPress password verification...');
-    const wordpressUrl = process.env.NEXT_PUBLIC_WORDPRESS_URL;
 
     try {
         // Try to verify password using WordPress REST API
