@@ -112,16 +112,37 @@ function generateLocalInventoryXML(product: WooProduct): string {
 
 export async function GET() {
   try {
-    // Fetch all published products from WooCommerce using the library
-    const products: WooProduct[] = await fetchWooCommerceCached(
-      `/products?status=publish&per_page=100`,
-      3600, // Cache for 1 hour
-      ['products', 'google-local-feed']
-    );
+    // Fetch all products with pagination
+    let allFetchedProducts: WooProduct[] = [];
+    let page = 1;
+    let hasMorePages = true;
+
+    // Fetch all pages of products
+    while (hasMorePages) {
+      const products: WooProduct[] = await fetchWooCommerceCached(
+        `/products?status=publish&per_page=100&page=${page}`,
+        3600, // Cache for 1 hour
+        ['products', 'google-local-feed', `page-${page}`]
+      );
+
+      if (products.length > 0) {
+        allFetchedProducts = [...allFetchedProducts, ...products];
+        page++;
+
+        // If we got less than 100 products, we've reached the last page
+        if (products.length < 100) {
+          hasMorePages = false;
+        }
+      } else {
+        hasMorePages = false;
+      }
+    }
+
+    console.log(`Fetched ${allFetchedProducts.length} products from ${page - 1} pages`);
 
     // Fetch variations for variable products
     const allProducts: WooProduct[] = [];
-    for (const product of products) {
+    for (const product of allFetchedProducts) {
       if (product.type === 'variable' && product.variations && product.variations.length > 0) {
         // Fetch variations
         for (const variationId of product.variations) {
