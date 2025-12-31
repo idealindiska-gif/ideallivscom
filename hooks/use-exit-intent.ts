@@ -23,14 +23,11 @@ export function useExitIntent({
   useEffect(() => {
     if (!enabled) return;
 
-    // Check if survey was already shown recently
-    const lastShown = localStorage.getItem(cookieName);
-    if (lastShown) {
-      const daysSinceShown = (Date.now() - parseInt(lastShown)) / (1000 * 60 * 60 * 24);
-      if (daysSinceShown < cookieExpireDays) {
-        setHasBeenShown(true);
-        return;
-      }
+    // Check if survey was already submitted (not just shown)
+    const wasSubmitted = localStorage.getItem(`${cookieName}_submitted`);
+    if (wasSubmitted) {
+      setHasBeenShown(true);
+      return;
     }
 
     let timeoutId: NodeJS.Timeout;
@@ -41,16 +38,43 @@ export function useExitIntent({
         timeoutId = setTimeout(() => {
           setShowExitIntent(true);
           setHasBeenShown(true);
-          // Store timestamp
-          localStorage.setItem(cookieName, Date.now().toString());
+        }, delayMs);
+      }
+    };
+
+    // Touch support for mobile devices
+    const handleTouchStart = (e: TouchEvent) => {
+      const touch = e.touches[0];
+      if (touch) {
+        // Store initial touch position
+        (window as any).__touchStartY = touch.clientY;
+      }
+    };
+
+    const handleTouchMove = (e: TouchEvent) => {
+      const touch = e.touches[0];
+      if (!touch || hasBeenShown) return;
+
+      const startY = (window as any).__touchStartY || 0;
+      const currentY = touch.clientY;
+
+      // Detect upward swipe from bottom (mobile exit intent)
+      if (startY > window.innerHeight - 100 && currentY < startY - 50) {
+        timeoutId = setTimeout(() => {
+          setShowExitIntent(true);
+          setHasBeenShown(true);
         }, delayMs);
       }
     };
 
     document.addEventListener('mouseleave', handleMouseLeave);
+    document.addEventListener('touchstart', handleTouchStart, { passive: true });
+    document.addEventListener('touchmove', handleTouchMove, { passive: true });
 
     return () => {
       document.removeEventListener('mouseleave', handleMouseLeave);
+      document.removeEventListener('touchstart', handleTouchStart);
+      document.removeEventListener('touchmove', handleTouchMove);
       if (timeoutId) clearTimeout(timeoutId);
     };
   }, [enabled, threshold, delayMs, hasBeenShown, cookieName, cookieExpireDays]);

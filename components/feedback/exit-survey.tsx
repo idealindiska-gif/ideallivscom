@@ -63,6 +63,8 @@ export function ExitSurvey({ show, onClose }: ExitSurveyProps) {
 
       if (response.ok) {
         setIsSubmitted(true);
+        // Mark as submitted in localStorage so it won't show again
+        localStorage.setItem('exit_survey_shown_submitted', 'true');
         setTimeout(() => {
           onClose();
         }, 2000);
