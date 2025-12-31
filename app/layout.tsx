@@ -11,6 +11,8 @@ import { GoogleTagManager, GoogleTagManagerNoScript, FacebookPixel } from "@/com
 import { VerticalSidebar } from "@/components/layout/vertical-sidebar";
 import { ContentHeader } from "@/components/layout/content-header";
 import { Footer } from "@/components/layout/footer";
+import { GeoMetaTags } from "@/components/seo/geo-meta-tags";
+import { HreflangTags } from "@/components/seo/hreflang-tags";
 import { CartDrawer } from "@/components/cart/cart-drawer";
 import { WishlistDrawer } from "@/components/wishlist/wishlist-drawer";
 import { siteConfig } from "@/site.config";
@@ -51,6 +53,58 @@ export const metadata: Metadata = {
   verification: {
     google: "JHCIpEz_IWYNdnNQGCkUKVQ8tiUre1hcCOqcSNhKlmQ",
   },
+  // OpenGraph with Swedish locale
+  openGraph: {
+    type: "website",
+    locale: "sv_SE",
+    alternateLocale: ["en_SE"],
+    url: siteConfig.site_domain,
+    siteName: siteConfig.site_name,
+    title: siteConfig.site_name,
+    description: siteConfig.site_description,
+    images: [
+      {
+        url: "https://crm.ideallivs.com/wp-content/uploads/2025/07/ideal-indiska-livs-stockholm.jpg",
+        width: 1200,
+        height: 630,
+        alt: "Ideal Indiska LIVS - Indian & Pakistani Groceries in Stockholm",
+      },
+    ],
+  },
+  // Twitter Card
+  twitter: {
+    card: "summary_large_image",
+    title: siteConfig.site_name,
+    description: siteConfig.site_description,
+    images: ["https://crm.ideallivs.com/wp-content/uploads/2025/07/ideal-indiska-livs-stockholm.jpg"],
+  },
+  // Additional metadata
+  keywords: [
+    "Indian groceries Stockholm",
+    "Pakistani groceries Sweden",
+    "Indiska livsmedel Stockholm",
+    "Halal mat Stockholm",
+    "Basmati ris Sverige",
+    "Asiatiska kryddor Stockholm",
+    "Indian spices Sweden",
+    "Halal meat Stockholm",
+    "Bandhagen grocery",
+    "Indian store Sweden",
+  ],
+  authors: [{ name: "Ideal Indiska LIVS" }],
+  creator: "Ideal Indiska LIVS",
+  publisher: "Ideal Indiska LIVS",
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      "max-video-preview": -1,
+      "max-image-preview": "large",
+      "max-snippet": -1,
+    },
+  },
 };
 
 // Viewport configuration for mobile devices
@@ -69,8 +123,14 @@ export default async function RootLayout({
   const categories = await getProductCategories({ parent: 0 });
 
   return (
-    <html lang="en" suppressHydrationWarning>
+    <html lang="sv-SE" suppressHydrationWarning>
       <head>
+        {/* Geo-Targeting Meta Tags */}
+        <GeoMetaTags />
+
+        {/* Hreflang Tags */}
+        <HreflangTags canonicalUrl={siteConfig.site_domain} />
+
         {/* Google Tag Manager */}
         <GoogleTagManager />
       </head>
