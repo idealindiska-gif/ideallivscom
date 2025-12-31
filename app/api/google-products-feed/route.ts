@@ -226,7 +226,7 @@ export async function GET() {
         // Fetch variations
         for (const variationId of product.variations) {
           try {
-            const variation = await fetchWooCommerceCached(
+            const variation = await fetchWooCommerceCached<WooProduct>(
               `/products/${product.id}/variations/${variationId}`,
               3600,
               ['products', 'variations', 'google-feed']
