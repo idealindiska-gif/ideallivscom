@@ -11,23 +11,87 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Badge } from '@/components/ui/badge';
-import { Package, User, MapPin, LogOut, Loader2, Eye, LayoutDashboard, Download, CreditCard } from 'lucide-react';
-import { getCustomerOrdersAction } from '@/app/actions/auth';
+import { Package, User, MapPin, LogOut, Loader2, Eye, LayoutDashboard, Download, CreditCard, Edit, Save, X } from 'lucide-react';
+import { getCustomerOrdersAction, updateCustomerAction } from '@/app/actions/auth';
 import type { Order } from '@/types/woocommerce';
 import { format } from 'date-fns';
+import { toast } from 'sonner';
 
 export default function MyAccountPage() {
-  const { user, isAuthenticated, logout } = useAuthStore();
+  const { user, isAuthenticated, logout, setUser } = useAuthStore();
   const router = useRouter();
   const [orders, setOrders] = useState<Order[]>([]);
   const [isLoadingOrders, setIsLoadingOrders] = useState(true);
   const [ordersError, setOrdersError] = useState<string | null>(null);
+
+  // Profile editing state
+  const [isEditingProfile, setIsEditingProfile] = useState(false);
+  const [isSavingProfile, setIsSavingProfile] = useState(false);
+  const [profileData, setProfileData] = useState({
+    first_name: '',
+    last_name: '',
+    email: '',
+  });
+
+  // Address editing state
+  const [isEditingBilling, setIsEditingBilling] = useState(false);
+  const [isEditingShipping, setIsEditingShipping] = useState(false);
+  const [isSavingAddress, setIsSavingAddress] = useState(false);
+  const [billingData, setBillingData] = useState({
+    first_name: '',
+    last_name: '',
+    address_1: '',
+    address_2: '',
+    city: '',
+    postcode: '',
+    country: 'SE',
+    phone: '',
+  });
+  const [shippingData, setShippingData] = useState({
+    first_name: '',
+    last_name: '',
+    address_1: '',
+    address_2: '',
+    city: '',
+    postcode: '',
+    country: 'SE',
+  });
 
   useEffect(() => {
     if (!isAuthenticated) {
       router.push('/login');
     }
   }, [isAuthenticated, router]);
+
+  // Initialize form data from user
+  useEffect(() => {
+    if (user) {
+      setProfileData({
+        first_name: user.first_name || '',
+        last_name: user.last_name || '',
+        email: user.email || '',
+      });
+      setBillingData({
+        first_name: user.billing?.first_name || user.first_name || '',
+        last_name: user.billing?.last_name || user.last_name || '',
+        address_1: user.billing?.address_1 || '',
+        address_2: user.billing?.address_2 || '',
+        city: user.billing?.city || '',
+        postcode: user.billing?.postcode || '',
+        country: user.billing?.country || 'SE',
+        phone: user.billing?.phone || '',
+      });
+      setShippingData({
+        first_name: user.shipping?.first_name || user.first_name || '',
+        last_name: user.shipping?.last_name || user.last_name || '',
+        address_1: user.shipping?.address_1 || '',
+        address_2: user.shipping?.address_2 || '',
+        city: user.shipping?.city || '',
+        postcode: user.shipping?.postcode || '',
+        country: user.shipping?.country || 'SE',
+      });
+    }
+  }, [user]);
 
   // Fetch customer orders
   useEffect(() => {
@@ -77,6 +141,89 @@ export default function MyAccountPage() {
   }, [user?.id, user]);
 
   if (!user) return null;
+
+  // Save profile changes
+  const handleSaveProfile = async () => {
+    if (!user?.id) {
+      toast.error('Unable to update profile');
+      return;
+    }
+
+    setIsSavingProfile(true);
+    try {
+      const result = await updateCustomerAction(user.id, {
+        first_name: profileData.first_name,
+        last_name: profileData.last_name,
+        email: profileData.email,
+      });
+
+      if (result.success && result.data) {
+        setUser(result.data);
+        toast.success('Profile updated successfully!');
+        setIsEditingProfile(false);
+      } else {
+        toast.error(result.error || 'Failed to update profile');
+      }
+    } catch (error) {
+      toast.error('Failed to update profile');
+    } finally {
+      setIsSavingProfile(false);
+    }
+  };
+
+  // Save billing address
+  const handleSaveBilling = async () => {
+    if (!user?.id) {
+      toast.error('Unable to update address');
+      return;
+    }
+
+    setIsSavingAddress(true);
+    try {
+      const result = await updateCustomerAction(user.id, {
+        billing: billingData,
+      });
+
+      if (result.success && result.data) {
+        setUser(result.data);
+        toast.success('Billing address updated successfully!');
+        setIsEditingBilling(false);
+      } else {
+        toast.error(result.error || 'Failed to update billing address');
+      }
+    } catch (error) {
+      toast.error('Failed to update billing address');
+    } finally {
+      setIsSavingAddress(false);
+    }
+  };
+
+  // Save shipping address
+  const handleSaveShipping = async () => {
+    if (!user?.id) {
+      toast.error('Unable to update address');
+      return;
+    }
+
+    setIsSavingAddress(true);
+    try {
+      const result = await updateCustomerAction(user.id, {
+        shipping: shippingData,
+      });
+
+      if (result.success && result.data) {
+        setUser(result.data);
+        toast.success('Shipping address updated successfully!');
+        setIsEditingShipping(false);
+      } else {
+        toast.error(result.error || 'Failed to update shipping address');
+      }
+    } catch (error) {
+      toast.error('Failed to update shipping address');
+    } finally {
+      setIsSavingAddress(false);
+    }
+  };
 
   // Helper function to get order status badge variant
   const getOrderStatusBadge = (status: string) => {
@@ -339,26 +486,81 @@ export default function MyAccountPage() {
           <TabsContent value="profile">
             <Card>
               <CardHeader>
-                <CardTitle>Profile Details</CardTitle>
-                <CardDescription>Update your personal information.</CardDescription>
+                <div className="flex items-center justify-between">
+                  <div>
+                    <CardTitle>Profile Details</CardTitle>
+                    <CardDescription>Update your personal information</CardDescription>
+                  </div>
+                  {!isEditingProfile ? (
+                    <Button onClick={() => setIsEditingProfile(true)} variant="outline" size="sm">
+                      <Edit className="h-4 w-4 mr-2" />
+                      Edit Profile
+                    </Button>
+                  ) : (
+                    <div className="flex gap-2">
+                      <Button
+                        onClick={handleSaveProfile}
+                        size="sm"
+                        disabled={isSavingProfile}
+                      >
+                        {isSavingProfile ? (
+                          <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                        ) : (
+                          <Save className="h-4 w-4 mr-2" />
+                        )}
+                        Save
+                      </Button>
+                      <Button
+                        onClick={() => {
+                          setIsEditingProfile(false);
+                          setProfileData({
+                            first_name: user.first_name || '',
+                            last_name: user.last_name || '',
+                            email: user.email || '',
+                          });
+                        }}
+                        variant="outline"
+                        size="sm"
+                        disabled={isSavingProfile}
+                      >
+                        <X className="h-4 w-4 mr-2" />
+                        Cancel
+                      </Button>
+                    </div>
+                  )}
+                </div>
               </CardHeader>
               <CardContent className="space-y-4">
                 <div className="grid gap-4 md:grid-cols-2">
                   <div className="space-y-2">
                     <Label>First Name</Label>
-                    <Input defaultValue={user.first_name} disabled />
+                    <Input
+                      value={profileData.first_name}
+                      onChange={(e) => setProfileData({ ...profileData, first_name: e.target.value })}
+                      disabled={!isEditingProfile || isSavingProfile}
+                    />
                   </div>
                   <div className="space-y-2">
                     <Label>Last Name</Label>
-                    <Input defaultValue={user.last_name} disabled />
+                    <Input
+                      value={profileData.last_name}
+                      onChange={(e) => setProfileData({ ...profileData, last_name: e.target.value })}
+                      disabled={!isEditingProfile || isSavingProfile}
+                    />
                   </div>
-                  <div className="space-y-2">
+                  <div className="space-y-2 md:col-span-2">
                     <Label>Email</Label>
-                    <Input defaultValue={user.email} disabled />
+                    <Input
+                      type="email"
+                      value={profileData.email}
+                      onChange={(e) => setProfileData({ ...profileData, email: e.target.value })}
+                      disabled={!isEditingProfile || isSavingProfile}
+                    />
                   </div>
                   <div className="space-y-2">
                     <Label>Username</Label>
-                    <Input defaultValue={user.username} disabled />
+                    <Input value={user.username} disabled />
+                    <p className="text-xs text-muted-foreground">Username cannot be changed</p>
                   </div>
                 </div>
               </CardContent>
@@ -369,28 +571,251 @@ export default function MyAccountPage() {
             <Card>
               <CardHeader>
                 <CardTitle>Addresses</CardTitle>
-                <CardDescription>Manage your billing and shipping addresses.</CardDescription>
+                <CardDescription>Manage your billing and shipping addresses</CardDescription>
               </CardHeader>
               <CardContent>
                 <div className="grid gap-6 md:grid-cols-2">
+                  {/* Billing Address */}
                   <div className="rounded-lg border p-4">
-                    <h3 className="mb-2 font-semibold">Billing Address</h3>
-                    <div className="text-sm text-neutral-600 dark:text-neutral-400">
-                      <p>{user.billing?.first_name} {user.billing?.last_name}</p>
-                      <p>{user.billing?.address_1}</p>
-                      <p>{user.billing?.city}, {user.billing?.postcode}</p>
-                      <p>{user.billing?.country}</p>
-                      <p>{user.billing?.phone}</p>
+                    <div className="flex items-center justify-between mb-4">
+                      <h3 className="font-semibold">Billing Address</h3>
+                      {!isEditingBilling ? (
+                        <Button onClick={() => setIsEditingBilling(true)} variant="ghost" size="sm">
+                          <Edit className="h-4 w-4 mr-1" />
+                          Edit
+                        </Button>
+                      ) : (
+                        <div className="flex gap-1">
+                          <Button
+                            onClick={handleSaveBilling}
+                            size="sm"
+                            disabled={isSavingAddress}
+                          >
+                            {isSavingAddress ? (
+                              <Loader2 className="h-4 w-4 animate-spin" />
+                            ) : (
+                              <Save className="h-4 w-4" />
+                            )}
+                          </Button>
+                          <Button
+                            onClick={() => {
+                              setIsEditingBilling(false);
+                              setBillingData({
+                                first_name: user.billing?.first_name || user.first_name || '',
+                                last_name: user.billing?.last_name || user.last_name || '',
+                                address_1: user.billing?.address_1 || '',
+                                address_2: user.billing?.address_2 || '',
+                                city: user.billing?.city || '',
+                                postcode: user.billing?.postcode || '',
+                                country: user.billing?.country || 'SE',
+                                phone: user.billing?.phone || '',
+                              });
+                            }}
+                            variant="ghost"
+                            size="sm"
+                            disabled={isSavingAddress}
+                          >
+                            <X className="h-4 w-4" />
+                          </Button>
+                        </div>
+                      )}
                     </div>
+                    {!isEditingBilling ? (
+                      <div className="text-sm text-neutral-600 dark:text-neutral-400 space-y-1">
+                        <p>{user.billing?.first_name} {user.billing?.last_name}</p>
+                        <p>{user.billing?.address_1}</p>
+                        {user.billing?.address_2 && <p>{user.billing.address_2}</p>}
+                        <p>{user.billing?.city}, {user.billing?.postcode}</p>
+                        <p>{user.billing?.country}</p>
+                        {user.billing?.phone && <p>Phone: {user.billing.phone}</p>}
+                      </div>
+                    ) : (
+                      <div className="space-y-3">
+                        <div className="grid grid-cols-2 gap-2">
+                          <div className="space-y-1">
+                            <Label className="text-xs">First Name</Label>
+                            <Input
+                              value={billingData.first_name}
+                              onChange={(e) => setBillingData({ ...billingData, first_name: e.target.value })}
+                              disabled={isSavingAddress}
+                              className="h-8 text-sm"
+                            />
+                          </div>
+                          <div className="space-y-1">
+                            <Label className="text-xs">Last Name</Label>
+                            <Input
+                              value={billingData.last_name}
+                              onChange={(e) => setBillingData({ ...billingData, last_name: e.target.value })}
+                              disabled={isSavingAddress}
+                              className="h-8 text-sm"
+                            />
+                          </div>
+                        </div>
+                        <div className="space-y-1">
+                          <Label className="text-xs">Address Line 1</Label>
+                          <Input
+                            value={billingData.address_1}
+                            onChange={(e) => setBillingData({ ...billingData, address_1: e.target.value })}
+                            disabled={isSavingAddress}
+                            className="h-8 text-sm"
+                          />
+                        </div>
+                        <div className="space-y-1">
+                          <Label className="text-xs">Address Line 2</Label>
+                          <Input
+                            value={billingData.address_2}
+                            onChange={(e) => setBillingData({ ...billingData, address_2: e.target.value })}
+                            disabled={isSavingAddress}
+                            className="h-8 text-sm"
+                          />
+                        </div>
+                        <div className="grid grid-cols-2 gap-2">
+                          <div className="space-y-1">
+                            <Label className="text-xs">City</Label>
+                            <Input
+                              value={billingData.city}
+                              onChange={(e) => setBillingData({ ...billingData, city: e.target.value })}
+                              disabled={isSavingAddress}
+                              className="h-8 text-sm"
+                            />
+                          </div>
+                          <div className="space-y-1">
+                            <Label className="text-xs">Postcode</Label>
+                            <Input
+                              value={billingData.postcode}
+                              onChange={(e) => setBillingData({ ...billingData, postcode: e.target.value })}
+                              disabled={isSavingAddress}
+                              className="h-8 text-sm"
+                            />
+                          </div>
+                        </div>
+                        <div className="space-y-1">
+                          <Label className="text-xs">Phone</Label>
+                          <Input
+                            value={billingData.phone}
+                            onChange={(e) => setBillingData({ ...billingData, phone: e.target.value })}
+                            disabled={isSavingAddress}
+                            className="h-8 text-sm"
+                          />
+                        </div>
+                      </div>
+                    )}
                   </div>
+
+                  {/* Shipping Address */}
                   <div className="rounded-lg border p-4">
-                    <h3 className="mb-2 font-semibold">Shipping Address</h3>
-                    <div className="text-sm text-neutral-600 dark:text-neutral-400">
-                      <p>{user.shipping?.first_name} {user.shipping?.last_name}</p>
-                      <p>{user.shipping?.address_1}</p>
-                      <p>{user.shipping?.city}, {user.shipping?.postcode}</p>
-                      <p>{user.shipping?.country}</p>
+                    <div className="flex items-center justify-between mb-4">
+                      <h3 className="font-semibold">Shipping Address</h3>
+                      {!isEditingShipping ? (
+                        <Button onClick={() => setIsEditingShipping(true)} variant="ghost" size="sm">
+                          <Edit className="h-4 w-4 mr-1" />
+                          Edit
+                        </Button>
+                      ) : (
+                        <div className="flex gap-1">
+                          <Button
+                            onClick={handleSaveShipping}
+                            size="sm"
+                            disabled={isSavingAddress}
+                          >
+                            {isSavingAddress ? (
+                              <Loader2 className="h-4 w-4 animate-spin" />
+                            ) : (
+                              <Save className="h-4 w-4" />
+                            )}
+                          </Button>
+                          <Button
+                            onClick={() => {
+                              setIsEditingShipping(false);
+                              setShippingData({
+                                first_name: user.shipping?.first_name || user.first_name || '',
+                                last_name: user.shipping?.last_name || user.last_name || '',
+                                address_1: user.shipping?.address_1 || '',
+                                address_2: user.shipping?.address_2 || '',
+                                city: user.shipping?.city || '',
+                                postcode: user.shipping?.postcode || '',
+                                country: user.shipping?.country || 'SE',
+                              });
+                            }}
+                            variant="ghost"
+                            size="sm"
+                            disabled={isSavingAddress}
+                          >
+                            <X className="h-4 w-4" />
+                          </Button>
+                        </div>
+                      )}
                     </div>
+                    {!isEditingShipping ? (
+                      <div className="text-sm text-neutral-600 dark:text-neutral-400 space-y-1">
+                        <p>{user.shipping?.first_name} {user.shipping?.last_name}</p>
+                        <p>{user.shipping?.address_1}</p>
+                        {user.shipping?.address_2 && <p>{user.shipping.address_2}</p>}
+                        <p>{user.shipping?.city}, {user.shipping?.postcode}</p>
+                        <p>{user.shipping?.country}</p>
+                      </div>
+                    ) : (
+                      <div className="space-y-3">
+                        <div className="grid grid-cols-2 gap-2">
+                          <div className="space-y-1">
+                            <Label className="text-xs">First Name</Label>
+                            <Input
+                              value={shippingData.first_name}
+                              onChange={(e) => setShippingData({ ...shippingData, first_name: e.target.value })}
+                              disabled={isSavingAddress}
+                              className="h-8 text-sm"
+                            />
+                          </div>
+                          <div className="space-y-1">
+                            <Label className="text-xs">Last Name</Label>
+                            <Input
+                              value={shippingData.last_name}
+                              onChange={(e) => setShippingData({ ...shippingData, last_name: e.target.value })}
+                              disabled={isSavingAddress}
+                              className="h-8 text-sm"
+                            />
+                          </div>
+                        </div>
+                        <div className="space-y-1">
+                          <Label className="text-xs">Address Line 1</Label>
+                          <Input
+                            value={shippingData.address_1}
+                            onChange={(e) => setShippingData({ ...shippingData, address_1: e.target.value })}
+                            disabled={isSavingAddress}
+                            className="h-8 text-sm"
+                          />
+                        </div>
+                        <div className="space-y-1">
+                          <Label className="text-xs">Address Line 2</Label>
+                          <Input
+                            value={shippingData.address_2}
+                            onChange={(e) => setShippingData({ ...shippingData, address_2: e.target.value })}
+                            disabled={isSavingAddress}
+                            className="h-8 text-sm"
+                          />
+                        </div>
+                        <div className="grid grid-cols-2 gap-2">
+                          <div className="space-y-2">
+                            <Label className="text-xs">City</Label>
+                            <Input
+                              value={shippingData.city}
+                              onChange={(e) => setShippingData({ ...shippingData, city: e.target.value })}
+                              disabled={isSavingAddress}
+                              className="h-8 text-sm"
+                            />
+                          </div>
+                          <div className="space-y-1">
+                            <Label className="text-xs">Postcode</Label>
+                            <Input
+                              value={shippingData.postcode}
+                              onChange={(e) => setShippingData({ ...shippingData, postcode: e.target.value })}
+                              disabled={isSavingAddress}
+                              className="h-8 text-sm"
+                            />
+                          </div>
+                        </div>
+                      </div>
+                    )}
                   </div>
                 </div>
               </CardContent>
