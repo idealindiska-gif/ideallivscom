@@ -870,6 +870,25 @@ export default function CheckoutPage() {
           {/* Order Summary Sidebar */}
           <div className="lg:col-span-1">
             <div className="sticky top-24 space-y-6">
+              {/* WhatsApp Order Button */}
+              <div className="rounded-lg border border-neutral-200 bg-white p-6 dark:border-neutral-800 dark:bg-neutral-900">
+                <WhatsAppOrderButton
+                  context="cart"
+                  cartItems={items}
+                  cartTotal={getTotalPrice().toString()}
+                  cartSubtotal={getTotalPrice().toString()}
+                  requireCustomerInfo={true}
+                  variant="outline"
+                  size="lg"
+                  className="w-full border-2 border-green-600 text-green-600 hover:bg-green-50 dark:hover:bg-green-950/20"
+                  label="Order via WhatsApp"
+                  onSuccess={() => {
+                    clearCart();
+                    router.push('/');
+                  }}
+                />
+              </div>
+
               <OrderSummary
                 shippingCost={shippingCost}
                 taxRate={25}
@@ -892,25 +911,6 @@ export default function CheckoutPage() {
                     style={{ maxWidth: '250px' }}
                   />
                 </div>
-              </div>
-
-              {/* WhatsApp Order Button */}
-              <div className="rounded-lg border border-neutral-200 bg-white p-6 dark:border-neutral-800 dark:bg-neutral-900">
-                <WhatsAppOrderButton
-                  context="cart"
-                  cartItems={items}
-                  cartTotal={getTotalPrice().toString()}
-                  cartSubtotal={getTotalPrice().toString()}
-                  requireCustomerInfo={true}
-                  variant="outline"
-                  size="lg"
-                  className="w-full border-2 border-green-600 text-green-600 hover:bg-green-50 dark:hover:bg-green-950/20"
-                  label="Order via WhatsApp"
-                  onSuccess={() => {
-                    clearCart();
-                    router.push('/');
-                  }}
-                />
               </div>
             </div>
           </div>

@@ -10,13 +10,13 @@ export function PromotionGrid() {
         <section className="w-full py-6 md:py-8">
             <div className="w-full max-w-[1400px] mx-auto px-4 sm:px-6 md:px-8">
                 <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 sm:gap-6">
-                    {/* Card 1: Sona Masoori Rice Promotion */}
-                    <Link href="/shop" className="group">
+                    {/* Card 1: Biryani Pre-Order Promotion */}
+                    <Link href="/prepared-meals" className="group">
                         <div className="relative overflow-hidden rounded-2xl shadow-sm group-hover:shadow-lg transition-all h-full">
                             <div className="relative aspect-[4/4] w-full">
                                 <Image
-                                    src="https://crm.ideallivs.com/wp-content/uploads/2025/05/sona-masoori-speical-promotion-price-web.jpg"
-                                    alt="Sona Masoori Special Promotion"
+                                    src="https://crm.ideallivs.com/wp-content/uploads/2026/01/dum-biryani-scaled.jpg"
+                                    alt="Weekend Biryani Pre-Orders - Authentic Dum Biryani"
                                     fill
                                     className="object-cover group-hover:scale-105 transition-transform duration-500"
                                     sizes="(max-width: 768px) 100vw, 33vw"

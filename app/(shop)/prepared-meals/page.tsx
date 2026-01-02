@@ -23,7 +23,13 @@ export default function PreparedMealsPage() {
     <div className="min-h-screen bg-gradient-to-b from-orange-50 to-white dark:from-gray-900 dark:to-gray-950">
       {/* Hero Section */}
       <section className="relative overflow-hidden bg-gradient-to-r from-orange-600 to-red-600 text-white">
-        <div className="absolute inset-0 bg-black/10"></div>
+        {/* Background Image */}
+        <div
+          className="absolute inset-0 bg-cover bg-center"
+          style={{ backgroundImage: 'url(https://crm.ideallivs.com/wp-content/uploads/2026/01/dum-biryani-scaled.jpg)' }}
+        ></div>
+        {/* Overlay */}
+        <div className="absolute inset-0 bg-gradient-to-r from-orange-900/90 to-red-900/90"></div>
         <div className="container relative mx-auto px-4 py-16 md:py-24">
           <div className="max-w-3xl mx-auto text-center">
             <div className="inline-flex items-center gap-2 bg-white/20 backdrop-blur-sm px-4 py-2 rounded-full mb-6">

@@ -138,8 +138,8 @@ export function CartDrawer() {
             </div>
 
             {/* Cart Footer */}
-            <SheetFooter className="flex-col gap-4">
-              <div className="flex justify-between border-t pt-4 text-lg font-bold">
+            <SheetFooter className="flex-col gap-3">
+              <div className="flex justify-between border-t pt-4 text-base font-bold">
                 <span>Total:</span>
                 <span>{formatPrice(getTotalPrice(), 'SEK')}</span>
               </div>
@@ -151,7 +151,7 @@ export function CartDrawer() {
                 cartSubtotal={getTotalPrice().toString()}
                 requireCustomerInfo={true}
                 variant="outline"
-                size="lg"
+                size="default"
                 className="w-full border-2 border-green-600 text-green-600 hover:bg-green-50 dark:hover:bg-green-950/20"
                 label="Order via WhatsApp"
                 onSuccess={() => {
@@ -159,11 +159,11 @@ export function CartDrawer() {
                 }}
               />
 
-              <div className="grid grid-cols-2 gap-4">
-                <Button asChild variant="outline" size="lg" onClick={closeCart}>
+              <div className="grid grid-cols-2 gap-3">
+                <Button asChild variant="outline" size="default" onClick={closeCart} className="text-sm">
                   <Link href="/shop">Continue Shopping</Link>
                 </Button>
-                <Button asChild size="lg" onClick={closeCart}>
+                <Button asChild size="default" onClick={closeCart} className="text-sm">
                   <Link href="/checkout">Checkout</Link>
                 </Button>
               </div>

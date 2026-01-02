@@ -26,7 +26,8 @@ import {
   Package,
   Flame,
   Gift,
-  Star
+  Star,
+  ChefHat
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { CartIcon } from "@/components/cart/cart-icon";
@@ -161,6 +162,17 @@ export function VerticalSidebar({ categories = [] }: VerticalSidebarProps) {
                 <span className="text-sm font-semibold">Shop by Brands</span>
               </div>
               <ChevronRight className="h-4 w-4 text-muted-foreground group-hover:text-primary group-hover:translate-x-1 transition-transform" />
+            </Link>
+
+            <Link
+              href="/prepared-meals"
+              className="flex items-center justify-between p-3 bg-orange-50 dark:bg-orange-950/20 border border-orange-200 dark:border-orange-900 rounded-xl hover:bg-orange-100 dark:hover:bg-orange-950/30 hover:border-orange-300 dark:hover:border-orange-800 hover:shadow-sm transition-all group"
+            >
+              <div className="flex items-center gap-3">
+                <ChefHat className="h-4 w-4 text-orange-600 dark:text-orange-500 group-hover:text-orange-700" />
+                <span className="text-sm font-semibold text-orange-700 dark:text-orange-400">Preorder Biryani</span>
+              </div>
+              <ChevronRight className="h-4 w-4 text-orange-600 dark:text-orange-500 group-hover:text-orange-700 group-hover:translate-x-1 transition-transform" />
             </Link>
           </div>
 
