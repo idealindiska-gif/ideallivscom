@@ -66,7 +66,7 @@ export function BiryaniBookingForm() {
 
     try {
       // Calculate price
-      const pricePerItem = data.biryaniType === 'chicken' ? 119 : 109;
+      const pricePerItem = data.biryaniType === 'chicken' ? 119 : 119;
       const totalPrice = pricePerItem * parseInt(data.quantity || '1');
 
       // Format WhatsApp message
@@ -204,7 +204,7 @@ Please confirm this pre-order. Thank you!`;
                   <RadioGroupItem value="vegetable" id="vegetable" />
                   <Label htmlFor="vegetable" className="flex-1 cursor-pointer">
                     <div className="font-semibold">Vegetable Dum Biryani</div>
-                    <div className="text-sm text-gray-500">109 kr per portion</div>
+                    <div className="text-sm text-gray-500">119 kr per portion</div>
                   </Label>
                 </div>
               </RadioGroup>
@@ -230,7 +230,7 @@ Please confirm this pre-order. Thank you!`;
               )}
               {quantity && biryaniType && (
                 <p className="text-sm text-gray-600 dark:text-gray-300 mt-1">
-                  Total: {(biryaniType === 'chicken' ? 119 : 109) * parseInt(quantity)} kr
+                  Total: {(biryaniType === 'chicken' ? 119 : 119) * parseInt(quantity)} kr
                 </p>
               )}
             </div>
@@ -270,13 +270,13 @@ Please confirm this pre-order. Thank you!`;
                     <SelectValue placeholder="Select time" />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="12:00-13:00">12:00 - 13:00</SelectItem>
-                    <SelectItem value="13:00-14:00">13:00 - 14:00</SelectItem>
                     <SelectItem value="14:00-15:00">14:00 - 15:00</SelectItem>
                     <SelectItem value="15:00-16:00">15:00 - 16:00</SelectItem>
                     <SelectItem value="16:00-17:00">16:00 - 17:00</SelectItem>
                     <SelectItem value="17:00-18:00">17:00 - 18:00</SelectItem>
                     <SelectItem value="18:00-19:00">18:00 - 19:00</SelectItem>
+                    <SelectItem value="19:00-20:00">19:00 - 20:00</SelectItem>
+                    <SelectItem value="20:00-21:00">20:00 - 21:00</SelectItem>
                   </SelectContent>
                 </Select>
                 {errors.preferredTime && (

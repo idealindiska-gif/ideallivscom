@@ -46,7 +46,7 @@ const biryanis: BiryaniItem[] = [
     id: 'vegetable-dum-biryani',
     name: 'Vegetable Dum Biryani',
     description: 'A delightful medley of fresh seasonal vegetables and paneer, layered with basmati rice and aromatic spices. Cooked in the traditional dum style for authentic flavors.',
-    price: 109,
+    price: 119,
     type: 'vegetable',
     spiceLevel: 2,
     features: [
