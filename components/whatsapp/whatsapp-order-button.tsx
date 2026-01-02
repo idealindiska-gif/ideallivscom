@@ -11,7 +11,7 @@ import { MessageCircle, Loader2 } from 'lucide-react';
 import { WhatsAppCustomerModal } from './whatsapp-customer-modal';
 import { createWhatsAppOrderAction } from '@/app/actions/whatsapp-order';
 import type { Product, ProductVariation } from '@/types/woocommerce';
-import type { CartItem } from '@/types/cart';
+import type { CartItem } from '@/store/cart-store';
 import type {
   WhatsAppCustomerData,
   WhatsAppShippingAddress,
