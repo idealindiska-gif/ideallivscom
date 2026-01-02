@@ -144,15 +144,6 @@ export function CartDrawer() {
                 <span>{formatPrice(getTotalPrice(), 'SEK')}</span>
               </div>
 
-              <div className="grid grid-cols-2 gap-4">
-                <Button asChild variant="outline" size="lg" onClick={closeCart}>
-                  <Link href="/shop">Continue Shopping</Link>
-                </Button>
-                <Button asChild size="lg" onClick={closeCart}>
-                  <Link href="/checkout">Checkout</Link>
-                </Button>
-              </div>
-
               <WhatsAppOrderButton
                 context="cart"
                 cartItems={items}
@@ -167,6 +158,15 @@ export function CartDrawer() {
                   closeCart();
                 }}
               />
+
+              <div className="grid grid-cols-2 gap-4">
+                <Button asChild variant="outline" size="lg" onClick={closeCart}>
+                  <Link href="/shop">Continue Shopping</Link>
+                </Button>
+                <Button asChild size="lg" onClick={closeCart}>
+                  <Link href="/checkout">Checkout</Link>
+                </Button>
+              </div>
             </SheetFooter>
           </>
         )}
