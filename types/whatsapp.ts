@@ -13,7 +13,7 @@ export interface WhatsAppConfig {
   };
 }
 
-export type WhatsAppMessageContext = 'product' | 'cart' | 'checkout' | 'order';
+export type WhatsAppMessageContext = 'product' | 'cart' | 'checkout' | 'orders';
 
 export type DeviceType = 'mobile' | 'desktop';
 
