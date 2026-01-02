@@ -128,7 +128,7 @@ export function WhatsAppOrderButton({
       handleCreateOrder({
         customer: customerData as WhatsAppCustomerData,
         shipping: shippingData as WhatsAppShippingAddress,
-        billing: billingData,
+        billing: billingData as WhatsAppBillingAddress | undefined,
       });
     }
   };
