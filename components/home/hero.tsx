@@ -34,6 +34,7 @@ export function Hero({
                             fill
                             className="object-cover object-center"
                             priority
+                            fetchPriority="high"
                             sizes="(max-width: 768px) 100vw, 66vw"
                         />
                     </div>

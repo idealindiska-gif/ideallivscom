@@ -15,6 +15,14 @@ const nextConfig = {
         optimizePackageImports: ['lucide-react', 'date-fns'],
     },
 
+    // Modern browser targets - reduces legacy JavaScript
+    transpilePackages: [],
+    modularizeImports: {
+        'lucide-react': {
+            transform: 'lucide-react/dist/esm/icons/{{kebabCase member}}',
+        },
+    },
+
     images: {
         unoptimized: true, // Disable Vercel image optimization to avoid 402 errors
         formats: ['image/avif', 'image/webp'],

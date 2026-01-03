@@ -41,9 +41,14 @@ export function FacebookPixel() {
       }
     };
 
-    // Load after a short delay to prioritize critical resources
-    const timer = setTimeout(loadFacebookPixel, 1000);
-    return () => clearTimeout(timer);
+    // Use requestIdleCallback for better performance, fallback to setTimeout
+    if ('requestIdleCallback' in window) {
+      const idleCallback = requestIdleCallback(loadFacebookPixel, { timeout: 3000 });
+      return () => cancelIdleCallback(idleCallback);
+    } else {
+      const timer = setTimeout(loadFacebookPixel, 2000);
+      return () => clearTimeout(timer);
+    }
   }, []);
 
   return (
