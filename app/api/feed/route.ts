@@ -7,8 +7,6 @@
 import { NextResponse } from 'next/server';
 import { siteConfig } from '@/site.config';
 
-const WORDPRESS_API_URL = process.env.NEXT_PUBLIC_WORDPRESS_API_URL || '';
-
 interface WPPost {
   id: number;
   date: string;
@@ -62,19 +60,31 @@ function stripHtml(html: string): string {
 
 export async function GET() {
   try {
+    // Use the correct WordPress API URL
+    const WORDPRESS_URL = process.env.NEXT_PUBLIC_WORDPRESS_URL || 'https://crm.ideallivs.com';
+    const apiUrl = `${WORDPRESS_URL}/wp-json/wp/v2`;
+
+    console.log('Fetching posts from:', `${apiUrl}/posts`);
+
     // Fetch recent blog posts from WordPress
     const response = await fetch(
-      `${WORDPRESS_API_URL}/posts?per_page=50&_embed=true&status=publish&orderby=date&order=desc`,
+      `${apiUrl}/posts?per_page=50&_embed=true&status=publish&orderby=date&order=desc`,
       {
         next: { revalidate: 3600 } // Cache for 1 hour
       }
     );
 
     if (!response.ok) {
+      const errorText = await response.text();
+      console.error('WordPress API error:', response.status, errorText);
       throw new Error(`WordPress API error: ${response.status}`);
     }
 
     const posts: WPPost[] = await response.json();
+
+    if (!posts || posts.length === 0) {
+      console.warn('No posts found');
+    }
 
     // Generate RSS feed
     const now = new Date().toUTCString();
