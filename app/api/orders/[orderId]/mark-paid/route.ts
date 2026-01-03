@@ -1,8 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server';
 
 const WOOCOMMERCE_URL = process.env.NEXT_PUBLIC_WORDPRESS_URL || 'https://crm.ideallivs.com';
-const CONSUMER_KEY = process.env.WOOCOMMERCE_CONSUMER_KEY || '';
-const CONSUMER_SECRET = process.env.WOOCOMMERCE_CONSUMER_SECRET || '';
+const CONSUMER_KEY = process.env.WORDPRESS_CONSUMER_KEY || '';
+const CONSUMER_SECRET = process.env.WORDPRESS_CONSUMER_SECRET || '';
 
 /**
  * PATCH /api/orders/[orderId]/mark-paid
