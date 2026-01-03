@@ -1,5 +1,3 @@
-'use server';
-
 /**
  * Test endpoint to directly check WooCommerce API connectivity
  * Access: /api/test-wc-customer?email=test@test.com
