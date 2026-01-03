@@ -11,13 +11,14 @@ const CONSUMER_SECRET = process.env.WOOCOMMERCE_CONSUMER_SECRET || '';
  */
 export async function GET(
     request: NextRequest,
-    { params }: { params: { orderId: string } }
+    { params }: { params: Promise<{ orderId: string }> }
 ) {
     try {
+        const { orderId } = await params;
         const { searchParams } = new URL(request.url);
         const orderKey = searchParams.get('key');
 
-        if (!params.orderId) {
+        if (!orderId) {
             return NextResponse.json({ error: 'Order ID is required' }, { status: 400 });
         }
 
@@ -29,7 +30,7 @@ export async function GET(
         const auth = Buffer.from(`${CONSUMER_KEY}:${CONSUMER_SECRET}`).toString('base64');
 
         const response = await fetch(
-            `${WOOCOMMERCE_URL}/wp-json/wc/v3/orders/${params.orderId}`,
+            `${WOOCOMMERCE_URL}/wp-json/wc/v3/orders/${orderId}`,
             {
                 headers: {
                     'Authorization': `Basic ${auth}`,

@@ -11,13 +11,14 @@ const CONSUMER_SECRET = process.env.WOOCOMMERCE_CONSUMER_SECRET || '';
  */
 export async function PATCH(
     request: NextRequest,
-    { params }: { params: { orderId: string } }
+    { params }: { params: Promise<{ orderId: string }> }
 ) {
     try {
+        const { orderId } = await params;
         const body = await request.json();
         const { orderKey, paymentIntentId } = body;
 
-        if (!params.orderId) {
+        if (!orderId) {
             return NextResponse.json({ error: 'Order ID is required' }, { status: 400 });
         }
 
@@ -29,7 +30,7 @@ export async function PATCH(
         const auth = Buffer.from(`${CONSUMER_KEY}:${CONSUMER_SECRET}`).toString('base64');
 
         const getResponse = await fetch(
-            `${WOOCOMMERCE_URL}/wp-json/wc/v3/orders/${params.orderId}`,
+            `${WOOCOMMERCE_URL}/wp-json/wc/v3/orders/${orderId}`,
             {
                 headers: {
                     'Authorization': `Basic ${auth}`,
@@ -64,7 +65,7 @@ export async function PATCH(
 
         // Update order status to 'processing' and mark as paid
         const updateResponse = await fetch(
-            `${WOOCOMMERCE_URL}/wp-json/wc/v3/orders/${params.orderId}`,
+            `${WOOCOMMERCE_URL}/wp-json/wc/v3/orders/${orderId}`,
             {
                 method: 'PUT',
                 headers: {
@@ -102,7 +103,7 @@ export async function PATCH(
 
         const updatedOrder = await updateResponse.json();
 
-        console.log(`Order ${params.orderId} marked as paid with PaymentIntent: ${paymentIntentId}`);
+        console.log(`Order ${orderId} marked as paid with PaymentIntent: ${paymentIntentId}`);
 
         return NextResponse.json({
             success: true,
