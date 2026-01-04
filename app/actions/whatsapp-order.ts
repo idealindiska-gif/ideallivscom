@@ -111,17 +111,17 @@ export async function createWhatsAppOrderAction(
     // Step 4: Build line items for WooCommerce order
     const lineItems = data.product
       ? [
-          {
-            product_id: data.product.id,
-            variation_id: data.product.variation?.id,
-            quantity: data.product.quantity,
-          },
-        ]
+        {
+          product_id: data.product.id,
+          variation_id: data.product.variation?.id,
+          quantity: data.product.quantity,
+        },
+      ]
       : data.cart!.items.map((item) => ({
-          product_id: item.productId,
-          variation_id: item.variationId,
-          quantity: item.quantity,
-        }));
+        product_id: item.productId,
+        variation_id: item.variationId,
+        quantity: item.quantity,
+      }));
 
     // Step 5: Build billing address (default to shipping if not provided)
     const billing = data.billing || {
@@ -174,21 +174,21 @@ export async function createWhatsAppOrderAction(
     // Format items for message
     const messageItems = data.product
       ? [
-          {
-            name: data.product.name,
-            quantity: data.product.quantity,
-            price: formatPrice(data.product.price, 'SEK'),
-            variation: data.product.variation
-              ? formatVariation(data.product.variation.attributes)
-              : undefined,
-          },
-        ]
+        {
+          name: data.product.name,
+          quantity: data.product.quantity,
+          price: formatPrice(data.product.price, 'SEK'),
+          variation: data.product.variation
+            ? formatVariation(data.product.variation.attributes)
+            : undefined,
+        },
+      ]
       : data.cart!.items.map((item) => ({
-          name: item.name,
-          quantity: item.quantity,
-          price: item.price,
-          variation: item.variation,
-        }));
+        name: item.name,
+        quantity: item.quantity,
+        price: item.price,
+        variation: item.variation,
+      }));
 
     // Calculate totals
     const subtotal = data.cart?.subtotal || data.product!.price;
@@ -214,10 +214,27 @@ export async function createWhatsAppOrderAction(
       orderNotes: data.notes,
     });
 
+    // Step 8.5: Generate payment link for the order
+    const paymentUrl = `${siteUrl}/checkout/order-pay/${order.id}?pay_for_order=true&key=${order.order_key}`;
+
+    // Add payment information to message
+    const enhancedMessage = `${message}
+
+*💳 Payment Options:*
+
+*Option 1: Pay Online Now*
+Click here to pay securely with card:
+${paymentUrl}
+
+*Option 2: Pay on Delivery/Pickup*
+You can also pay when you receive your order.
+
+Please confirm your order and let us know your preferred payment method. Thank you!`;
+
     // Step 9: Generate WhatsApp URL
     const phone = getWhatsAppPhone('orders');
     const deviceType = detectDevice();
-    const urlResult = generateWhatsAppUrl(phone, message, deviceType);
+    const urlResult = generateWhatsAppUrl(phone, enhancedMessage, deviceType);
 
     // Step 10: Return success with WhatsApp URL
     return {
