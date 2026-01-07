@@ -18,7 +18,7 @@ const nextConfig = {
     transpilePackages: [],
 
     // Target modern browsers to reduce bundle size
-    swcMinify: true,
+
 
     modularizeImports: {
         'lucide-react': {
