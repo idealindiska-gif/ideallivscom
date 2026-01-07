@@ -60,23 +60,14 @@ export function ProductTabs({ product, reviews = [], onSubmitReview }: ProductTa
                       </Badge>
                     )}
                   </h3>
-                  {hasReviews ? (
-                    <ProductReviews
-                      productId={product.id}
-                      reviews={reviews}
-                      averageRating={product.average_rating}
-                      ratingCount={product.rating_count}
-                      onSubmitReview={onSubmitReview}
-                      compact={true}
-                    />
-                  ) : (
-                    <div className="text-muted-foreground">
-                      <p className="mb-4">No reviews yet.</p>
-                      <Button variant="outline" className="w-full">
-                        Be the first to review
-                      </Button>
-                    </div>
-                  )}
+                  <ProductReviews
+                    productId={product.id}
+                    reviews={reviews}
+                    averageRating={product.average_rating}
+                    ratingCount={product.rating_count}
+                    onSubmitReview={onSubmitReview}
+                    compact={true}
+                  />
                 </div>
               </div>
             </div>
@@ -197,23 +188,14 @@ export function ProductTabs({ product, reviews = [], onSubmitReview }: ProductTa
                       </Badge>
                     )}
                   </h3>
-                  {hasReviews ? (
-                    <ProductReviews
-                      productId={product.id}
-                      reviews={reviews}
-                      averageRating={product.average_rating}
-                      ratingCount={product.rating_count}
-                      onSubmitReview={onSubmitReview}
-                      compact={true}
-                    />
-                  ) : (
-                    <div className="text-muted-foreground">
-                      <p className="mb-4">No reviews yet.</p>
-                      <Button variant="outline" className="w-full">
-                        Be the first to review
-                      </Button>
-                    </div>
-                  )}
+                  <ProductReviews
+                    productId={product.id}
+                    reviews={reviews}
+                    averageRating={product.average_rating}
+                    ratingCount={product.rating_count}
+                    onSubmitReview={onSubmitReview}
+                    compact={true}
+                  />
                 </div>
               </div>
             </div>

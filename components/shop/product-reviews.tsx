@@ -41,6 +41,7 @@ export function ProductReviews({
   ratingCount,
   onSubmitReview,
   className,
+  compact = false,
 }: ProductReviewsProps) {
   const [sortBy, setSortBy] = useState<'newest' | 'highest' | 'lowest'>('newest');
   const [showReviewForm, setShowReviewForm] = useState(false);
@@ -90,61 +91,91 @@ export function ProductReviews({
   };
 
   return (
-    <div className={cn('space-y-8', className)}>
-      {/* Reviews Summary */}
-      <div className="rounded-lg border bg-muted/50 p-6">
-        <div className="grid gap-6 md:grid-cols-2">
-          {/* Overall Rating */}
-          <div className="space-y-2">
-            <div className="flex items-baseline gap-2">
-              <span className="text-5xl font-bold">{averageRating}</span>
-              <span className="text-2xl text-muted-foreground">/ 5</span>
-            </div>
-            <StarRating rating={parseFloat(averageRating)} size="lg" />
-            <p className="text-sm text-muted-foreground">
-              Based on {ratingCount} {ratingCount === 1 ? 'review' : 'reviews'}
-            </p>
-          </div>
-
-          {/* Rating Distribution */}
-          <div className="space-y-2">
-            {ratingDistribution.map(({ stars, count, percentage }) => (
-              <div key={stars} className="flex items-center gap-2 text-sm">
-                <span className="w-12 text-right">{stars} star</span>
-                <div className="h-2 flex-1 overflow-hidden rounded-full bg-muted">
-                  <div
-                    className="h-full bg-yellow-400 transition-all"
-                    style={{ width: `${percentage}%` }}
-                  />
-                </div>
-                <span className="w-12 text-muted-foreground">{count}</span>
+    <div className={cn('space-y-6', className)}>
+      {/* Reviews Summary - Hide in compact mode */}
+      {!compact && (
+        <div className="rounded-lg border bg-muted/50 p-6">
+          <div className="grid gap-6 md:grid-cols-2">
+            {/* Overall Rating */}
+            <div className="space-y-2">
+              <div className="flex items-baseline gap-2">
+                <span className="text-5xl font-bold">{averageRating}</span>
+                <span className="text-2xl text-muted-foreground">/ 5</span>
               </div>
-            ))}
+              <StarRating rating={parseFloat(averageRating)} size="lg" />
+              <p className="text-sm text-muted-foreground">
+                Based on {ratingCount} {ratingCount === 1 ? 'review' : 'reviews'}
+              </p>
+            </div>
+
+            {/* Rating Distribution */}
+            <div className="space-y-2">
+              {ratingDistribution.map(({ stars, count, percentage }) => (
+                <div key={stars} className="flex items-center gap-2 text-sm">
+                  <span className="w-12 text-right">{stars} star</span>
+                  <div className="h-2 flex-1 overflow-hidden rounded-full bg-muted">
+                    <div
+                      className="h-full bg-yellow-400 transition-all"
+                      style={{ width: `${percentage}%` }}
+                    />
+                  </div>
+                  <span className="w-12 text-muted-foreground">{count}</span>
+                </div>
+              ))}
+            </div>
           </div>
         </div>
-      </div>
+      )}
+
+      {/* Compact mode: Simple rating display */}
+      {compact && ratingCount > 0 && (
+        <div className="space-y-2">
+          <div className="flex items-center gap-2">
+            <StarRating rating={parseFloat(averageRating)} size="md" />
+            <span className="text-sm font-medium">{averageRating}</span>
+          </div>
+          <p className="text-xs text-muted-foreground">
+            {ratingCount} {ratingCount === 1 ? 'review' : 'reviews'}
+          </p>
+        </div>
+      )}
 
       {/* Review Actions */}
-      <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-        <div className="flex items-center gap-2">
-          <Label className="text-sm text-muted-foreground">Sort by:</Label>
-          <Select value={sortBy} onValueChange={(value: any) => setSortBy(value)}>
-            <SelectTrigger className="w-[180px]">
-              <SelectValue />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="newest">Newest first</SelectItem>
-              <SelectItem value="highest">Highest rated</SelectItem>
-              <SelectItem value="lowest">Lowest rated</SelectItem>
-            </SelectContent>
-          </Select>
-        </div>
+      {!compact && (
+        <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+          <div className="flex items-center gap-2">
+            <Label className="text-sm text-muted-foreground">Sort by:</Label>
+            <Select value={sortBy} onValueChange={(value: any) => setSortBy(value)}>
+              <SelectTrigger className="w-[180px]">
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="newest">Newest first</SelectItem>
+                <SelectItem value="highest">Highest rated</SelectItem>
+                <SelectItem value="lowest">Lowest rated</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
 
-        <Button onClick={() => setShowReviewForm(!showReviewForm)}>
+          <Button onClick={() => setShowReviewForm(!showReviewForm)}>
+            <MessageCircle className="mr-2 h-4 w-4" />
+            Write a Review
+          </Button>
+        </div>
+      )}
+
+      {/* Compact mode: Write review button */}
+      {compact && (
+        <Button
+          onClick={() => setShowReviewForm(!showReviewForm)}
+          variant="outline"
+          className="w-full"
+          size="sm"
+        >
           <MessageCircle className="mr-2 h-4 w-4" />
-          Write a Review
+          {showReviewForm ? 'Cancel' : 'Write a Review'}
         </Button>
-      </div>
+      )}
 
       {/* Review Form */}
       {showReviewForm && (
@@ -209,16 +240,19 @@ export function ProductReviews({
       {/* Reviews List */}
       <div className="space-y-4">
         {sortedReviews.length === 0 ? (
-          <div className="rounded-lg border bg-muted/50 p-8 text-center">
-            <MessageCircle className="mx-auto mb-2 h-12 w-12 text-muted-foreground" />
-            <p className="text-lg font-medium">No reviews yet</p>
-            <p className="text-sm text-muted-foreground">
+          <div className={cn(
+            "rounded-lg border bg-muted/50 text-center",
+            compact ? "p-4" : "p-8"
+          )}>
+            {!compact && <MessageCircle className="mx-auto mb-2 h-12 w-12 text-muted-foreground" />}
+            <p className={cn("font-medium", compact ? "text-sm" : "text-lg")}>No reviews yet</p>
+            <p className="text-xs text-muted-foreground mt-1">
               Be the first to review this product
             </p>
           </div>
         ) : (
-          sortedReviews.map((review) => (
-            <ReviewCard key={review.id} review={review} />
+          (compact ? sortedReviews.slice(0, 3) : sortedReviews).map((review) => (
+            <ReviewCard key={review.id} review={review} compact={compact} />
           ))
         )}
       </div>
@@ -306,15 +340,15 @@ function StarRatingInput({ name, required }: { name: string; required?: boolean 
 }
 
 // Individual Review Card
-function ReviewCard({ review }: { review: ProductReview }) {
+function ReviewCard({ review, compact = false }: { review: ProductReview; compact?: boolean }) {
   const [helpful, setHelpful] = useState(false);
 
   return (
-    <div className="rounded-lg border bg-background p-6">
+    <div className={cn("rounded-lg border bg-background", compact ? "p-4" : "p-6")}>
       <div className="mb-3 flex items-start justify-between">
         <div className="space-y-1">
           <div className="flex items-center gap-2">
-            <p className="font-semibold">{review.reviewer}</p>
+            <p className={cn("font-semibold", compact && "text-sm")}>{review.reviewer}</p>
             {review.verified && (
               <Badge variant="secondary" className="gap-1 text-xs">
                 <CheckCircle2 className="h-3 w-3" />
@@ -324,35 +358,37 @@ function ReviewCard({ review }: { review: ProductReview }) {
           </div>
           <StarRating rating={review.rating} size="sm" />
         </div>
-        <time className="text-sm text-muted-foreground">
+        <time className="text-xs text-muted-foreground">
           {new Date(review.date_created).toLocaleDateString('en-US', {
-            year: 'numeric',
-            month: 'long',
+            month: 'short',
             day: 'numeric',
+            year: compact ? undefined : 'numeric',
           })}
         </time>
       </div>
 
       <div
-        className="prose prose-sm max-w-none dark:prose-invert"
+        className={cn("prose max-w-none dark:prose-invert", compact ? "prose-sm text-sm" : "prose-sm")}
         dangerouslySetInnerHTML={{ __html: review.review }}
       />
 
-      {/* Review Actions */}
-      <div className="mt-4 flex items-center gap-4">
-        <Button
-          variant="ghost"
-          size="sm"
-          onClick={() => setHelpful(!helpful)}
-          className={cn(
-            'gap-2',
-            helpful && 'text-primary'
-          )}
-        >
-          <ThumbsUp className="h-4 w-4" />
-          Helpful
-        </Button>
-      </div>
+      {/* Review Actions - Hide in compact mode */}
+      {!compact && (
+        <div className="mt-4 flex items-center gap-4">
+          <Button
+            variant="ghost"
+            size="sm"
+            onClick={() => setHelpful(!helpful)}
+            className={cn(
+              'gap-2',
+              helpful && 'text-primary'
+            )}
+          >
+            <ThumbsUp className="h-4 w-4" />
+            Helpful
+          </Button>
+        </div>
+      )}
     </div>
   );
 }
