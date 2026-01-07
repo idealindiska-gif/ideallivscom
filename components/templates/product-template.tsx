@@ -237,9 +237,11 @@ export function ProductTemplate({
                 {product.categories && product.categories.length > 0 && (
                   <>
                     {product.categories.map((category) => (
-                      <Badge key={category.id} variant="secondary" className="bg-secondary/10 text-secondary hover:bg-secondary/20">
-                        {decodeHtmlEntities(category.name)}
-                      </Badge>
+                      <Link key={category.id} href={`/product-category/${category.slug}`}>
+                        <Badge variant="secondary" className="bg-secondary/10 text-secondary hover:bg-secondary/20 transition-colors cursor-pointer">
+                          {decodeHtmlEntities(category.name)}
+                        </Badge>
+                      </Link>
                     ))}
                   </>
                 )}
@@ -291,7 +293,7 @@ export function ProductTemplate({
                   </div>
                 )}
 
-                <h1 className="font-heading text-foreground text-2xl md:text-[27px] font-bold leading-tight">
+                <h1 style={{ fontSize: '20px', fontWeight: 500, letterSpacing: '0px' }} className="font-heading text-foreground leading-tight">
                   {decodeHtmlEntities(product.name)}
                 </h1>
                 {product.sku && (
@@ -452,7 +454,7 @@ export function ProductTemplate({
                     quantity={quantity}
                     size="lg"
                     className="flex-1 bg-primary hover:bg-primary/90 text-primary-foreground rounded-full py-5"
-                    style={{ fontSize: '17.89px', fontWeight: 500, lineHeight: 1.52, letterSpacing: '0.03em' }}
+                    style={{ fontSize: '15px', fontWeight: 500, lineHeight: 1.52, letterSpacing: '0.03em' }}
                   />
                   <WishlistButton
                     product={product}
