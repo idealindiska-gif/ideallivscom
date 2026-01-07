@@ -101,7 +101,7 @@ export function productBreadcrumbs(
   if (product.category) {
     breadcrumbs.push({
       name: product.category.name,
-      url: `${baseUrl}/shop/category/${product.category.slug}`,
+      url: `${baseUrl}/product-category/${product.category.slug}`,
     });
   }
 
@@ -137,7 +137,7 @@ export function categoryBreadcrumbs(
   if (category.parent) {
     breadcrumbs.push({
       name: category.parent.name,
-      url: `${baseUrl}/shop/category/${category.parent.slug}`,
+      url: `${baseUrl}/product-category/${category.parent.slug}`,
     });
   }
 
