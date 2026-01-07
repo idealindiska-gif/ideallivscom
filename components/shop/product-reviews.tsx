@@ -24,6 +24,7 @@ interface ProductReviewsProps {
   ratingCount: number;
   onSubmitReview?: (review: ReviewFormData) => Promise<void>;
   className?: string;
+  compact?: boolean;
 }
 
 export interface ReviewFormData {

@@ -889,6 +889,13 @@ export default function CheckoutPage() {
                 />
               </div>
 
+              {/* Stock Disclaimer */}
+              <div className="rounded-lg border border-amber-200 bg-amber-50 p-4 text-sm text-amber-900 dark:border-amber-900/30 dark:bg-amber-900/10 dark:text-amber-200">
+                <p>
+                  <strong>Note:</strong> Inventory is shared with our physical store. In the rare event of a stock discrepancy, we will contact you immediately.
+                </p>
+              </div>
+
               <OrderSummary
                 shippingCost={shippingCost}
                 taxRate={25}
