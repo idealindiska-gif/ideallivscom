@@ -18,6 +18,7 @@ export interface AuthResponse {
     user_email: string;
     user_nicename: string;
     user_display_name: string;
+    user_id?: number;
 }
 
 /**

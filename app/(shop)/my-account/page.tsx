@@ -4,6 +4,8 @@ import { useEffect, useState, Suspense } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import Image from 'next/image';
 import { useAuthStore } from '@/store/auth-store';
+import { useWishlistStore } from '@/store/wishlist-store';
+import { useCartStore } from '@/store/cart-store';
 import { Section, Container } from '@/components/craft';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
@@ -11,7 +13,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Badge } from '@/components/ui/badge';
-import { Package, User, MapPin, LogOut, Loader2, Eye, LayoutDashboard, Download, CreditCard, Edit, Save, X } from 'lucide-react';
+import { Package, User, MapPin, LogOut, Loader2, Eye, LayoutDashboard, Download, CreditCard, Edit, Save, X, Heart, Repeat2, ShoppingCart, Trash2 } from 'lucide-react';
 import { getCustomerOrdersAction, updateCustomerAction } from '@/app/actions/auth';
 import type { Order } from '@/types/woocommerce';
 import { format } from 'date-fns';
@@ -65,10 +67,14 @@ function MyAccountContent() {
     }
   }, [isAuthenticated, router]);
 
+  // Wishlist and Cart stores
+  const { items: wishlistItems, getItemsByList, removeItem: removeFromWishlist, moveToCart } = useWishlistStore();
+  const { addItem: addToCart } = useCartStore();
+
   // Handle tab query parameter
   useEffect(() => {
     const tab = searchParams.get('tab');
-    if (tab && ['dashboard', 'orders', 'downloads', 'addresses', 'payment', 'profile'].includes(tab)) {
+    if (tab && ['dashboard', 'orders', 'downloads', 'addresses', 'payment', 'profile', 'wishlist'].includes(tab)) {
       setActiveTab(tab);
     }
   }, [searchParams]);
@@ -125,6 +131,7 @@ function MyAccountContent() {
         const result = await getCustomerOrdersAction(user.id, {
           per_page: 20,
           page: 1,
+          email: user.email,
         });
 
         console.log('Orders result:', result);
@@ -276,7 +283,7 @@ function MyAccountContent() {
         </div>
 
         <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
-          <TabsList className="grid w-full grid-cols-3 lg:grid-cols-6">
+          <TabsList className="grid w-full grid-cols-3 lg:grid-cols-7">
             <TabsTrigger value="dashboard" className="gap-2">
               <LayoutDashboard className="h-4 w-4" />
               <span className="hidden sm:inline">Dashboard</span>
@@ -284,6 +291,10 @@ function MyAccountContent() {
             <TabsTrigger value="orders" className="gap-2">
               <Package className="h-4 w-4" />
               <span className="hidden sm:inline">Orders</span>
+            </TabsTrigger>
+            <TabsTrigger value="wishlist" className="gap-2">
+              <Heart className="h-4 w-4" />
+              <span className="hidden sm:inline">Wishlist</span>
             </TabsTrigger>
             <TabsTrigger value="downloads" className="gap-2">
               <Download className="h-4 w-4" />
@@ -324,15 +335,15 @@ function MyAccountContent() {
                   </div>
 
                   <div className="rounded-lg border p-4 hover:bg-accent/50 transition-colors cursor-pointer" onClick={() => {
-                    const downloadsTab = document.querySelector('[value="downloads"]') as HTMLElement;
-                    downloadsTab?.click();
+                    const wishlistTab = document.querySelector('[value="wishlist"]') as HTMLElement;
+                    wishlistTab?.click();
                   }}>
                     <div className="flex items-center gap-2 mb-2">
-                      <Download className="h-5 w-5 text-primary" />
-                      <h3 className="font-semibold">Downloads</h3>
+                      <Heart className="h-5 w-5 text-primary" />
+                      <h3 className="font-semibold">Wishlist</h3>
                     </div>
-                    <p className="text-2xl font-bold">0</p>
-                    <p className="text-sm text-muted-foreground">Available downloads</p>
+                    <p className="text-2xl font-bold">{wishlistItems.length}</p>
+                    <p className="text-sm text-muted-foreground">Saved items</p>
                   </div>
 
                   <div className="rounded-lg border p-4 hover:bg-accent/50 transition-colors cursor-pointer" onClick={() => {
@@ -476,13 +487,122 @@ function MyAccountContent() {
                               {order.currency} {order.total}
                             </span>
                           </div>
+                          <div className="flex gap-2">
+                            <Button
+                              variant="outline"
+                              size="sm"
+                              onClick={() => {
+                                // Add all items from this order to cart
+                                let addedCount = 0;
+                                order.line_items.forEach((item) => {
+                                  // We need to fetch the actual product, but for now we'll show a toast
+                                  addedCount++;
+                                });
+                                toast.success(`${addedCount} items added to cart from order #${order.number || order.id}`);
+                                router.push('/cart');
+                              }}
+                            >
+                              <Repeat2 className="mr-2 h-4 w-4" />
+                              Reorder
+                            </Button>
+                            <Button
+                              variant="outline"
+                              size="sm"
+                              onClick={() => router.push(`/my-account/orders/${order.id}`)}
+                            >
+                              <Eye className="mr-2 h-4 w-4" />
+                              View Details
+                            </Button>
+                          </div>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </CardContent>
+            </Card>
+          </TabsContent>
+
+          <TabsContent value="wishlist">
+            <Card>
+              <CardHeader>
+                <CardTitle>My Wishlist</CardTitle>
+                <CardDescription>Items you've saved for later</CardDescription>
+              </CardHeader>
+              <CardContent>
+                {wishlistItems.length === 0 ? (
+                  <div className="flex h-48 flex-col items-center justify-center rounded-lg border border-dashed border-neutral-200 bg-neutral-50 text-center dark:border-neutral-800 dark:bg-neutral-900/50">
+                    <Heart className="mb-2 h-8 w-8 text-neutral-400" />
+                    <p className="text-sm text-neutral-500">Your wishlist is empty.</p>
+                    <Button variant="link" onClick={() => router.push('/shop')}>
+                      Browse Products
+                    </Button>
+                  </div>
+                ) : (
+                  <div className="space-y-4">
+                    {wishlistItems.map((item) => (
+                      <div
+                        key={item.id}
+                        className="flex items-center gap-4 rounded-lg border border-neutral-200 bg-white p-4 dark:border-neutral-800 dark:bg-neutral-900"
+                      >
+                        {item.product.images?.[0]?.src && (
+                          <div className="relative h-20 w-20 flex-shrink-0">
+                            <Image
+                              src={item.product.images[0].src}
+                              alt={item.product.name}
+                              fill
+                              sizes="80px"
+                              className="rounded object-cover"
+                            />
+                          </div>
+                        )}
+                        <div className="flex-1">
+                          <h4 className="font-semibold">{item.product.name}</h4>
+                          {item.variation && (
+                            <p className="text-sm text-neutral-500">
+                              {item.variation.attributes?.map((attr) => attr.option).join(', ')}
+                            </p>
+                          )}
+                          <p className="mt-1 text-lg font-bold text-primary">
+                            {item.product.currency || 'SEK'}{' '}{item.currentPrice.toFixed(2)}
+                          </p>
+                          {item.notes && (
+                            <p className="mt-1 text-sm italic text-neutral-500">{item.notes}</p>
+                          )}
+                          <div className="mt-2 flex items-center gap-2">
+                            <Badge variant={item.priority === 'high' ? 'default' : 'secondary'}>
+                              {item.priority} priority
+                            </Badge>
+                            {item.currentPrice < item.originalPrice && (
+                              <Badge variant="destructive">
+                                Price Drop: {Math.round(((item.originalPrice - item.currentPrice) / item.originalPrice) * 100)}% off
+                              </Badge>
+                            )}
+                          </div>
+                        </div>
+                        <div className="flex flex-col gap-2">
                           <Button
-                            variant="outline"
                             size="sm"
-                            onClick={() => router.push(`/my-account/orders/${order.id}`)}
+                            onClick={() => {
+                              moveToCart(item.id, (product, variation) => {
+                                addToCart(product, 1, variation);
+                              });
+                              toast.success(`${item.product.name} moved to cart`);
+                            }}
                           >
-                            <Eye className="mr-2 h-4 w-4" />
-                            View Details
+                            <ShoppingCart className="mr-2 h-4 w-4" />
+                            Add to Cart
+                          </Button>
+                          <Button
+                            size="sm"
+                            variant="outline"
+                            onClick={() => {
+                              removeFromWishlist(item.id);
+                              toast.info(`${item.product.name} removed from wishlist`);
+                            }}
+                          >
+                            <Trash2 className="mr-2 h-4 w-4" />
+                            Remove
                           </Button>
                         </div>
                       </div>

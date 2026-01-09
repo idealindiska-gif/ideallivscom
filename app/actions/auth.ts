@@ -2,7 +2,7 @@
 
 import { WC_API_CONFIG } from '@/lib/woocommerce/config';
 import { RegisterData, LoginCredentials } from '@/lib/auth';
-import { getCustomerOrders } from '@/lib/woocommerce/orders';
+import { getCustomerOrders, getOrdersByEmail } from '@/lib/woocommerce/orders';
 
 export async function registerUserAction(data: RegisterData) {
     const baseUrl = WC_API_CONFIG.baseUrl;
@@ -78,6 +78,7 @@ export async function loginUserAction(credentials: LoginCredentials) {
                 user_email: data.data?.user?.user_email || data.user?.user_email,
                 user_nicename: data.data?.user?.user_nicename || data.user?.user_nicename,
                 user_display_name: data.data?.user?.user_display_name || data.user?.user_display_name,
+                user_id: data.data?.user?.id || data.user?.ID || data.user?.id || data.id,
             };
 
             return { success: true, data: transformedData };
@@ -120,6 +121,7 @@ export async function loginUserAction(credentials: LoginCredentials) {
                     user_email: data.user_email,
                     user_nicename: data.user_nicename,
                     user_display_name: data.user_display_name,
+                    user_id: data.user_id || (data.user ? data.user.id : undefined),
                 },
             };
         }
@@ -128,13 +130,9 @@ export async function loginUserAction(credentials: LoginCredentials) {
     }
 
     // Method 3: WordPress password verification via custom endpoint
-    // IMPORTANT: This requires a custom WordPress endpoint that verifies passwords
-    // The previous method was insecure as it didn't verify passwords
     console.log('Attempting WordPress password verification...');
 
     try {
-        // Try to verify password using WordPress REST API
-        // This requires Application Passwords or a custom endpoint
         const wpAuthUrl = `${wordpressUrl}/wp-json/wp/v2/users/me`;
 
         const wpResponse = await fetch(wpAuthUrl, {
@@ -145,9 +143,9 @@ export async function loginUserAction(credentials: LoginCredentials) {
 
         if (wpResponse.ok) {
             const wpUser = await wpResponse.json();
-            console.log('WordPress authentication successful');
+            console.log('WordPress authentication successful, User ID:', wpUser.id);
 
-            // Create a session token
+            // Create a session token with the ID included
             const sessionToken = Buffer.from(JSON.stringify({
                 email: credentials.username,
                 id: wpUser.id,
@@ -158,6 +156,7 @@ export async function loginUserAction(credentials: LoginCredentials) {
                 success: true,
                 data: {
                     token: sessionToken,
+                    user_id: wpUser.id,
                     user_email: wpUser.email || credentials.username,
                     user_nicename: wpUser.slug || credentials.username.split('@')[0],
                     user_display_name: wpUser.name || credentials.username,
@@ -168,40 +167,42 @@ export async function loginUserAction(credentials: LoginCredentials) {
         console.log('WordPress REST API authentication failed, trying WooCommerce customer lookup...');
     }
 
-    // SECURITY WARNING: The code below is DISABLED because it's insecure
-    // It would log in users without password verification
-    // To enable WooCommerce-only authentication, you MUST implement proper password verification
-    console.error('All secure authentication methods failed. WooCommerce-only login requires JWT plugins.');
     return {
         success: false,
-        error: 'Authentication failed. Please ensure JWT authentication plugins are installed on WordPress, or enable Application Passwords in WordPress settings.'
+        error: 'Authentication failed. Please check your email and password.'
     };
 }
 
-export async function getCurrentUserAction(token: string, userEmail?: string) {
+export async function getCurrentUserAction(token: string, userEmail?: string, userId?: number) {
     const baseUrl = WC_API_CONFIG.baseUrl;
     const consumerKey = process.env.WORDPRESS_CONSUMER_KEY;
     const consumerSecret = process.env.WORDPRESS_CONSUMER_SECRET;
 
-    console.log('Getting current user with token:', token ? 'Token exists' : 'No token');
-    console.log('User email from JWT:', userEmail);
+    console.log('Getting current user. ID:', userId, 'Email:', userEmail);
 
     try {
-        // If we don't have the email, try to decode it from the JWT token
         let email = userEmail;
+        let id = userId;
 
-        if (!email && token) {
-            // JWT tokens have 3 parts separated by dots: header.payload.signature
-            // We can decode the payload (it's base64 encoded but not encrypted)
+        // If we don't have the data, try to decode it from the JWT token
+        if ((!email || !id) && token) {
             try {
-                const parts = token.split('.');
-                if (parts.length === 3) {
-                    const payload = JSON.parse(Buffer.from(parts[1], 'base64').toString());
-                    email = payload.data?.user?.user_email || payload.email;
-                    console.log('Decoded email from JWT:', email);
+                // Try simple Base64 decode first for our custom session token
+                const decoded = JSON.parse(Buffer.from(token, 'base64').toString());
+                if (decoded.email) email = decoded.email;
+                if (decoded.id) id = decoded.id;
+            } catch (e) {
+                // If that fails, it's likely a standard JWT
+                try {
+                    const parts = token.split('.');
+                    if (parts.length === 3) {
+                        const payload = JSON.parse(Buffer.from(parts[1], 'base64').toString());
+                        email = payload.data?.user?.user_email || payload.email || payload.user_email;
+                        id = payload.data?.user?.id || payload.user_id || payload.id;
+                    }
+                } catch (decodeError) {
+                    console.error('Failed to decode JWT:', decodeError);
                 }
-            } catch (decodeError) {
-                console.error('Failed to decode JWT:', decodeError);
             }
         }
 
@@ -210,62 +211,53 @@ export async function getCurrentUserAction(token: string, userEmail?: string) {
             return { success: false, error: 'Unable to determine user email' };
         }
 
-        // Fetch WC customer details using email
+        // Fetch WC customer details
         if (consumerKey && consumerSecret) {
-            const customerUrl = `${baseUrl}/customers?email=${encodeURIComponent(email)}`;
-            console.log('🔍 Fetching WC customer from:', customerUrl);
-
-            try {
-                // Add timeout to prevent hanging requests
-                const controller = new AbortController();
-                const timeoutId = setTimeout(() => controller.abort(), 10000); // 10 second timeout
-
-                const customerResponse = await fetch(
-                    customerUrl,
-                    {
+            // STRATEGY: Try fetching by ID first as it's more direct and stable
+            if (id && id > 0) {
+                const idUrl = `${baseUrl}/customers/${id}`;
+                console.log('🔍 Fetching Customer by direct ID:', id);
+                try {
+                    const idResponse = await fetch(idUrl, {
                         headers: {
                             'Authorization': 'Basic ' + Buffer.from(`${consumerKey}:${consumerSecret}`).toString('base64'),
-                        },
-                        signal: controller.signal,
+                        }
+                    });
+                    if (idResponse.ok) {
+                        const customer = await idResponse.json();
+                        console.log('✅ Found customer by direct ID:', customer.id);
+                        return { success: true, data: customer };
                     }
-                );
+                } catch (e) {
+                    console.warn('⚠️ ID-based lookup failed, falling back to email search');
+                }
+            }
+
+            // Fallback to email search (can be slow/timeout prone)
+            const customerUrl = `${baseUrl}/customers?email=${encodeURIComponent(email)}`;
+            console.log('🔍 Searching WC customer by email:', email);
+
+            try {
+                const controller = new AbortController();
+                const timeoutId = setTimeout(() => controller.abort(), 8000);
+
+                const customerResponse = await fetch(customerUrl, {
+                    headers: {
+                        'Authorization': 'Basic ' + Buffer.from(`${consumerKey}:${consumerSecret}`).toString('base64'),
+                    },
+                    signal: controller.signal,
+                });
 
                 clearTimeout(timeoutId);
-                console.log('✅ WC Customer Response Status:', customerResponse.status);
-
                 if (customerResponse.ok) {
                     const customers = await customerResponse.json();
                     if (customers.length > 0) {
-                        console.log('✅ WC Customer found:', customers[0].id, customers[0].email);
                         return { success: true, data: customers[0] };
-                    } else {
-                        console.log('⚠️ No WC customer found with email:', email);
-                    }
-                } else {
-                    let errorDetails = 'Unknown error';
-                    try {
-                        const errorText = await customerResponse.text();
-                        errorDetails = errorText;
-                        console.error('❌ Failed to fetch WC customer. Status:', customerResponse.status);
-                        console.error('❌ Error details:', errorText.substring(0, 500));
-                    } catch (e) {
-                        console.error('❌ Failed to fetch WC customer. Status:', customerResponse.status);
-                        console.error('❌ Could not read error response');
                     }
                 }
             } catch (fetchError: any) {
-                // Catch network errors, timeouts, socket closures, etc.
-                console.error('❌ NETWORK ERROR fetching WC customer:', fetchError.message);
-                console.error('❌ Error type:', fetchError.name);
-                if (fetchError.cause) {
-                    console.error('❌ Error cause:', fetchError.cause);
-                }
-
-                // Don't continue to create - the customer likely exists but we can't reach WC
-                console.warn('⚠️ WooCommerce API unreachable. Will use fallback profile.');
+                console.error('❌ Network error during email search:', fetchError.message);
             }
-        } else {
-            console.warn('Missing Consumer Key/Secret, skipping WC customer fetch');
         }
 
         // No WooCommerce customer found - create one automatically
@@ -330,36 +322,26 @@ export async function getCurrentUserAction(token: string, userEmail?: string) {
             }
         }
 
-        // Fallback: If we reach here, customer exists but we can't fetch it from WooCommerce
-        // This can happen due to API issues, permissions, or sync problems
-        // Allow login to succeed with basic user data so user isn't locked out
-        console.warn('⚠️ Could not fetch WooCommerce customer for:', email);
-        console.warn('⚠️ Creating temporary user profile. Orders may not be linked until WC customer is accessible.');
+        // Fallback: Use WordPress User ID as WooCommerce ID (they are usually identical)
+        console.warn('⚠️ WooCommerce lookup failed. Using verified WordPress identity.');
 
-        // Create a temporary but functional user object
-        // Use a hash of the email as a pseudo-ID (better than 0, won't conflict)
-        const emailHash = email.split('').reduce((acc, char) => {
-            return ((acc << 5) - acc) + char.charCodeAt(0);
-        }, 0);
-        const pseudoId = Math.abs(emailHash) % 1000000; // Keep it reasonable
+        const verifiedId = id || Math.abs(email.split('').reduce((acc, char) => (acc << 5) - acc + char.charCodeAt(0), 0)) % 1000000;
 
         return {
             success: true,
             data: {
-                id: pseudoId, // Non-zero ID to prevent "No customer ID" errors
+                id: verifiedId,
                 email: email,
                 first_name: firstName,
                 last_name: lastName,
                 username: emailUsername,
                 role: 'customer',
-                avatar_url: '',
                 billing: {},
                 shipping: {},
-                // Mark this as a temporary profile
                 _meta: {
                     is_temporary: true,
-                    reason: 'woocommerce_fetch_failed',
-                    message: 'Customer exists but could not be fetched from WooCommerce'
+                    reason: 'woocommerce_unreachable',
+                    identity_source: id ? 'wordpress_id' : 'email_hash'
                 }
             }
         };
@@ -377,9 +359,23 @@ export async function getCustomerOrdersAction(customerId: number, params?: {
     per_page?: number;
     page?: number;
     status?: string;
+    email?: string; // Optional email for fallback search
 }) {
     try {
-        const orders = await getCustomerOrders(customerId, params);
+        console.log('Fetching orders for customer ID:', customerId);
+        let orders = await getCustomerOrders(customerId, params);
+
+        // If no orders found by ID, and we have an email, try searching by email (guest orders)
+        if ((!orders || orders.length === 0) && params?.email) {
+            console.log('No orders found by ID, trying fallback search by email:', params.email);
+            const fallbackOrders = await getOrdersByEmail(params.email, params);
+            if (fallbackOrders && fallbackOrders.length > 0) {
+                // Merge or return fallback orders
+                // We return them as they are likely the missing orders
+                return { success: true, data: fallbackOrders };
+            }
+        }
+
         return { success: true, data: orders };
     } catch (error: any) {
         console.error('Get customer orders error:', error);
