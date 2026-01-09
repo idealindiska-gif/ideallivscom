@@ -53,12 +53,16 @@ export async function Footer() {
                 </Link>
               </li>
               <li>
-                <p className="font-medium text-foreground mb-1">Delivery Areas</p>
-                <p className="text-xs">Stockholm & surrounding areas</p>
+                <div className="space-y-1">
+                  <p className="font-medium text-foreground">Serving Neighborhoods</p>
+                  <p className="text-[10px] leading-relaxed">
+                    Bandhagen, Högdalen, Enskede, Älvsjö, Farsta, Skarpnäck, Bagarmossen, Stockholms innerstad, Bromma, Täby, Sollentuna & more.
+                  </p>
+                </div>
               </li>
               <li>
-                <p className="font-medium text-foreground mb-1">Free Delivery</p>
-                <p className="text-xs">On orders over 500 SEK</p>
+                <p className="font-medium text-foreground mb-1">Stockholm & Sweden</p>
+                <p className="text-xs">Same-day delivery local orders</p>
               </li>
             </ul>
           </div>
@@ -217,7 +221,7 @@ export async function Footer() {
             Crafted with ☕ & a cup of chai by <a href="https://fourlines.agency" target="_blank" rel="noopener noreferrer" className="hover:text-primary transition-colors">Fourlines Agency</a>
           </p>
         </div>
-      </div>
-    </footer>
+      </div >
+    </footer >
   );
 }

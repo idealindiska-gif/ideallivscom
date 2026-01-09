@@ -107,13 +107,13 @@ export function webpageSchema(config: {
 }
 
 /**
- * Pre-configured Anmol Sweets WebSite Schema
+ * Pre-configured Ideal Indiska WebSite Schema
  */
-export function anmolWebsiteSchema(baseUrl: string = 'https://anmolsweets.se'): WebSite {
+export function idealIndiskaWebsiteSchema(baseUrl: string = 'https://www.ideallivs.com'): WebSite {
   return websiteSchema({
-    name: 'Anmol Sweets & Restaurant',
+    name: 'Ideal Indiska LIVS',
     url: baseUrl,
-    description: 'Experience the authentic flavors of Pakistan & India in Stockholm. Famous for our Halwa Puri, fresh Mithai, and traditional curries.',
+    description: 'Your trusted source for authentic Indian and Pakistani groceries in Stockholm. Fresh produce, aromatic spices, and premium grains.',
     organizationId: generateSchemaId(baseUrl, 'organization'),
     searchUrl: `${baseUrl}/shop`,
   });

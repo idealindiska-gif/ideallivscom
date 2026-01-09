@@ -6,7 +6,7 @@ import { Analytics } from "@vercel/analytics/react";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 import { TopInfoBar } from "@/components/layout/top-info-bar";
 import { SchemaScript } from "@/lib/schema/schema-script";
-import { websiteSchema } from "@/lib/schema";
+import { idealIndiskaWebsiteSchema, schemaGraph, idealIndiskaOrganizationSchemaFull } from "@/lib/schema";
 import { GoogleTagManager, GoogleTagManagerNoScript, FacebookPixel } from "@/components/analytics";
 import { VerticalSidebar } from "@/components/layout/vertical-sidebar";
 import { ContentHeader } from "@/components/layout/content-header";
@@ -205,15 +205,13 @@ export default async function RootLayout({
         <SpeedInsights />
         <AiChatWidget />
 
-        {/* Global WebSite Schema */}
+        {/* Global SEO Schemas */}
         <SchemaScript
-          id="website-schema"
-          schema={websiteSchema({
-            name: siteConfig.site_name,
-            url: siteConfig.site_domain,
-            description: siteConfig.site_description,
-            searchUrl: `${siteConfig.site_domain}/shop`,
-          })}
+          id="global-schema"
+          schema={schemaGraph(
+            idealIndiskaWebsiteSchema(siteConfig.site_domain),
+            idealIndiskaOrganizationSchemaFull(siteConfig.site_domain)
+          )}
         />
       </body>
     </html>
