@@ -203,6 +203,7 @@ export default function CheckoutPage() {
           product_id: item.productId,
           variation_id: item.variationId,
           quantity: item.quantity,
+          tax_class: item.variation?.tax_class || item.product.tax_class, // Include tax class for Swedish rates (25% standard, 12% reduced)
         })),
         shipping_lines: [
           {
@@ -361,6 +362,7 @@ export default function CheckoutPage() {
               product_id: item.productId,
               variation_id: item.variationId,
               quantity: item.quantity,
+              tax_class: item.variation?.tax_class || item.product.tax_class, // Include tax class for Swedish rates (25% standard, 12% reduced)
             })),
             orderNotes: orderNotes,
             coupon: coupon ? { code: coupon.code } : null,
@@ -409,6 +411,7 @@ export default function CheckoutPage() {
           product_id: item.productId,
           variation_id: item.variationId,
           quantity: item.quantity,
+          tax_class: item.variation?.tax_class || item.product.tax_class, // Include tax class for Swedish rates (25% standard, 12% reduced)
         })),
         shipping_lines: [
           {

@@ -41,6 +41,7 @@ export interface CreateOrderData {
         product_id: number;
         variation_id?: number;
         quantity: number;
+        tax_class?: string;  // Tax class for Swedish tax rates: '' (standard 25%), 'reduced-rate' (12% for food)
     }[];
     shipping_lines?: {
         method_id: string;

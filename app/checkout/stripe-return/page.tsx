@@ -37,6 +37,7 @@ interface CheckoutData {
         product_id: number;
         variation_id?: number;
         quantity: number;
+        tax_class?: string;  // Tax class for Swedish tax rates: '' (standard 25%), 'reduced-rate' (12% for food)
     }>;
     orderNotes?: string;
     coupon?: { code: string } | null;
