@@ -258,5 +258,5 @@ function calculateSimilarity(str1: string, str2: string): number {
 }
 
 export function getGreeting(): string {
-    return `Hello! I'm your **Anmol Assistant**. I can help you with:\n\n✨ Menu recommendations\n🍽️ Reservations\n🎉 Catering & events\n📍 Location & hours\n💬 Any questions about our food\n\nWhat can I help you with today?`;
+    return `Hello! I'm your **Ideal Indiska Assistant**. I can help you with:\n\n✨ Menu recommendations\n🍽️ Reservations\n🎉 Catering & events\n📍 Location & hours\n💬 Any questions about our food\n\nWhat can I help you with today?`;
 }

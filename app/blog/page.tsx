@@ -2,6 +2,7 @@ import { Metadata } from 'next';
 import Link from 'next/link';
 import Image from 'next/image';
 import { Calendar, User, Tag as TagIcon } from 'lucide-react';
+import { Button } from '@/components/ui/button';
 import { getPostsPaginated, getAllCategories, getAllTags } from '@/lib/wordpress';
 import { Post } from '@/lib/wordpress.d';
 import { brandConfig } from '@/config/brand.config';
@@ -68,14 +69,41 @@ export default async function BlogPage() {
     <div className="min-h-screen bg-background">
       {/* Hero Section */}
       <section className="bg-gradient-to-br from-primary-900 to-primary-800 dark:from-primary-950 dark:to-primary-900 text-white py-16 md:py-24">
+        <div className="container px-4 md:px-6 text-center">
+          <h1 className="text-4xl md:text-5xl lg:text-6xl font-heading font-bold mb-6">
+            Our Blog
+          </h1>
+          <p className="text-lg md:text-xl text-primary-100 max-w-2xl mx-auto">
+            Discover authentic recipes, cooking tips, and the rich culinary traditions of Indian and Pakistani cuisine in Sweden.
+          </p>
+        </div>
+      </section>
+
+      {/* Featured Static Post (Internal) */}
+      <section className="py-12 bg-muted/30 border-b">
         <div className="container px-4 md:px-6">
-          <div className="max-w-3xl mx-auto text-center">
-            <h1 className="text-4xl md:text-5xl lg:text-6xl font-heading font-bold mb-6">
-              Our Blog
-            </h1>
-            <p className="text-lg md:text-xl text-primary-100 dark:text-primary-200">
-              Discover authentic recipes, cooking tips, restaurant news, and the rich culinary traditions of {brandConfig.cuisineType} cuisine.
-            </p>
+          <div className="flex flex-col md:flex-row gap-8 items-center bg-background rounded-3xl overflow-hidden shadow-sm border p-4 md:p-6">
+            <div className="relative w-full md:w-1/2 aspect-[16/9] rounded-2xl overflow-hidden flex-shrink-0">
+              <Image
+                src="/images/blog/indian-fika-hero.png"
+                alt="The Indian Fika"
+                fill
+                className="object-cover"
+              />
+              <div className="absolute top-4 left-4 bg-primary text-white text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wider">
+                Staff Pick
+              </div>
+            </div>
+            <div className="flex-1 space-y-4">
+              <div className="text-sm font-medium text-primary uppercase tracking-widest">Culture & Cooking</div>
+              <h2 className="text-2xl md:text-3xl font-bold font-heading">The Indian Fika: 5 Savory Snacks to Pair with Your Tea</h2>
+              <p className="text-muted-foreground line-clamp-3">
+                Experience the perfect blend of Swedish tradition and South Asian spice. Discover the best samosas, namkeen, and biscuits that turn every coffee break into a flavor adventure.
+              </p>
+              <Button asChild className="rounded-full px-8">
+                <Link href="/blog/the-indian-fika">Read the Guide</Link>
+              </Button>
+            </div>
           </div>
         </div>
       </section>
