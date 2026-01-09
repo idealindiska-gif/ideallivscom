@@ -177,6 +177,23 @@ export function VerticalSidebar({ categories = [] }: VerticalSidebarProps) {
                 </div>
                 <ChevronRight className="h-4 w-4 text-orange-600 dark:text-orange-500 group-hover:text-orange-700 group-hover:translate-x-1 transition-transform" />
               </Link>
+
+              <button
+                onClick={() => {
+                  // Trigger feedback modal
+                  const event = new CustomEvent('openFeedback');
+                  window.dispatchEvent(event);
+                }}
+                className="flex items-center justify-between p-3 bg-blue-50 dark:bg-blue-950/20 border border-blue-200 dark:border-blue-900 rounded-xl hover:bg-blue-100 dark:hover:bg-blue-950/30 hover:border-blue-300 dark:hover:border-blue-800 hover:shadow-sm transition-all group w-full"
+              >
+                <div className="flex items-center gap-3">
+                  <svg className="h-4 w-4 text-blue-600 dark:text-blue-500 group-hover:text-blue-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z" />
+                  </svg>
+                  <span className="text-sm font-semibold text-blue-700 dark:text-blue-400">Share Feedback</span>
+                </div>
+                <ChevronRight className="h-4 w-4 text-blue-600 dark:text-blue-500 group-hover:text-blue-700 group-hover:translate-x-1 transition-transform" />
+              </button>
             </div>
 
             {/* Top Charts */}

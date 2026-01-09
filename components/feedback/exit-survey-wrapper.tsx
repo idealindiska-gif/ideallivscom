@@ -32,38 +32,32 @@ export function ExitSurveyWrapper() {
     setWasSubmitted(!!submitted);
   }, []);
 
-  // Enable exit intent only if not on excluded pages
+  // Disable exit intent - only manual trigger allowed
   const { showExitIntent, dismiss } = useExitIntent({
-    enabled: !isExcludedPage && shouldShow,
+    enabled: false, // DISABLED - only manual trigger
     threshold: 50,
     delayMs: 500,
     cookieName: 'exit_survey_shown',
     cookieExpireDays: 7,
   });
 
+  // DISABLED: Auto-enable functionality
+  // Survey now only triggers via manual button click
   useEffect(() => {
-    if (isExcludedPage) return;
-
-    // Enable after user interaction
-    const enableAfterInteraction = () => {
-      setShouldShow(true);
-    };
-
-    // Enable after 15 seconds OR after first user interaction
-    const timer = setTimeout(() => {
-      setShouldShow(true);
-    }, 15000); // 15 seconds
-
-    // Enable on first click or scroll
-    document.addEventListener('click', enableAfterInteraction, { once: true });
-    document.addEventListener('scroll', enableAfterInteraction, { once: true });
-
-    return () => {
-      clearTimeout(timer);
-      document.removeEventListener('click', enableAfterInteraction);
-      document.removeEventListener('scroll', enableAfterInteraction);
-    };
+    // No auto-enable
   }, [isExcludedPage]);
+
+  // Listen for manual trigger from sidebar button
+  useEffect(() => {
+    const handleOpenFeedback = () => {
+      setManualTrigger(true);
+    };
+
+    window.addEventListener('openFeedback', handleOpenFeedback);
+    return () => {
+      window.removeEventListener('openFeedback', handleOpenFeedback);
+    };
+  }, []);
 
   // Don't render on excluded pages
   if (isExcludedPage) {
@@ -83,9 +77,10 @@ export function ExitSurveyWrapper() {
 
   return (
     <>
+      {/* Bubble is now disabled - using sidebar button instead */}
       <FeedbackTriggerBubble
         onClick={handleManualTrigger}
-        isVisible={!wasSubmitted && !shouldShowSurvey}
+        isVisible={false}
       />
       <ExitSurvey show={shouldShowSurvey} onClose={handleClose} />
     </>
