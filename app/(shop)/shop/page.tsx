@@ -7,8 +7,8 @@ import { Skeleton } from '@/components/ui/skeleton';
 import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
-  title: 'Shop',
-  description: 'Browse our delicious menu featuring authentic cuisine, gourmet dishes, and more.',
+  title: 'Shop Indian & Pakistani Groceries | Ideal Indiska LIVS',
+  description: 'Shop authentic Indian & Pakistani groceries online. Premium Basmati rice, spices, halal products, frozen foods & more. Deliveries across Stockholm and Europe.',
 };
 
 interface ShopPageProps {
@@ -76,7 +76,7 @@ export default async function ShopPage({ searchParams }: ShopPageProps) {
   return (
     <ArchiveTemplate
       title="Shop"
-      description="Browse our delicious menu featuring authentic cuisine, gourmet dishes, and more."
+      description="Shop authentic Indian & Pakistani groceries online. Premium Basmati rice, spices, halal products, frozen foods & more."
       breadcrumbs={[{ label: 'Shop' }]}
       products={products}
       totalProducts={total}

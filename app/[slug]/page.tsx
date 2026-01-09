@@ -20,16 +20,21 @@ export async function generateMetadata({ params }: DynamicPageProps): Promise<Me
   try {
     const post = await getPostBySlug(resolvedParams.slug);
     if (post) {
+      const decodedTitle = post.title.rendered.replace(/&#(\d+);/g, (match, dec) => String.fromCharCode(dec));
       const description = post.excerpt?.rendered?.replace(/<[^>]*>/g, '').trim() || '';
       return {
-        title: post.title.rendered,
+        title: `${decodedTitle} | Ideal Indiska LIVS Blog`,
         description: description.substring(0, 160),
         openGraph: {
-          title: post.title.rendered,
+          title: decodedTitle,
           description: description.substring(0, 160),
           type: 'article',
-          url: `https://ideallivs.com/${post.slug}`,
+          url: `https://www.ideallivs.com/${post.slug}`,
+          siteName: 'Ideal Indiska LIVS',
         },
+        alternates: {
+          canonical: `https://www.ideallivs.com/${post.slug}`,
+        }
       };
     }
   } catch {
@@ -40,19 +45,24 @@ export async function generateMetadata({ params }: DynamicPageProps): Promise<Me
   try {
     const page = await getPageBySlug(resolvedParams.slug);
     if (page) {
+      const decodedTitle = page.title.rendered.replace(/&#(\d+);/g, (match, dec) => String.fromCharCode(dec));
       const description = page.excerpt?.rendered?.replace(/<[^>]*>/g, '').substring(0, 160) || page.title.rendered;
       return {
-        title: page.title.rendered,
+        title: `${decodedTitle} | Ideal Indiska LIVS`,
         description: description,
         openGraph: {
-          title: page.title.rendered,
+          title: decodedTitle,
           description: description,
           type: 'website',
-          url: `https://ideallivs.com/${page.slug}`,
+          url: `https://www.ideallivs.com/${page.slug}`,
+          siteName: 'Ideal Indiska LIVS',
+        },
+        alternates: {
+          canonical: `https://www.ideallivs.com/${page.slug}`,
         },
         twitter: {
           card: 'summary_large_image',
-          title: page.title.rendered,
+          title: decodedTitle,
           description: description,
         }
       };
@@ -62,7 +72,7 @@ export async function generateMetadata({ params }: DynamicPageProps): Promise<Me
   }
 
   return {
-    title: 'Not Found',
+    title: 'Not Found | Ideal Indiska LIVS',
   };
 }
 

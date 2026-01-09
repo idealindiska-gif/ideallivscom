@@ -59,7 +59,7 @@ export function ProductCard({ product, className }: ProductCardProps) {
             {product.images && product.images.length > 0 && !imageError ? (
               <Image
                 src={product.images[0].src}
-                alt={product.images[0].alt || product.name}
+                alt={`${product.images[0].alt || product.name} | Ideal Indiska LIVS`}
                 fill
                 className="object-cover transition-transform duration-500 group-hover:scale-105"
                 sizes="(max-width: 768px) 50vw, (max-width: 1200px) 33vw, 25vw"

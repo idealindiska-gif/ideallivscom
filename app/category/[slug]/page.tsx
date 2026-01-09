@@ -19,17 +19,22 @@ export async function generateMetadata({ params }: CategoryPageProps): Promise<M
 
         if (!category) {
             return {
-                title: 'Category Not Found',
+                title: 'Category Not Found | Ideal Indiska LIVS Blog',
             };
         }
 
+        const title = `${category.name} | Ideal Indiska LIVS Blog - Recipes & Guides`;
+        const description = (category.description || `Read guides, recipes, and more about ${category.name} at Ideal Indiska LIVS.`) + " Learn about authentic South Asian ingredients and culture.";
+
         return {
-            title: `${category.name} | Ideal Indiska LIVS Blog`,
-            description: category.description || `Read articles about ${category.name}`,
+            title,
+            description: description.substring(0, 160),
             openGraph: {
-                title: category.name,
-                description: category.description || `Read articles about ${category.name}`,
+                title,
+                description: description.substring(0, 160),
                 url: `https://ideallivs.com/category/${resolvedParams.slug}`,
+                siteName: 'Ideal Indiska LIVS Blog',
+                type: 'website',
             },
             alternates: {
                 canonical: `/category/${resolvedParams.slug}`,
@@ -37,7 +42,7 @@ export async function generateMetadata({ params }: CategoryPageProps): Promise<M
         };
     } catch {
         return {
-            title: 'Category Not Found',
+            title: 'Category Not Found | Ideal Indiska LIVS Blog',
         };
     }
 }

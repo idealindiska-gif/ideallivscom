@@ -38,12 +38,17 @@ export async function generateMetadata({ params }: ProductCategoryPageProps): Pr
             alt: 'Ideal Indiska LIVS - Indian & Pakistani Groceries in Stockholm',
         };
 
+        const cleanDescription = category.description?.replace(/\<[^>]*>/g, '').trim();
+        const metaDescription = cleanDescription
+            ? cleanDescription.substring(0, 150) + " | Authentic Indian & Pakistani groceries at Ideal Indiska LIVS. Same-day delivery in Stockholm."
+            : `Shop ${category.name} at Ideal Indiska LIVS. Your trusted source for authentic Indian and Pakistani groceries in Stockholm. High-quality products at great prices.`;
+
         return {
             title: `${category.name} | Ideal Indiska LIVS`,
-            description: category.description?.replace(/\<[^>]*>/g, '').substring(0, 160) || `Shop ${category.name} products at Ideal Indiska LIVS`,
+            description: metaDescription.substring(0, 160),
             openGraph: {
-                title: category.name,
-                description: category.description?.replace(/\<[^>]*>/g, '').substring(0, 160),
+                title: `${category.name} | Ideal Indiska LIVS`,
+                description: metaDescription.substring(0, 160),
                 images: category.image
                     ? [{
                         url: category.image.src,
@@ -53,11 +58,16 @@ export async function generateMetadata({ params }: ProductCategoryPageProps): Pr
                     }]
                     : [defaultImage],
                 url: `${siteConfig.site_domain}/product-category/${resolvedParams.slug?.join('/')}`,
+                siteName: 'Ideal Indiska LIVS',
+                type: 'website',
+            },
+            alternates: {
+                canonical: `/product-category/${resolvedParams.slug?.join('/')}`,
             },
         };
     } catch {
         return {
-            title: 'Category Not Found',
+            title: 'Category Not Found | Ideal Indiska LIVS',
         };
     }
 }

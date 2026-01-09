@@ -3,6 +3,8 @@ import { CategoryGrid } from "@/components/home/category-grid";
 import { PromotionGrid } from "@/components/home/promotion-grid";
 import { BannerStrip } from "@/components/home/banner-strip";
 import { ProductShowcase } from "@/components/home/product-showcase";
+import { Features } from "@/components/home/features";
+import { SeoContent } from "@/components/home/seo-content";
 import { getProducts, getProductCategories } from "@/lib/woocommerce";
 import type { Metadata } from "next";
 import { SchemaScript } from "@/lib/schema/schema-script";
@@ -12,8 +14,8 @@ import { idealIndiskaOrganizationSchemaFull } from "@/lib/schema/organization";
 export const revalidate = 3600;
 
 export const metadata: Metadata = {
-  title: "Ideal Indiska LIVS - Indian & Pakistani Groceries in Stockholm",
-  description: "Your trusted source for authentic Indian and Pakistani groceries in Stockholm. Fresh produce, aromatic spices, premium Basmati rice, and halal meat delivered to your door. Free delivery on orders over 500 SEK.",
+  title: "Ideal Indiska LIVS | Authentic Indian & Pakistani Groceries Stockholm",
+  description: "Stockholm's best Indian & Pakistani grocery store. Shop premium Basmati rice, aromatic spices, Halal meat, and fresh produce. Fast delivery in Stockholm & Europe-wide.",
   alternates: {
     canonical: "https://www.ideallivs.com",
   },
@@ -80,49 +82,55 @@ export default async function HomePage() {
         badge="Free Delivery Over 500 SEK"
       />
 
-      {/* 2. Top Categories */}
+      {/* 2. Features/Benefits Section (NEW) */}
+      <Features />
+
+      {/* 3. Top Categories */}
       <CategoryGrid categories={categories} />
 
-      {/* 3. Promotion/Deals Grid */}
+      {/* 4. Promotion/Deals Grid */}
       <PromotionGrid />
 
-      {/* 4. Special Offers */}
+      {/* 5. Special Offers */}
       <ProductShowcase
         title="Special Offers on Indian & Pakistani Groceries"
         products={dealProducts}
         moreLink="/deals"
       />
 
-      {/* 4. Banner Strip */}
+      {/* 6. Banner Strip */}
       <BannerStrip />
 
-      {/* 5. Trending Products */}
+      {/* 7. Trending Products */}
       <ProductShowcase
         title="Customer Favorites - Most Popular Items"
         products={trendingProducts}
         moreLink="/shop?sort=bestsellers"
       />
 
-      {/* 5a. Haldiram Section */}
+      {/* 8. Haldiram Section */}
       <ProductShowcase
         title="Haldiram's - Authentic Indian Snacks"
         products={haldiramProducts}
         moreLink="/brand/haldiram"
       />
 
-      {/* 6. New Arrivals */}
+      {/* 9. New Arrivals */}
       <ProductShowcase
         title="Fresh Arrivals - New Stock Just In"
         products={newProducts}
         moreLink="/shop?sort=new"
       />
 
-      {/* 7. Fresh Produce Section */}
+      {/* 10. Fresh Produce Section */}
       <ProductShowcase
         title="Fresh Produce - Fruits & Vegetables"
         products={freshProduceProducts}
         moreLink="/product-category/fresh-produce"
       />
+
+      {/* 11. SEO & Brand Content (NEW) */}
+      <SeoContent />
 
       {/* SEO Structured Data */}
       <SchemaScript

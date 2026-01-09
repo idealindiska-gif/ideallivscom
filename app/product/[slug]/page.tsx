@@ -32,24 +32,28 @@ export async function generateMetadata({ params }: ProductPageProps): Promise<Me
         };
 
         // Enhanced description for AI Overview and search snippets
-        const cleanDescription = product.short_description?.replace(/\<[^>]*>/g, '') || '';
-        const enhancedDescription = cleanDescription.substring(0, 155) ||
-            `Buy ${product.name} online at ${brandConfig.businessName}. Premium quality Indian & Pakistani groceries delivered in Stockholm. ${product.price ? `Only ${product.price} SEK.` : ''}`;
+        const cleanDescription = product.short_description?.replace(/\<[^>]*>/g, '').trim() || '';
+        const metaDescription = cleanDescription
+            ? cleanDescription.substring(0, 150) + " | Ideal Indiska LIVS: Fresh groceries & spices delivered in Stockholm."
+            : `Shop ${product.name} at Ideal Indiska LIVS. Premium Indian & Pakistani groceries. Same-day delivery available in Stockholm. High quality, authentic products.`;
 
         const url = `${siteConfig.site_domain}/product/${resolvedParams.slug}`;
 
         return {
-            title: `${product.name} | Buy Online | ${brandConfig.businessName}`,
-            description: enhancedDescription,
+            title: `${product.name} | Ideal Indiska LIVS - Authentic Groceries`,
+            description: metaDescription.substring(0, 160),
             keywords: [
                 product.name,
+                "Indian groceries",
+                "Pakistani groceries",
+                "halal food Stockholm",
+                "online grocery delivery",
                 ...(product.categories?.map(c => c.name) || []),
-                ...brandConfig.seo.keywords,
             ],
             openGraph: {
                 type: 'website',
-                title: product.name,
-                description: enhancedDescription,
+                title: `${product.name} | Ideal Indiska LIVS`,
+                description: metaDescription.substring(0, 160),
                 images: product.images && product.images.length > 0
                     ? product.images.map((img) => ({
                         url: img.src,
@@ -59,12 +63,12 @@ export async function generateMetadata({ params }: ProductPageProps): Promise<Me
                     }))
                     : [defaultImage],
                 url: url,
-                siteName: brandConfig.businessName,
+                siteName: 'Ideal Indiska LIVS',
             },
             twitter: {
                 card: 'summary_large_image',
                 title: product.name,
-                description: enhancedDescription,
+                description: metaDescription.substring(0, 160),
                 images: product.images && product.images.length > 0
                     ? [product.images[0].src]
                     : [defaultImage.url],

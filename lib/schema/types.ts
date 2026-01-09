@@ -313,6 +313,9 @@ export interface ProductInput {
   isVariable?: boolean;
   lowPrice?: number | string;
   highPrice?: number | string;
+  offerCount?: number;
+  priceValidUntil?: string;
+  weight?: string | number;
   seller?: string;
   condition?: 'NewCondition' | 'UsedCondition' | 'RefurbishedCondition';
 }

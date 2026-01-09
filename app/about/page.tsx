@@ -6,8 +6,8 @@ import { ShoppingBag, Heart, Users, Award, MessageCircle, Mail, MapPin } from "l
 import { GoogleMapCompact } from "@/components/shared/google-map";
 
 export const metadata: Metadata = {
-  title: `About ${brandProfile.name} - ${brandProfile.tagline}`,
-  description: `Learn about ${brandProfile.name}, your trusted source for authentic Indian and Pakistani groceries in Stockholm. Discover our story, commitment to quality, and dedication to serving the South Asian community in Sweden.`,
+  title: `About ${brandProfile.name} - Stockholm's Best Indian & Pakistani Grocery`,
+  description: `Discover the story of ${brandProfile.name}. Since 2020, we have been Stockholm's most trusted source for authentic Indian and Pakistani groceries, premium Basmati rice, and Halal meat.`,
   alternates: {
     canonical: '/about',
   },
@@ -63,10 +63,10 @@ export default function AboutPage() {
                   letterSpacing: '0.03em'
                 }}>
                   <p>
-                    Ideal Indiska was born from a deep-rooted love for the authentic flavours of our homeland and a desire to share them with the vibrant community in Stockholm. We noticed a need for a dedicated space where people could find high-quality, genuine Indian and Pakistani groceries without compromise.
+                    Ideal Indiska was born in 2020 from a deep-rooted love for the authentic flavours of our homeland and a desire to share them with the vibrant community in Stockholm. We noticed a need for a dedicated space where people could find high-quality, genuine Indian and Pakistani groceries without compromise.
                   </p>
                   <p>
-                    What started as a small idea has grown into a cherished local store in Bandhagen, driven by our commitment to bringing you the best ingredients for your traditional recipes and culinary explorations.
+                    From our humble beginnings at <strong>Bandhagen Centrum</strong>, we have grown into Stockholm's premier destination for South Asian cooking essentials. We take pride in being a bridge to home for thousands of families across Sweden.
                   </p>
                   <div className="relative aspect-video rounded-2xl overflow-hidden shadow-sm border mt-8">
                     <Image

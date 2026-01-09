@@ -33,13 +33,27 @@ export async function generateMetadata({ params }: BrandArchivePageProps): Promi
 
     if (!brand) {
         return {
-            title: 'Brand Not Found',
+            title: 'Brand Not Found | Ideal Indiska LIVS',
         };
     }
 
+    const title = `${brand.name} | Authentic Products at Ideal Indiska LIVS`;
+    const description = brand.description
+        ? brand.description.replace(/\<[^>]*>/g, '').substring(0, 150) + " | Shop authentic products at Ideal Indiska LIVS Stockholm."
+        : `Shop all ${brand.name} products at Ideal Indiska LIVS. Your trusted source for authentic Indian and Pakistani groceries in Stockholm. High-quality products from top brands.`;
+
     return {
-        title: `${brand.name} Products - Shop by Brand`,
-        description: brand.description || `Browse all products from ${brand.name}`,
+        title,
+        description: description.substring(0, 160),
+        openGraph: {
+            title,
+            description: description.substring(0, 160),
+            siteName: 'Ideal Indiska LIVS',
+            type: 'website',
+        },
+        alternates: {
+            canonical: `${siteConfig.site_domain}/brand/${resolvedParams.slug}`,
+        },
     };
 }
 

@@ -55,7 +55,7 @@ export function ProductImageGallery({
               >
                 <Image
                   src={currentImage.src}
-                  alt={currentImage.alt || productName}
+                  alt={`${currentImage.alt || productName} | Ideal Indiska LIVS`}
                   fill
                   className="object-contain p-4"
                   priority
@@ -145,7 +145,7 @@ export function ProductImageGallery({
               >
                 <Image
                   src={image.src}
-                  alt={image.alt || `${productName} - Image ${index + 1}`}
+                  alt={`${image.alt || productName} - Image ${index + 1} | Ideal Indiska LIVS`}
                   fill
                   className="object-contain p-1 transition-transform group-hover:scale-110"
                   sizes="(max-width: 768px) 20vw, 10vw"
@@ -175,7 +175,7 @@ export function ProductImageGallery({
             <div className="relative aspect-square w-full md:aspect-video">
               <Image
                 src={currentImage.src}
-                alt={currentImage.alt || productName}
+                alt={`${currentImage.alt || productName} | Ideal Indiska LIVS`}
                 fill
                 className={cn(
                   'object-contain transition-transform duration-300',
@@ -230,7 +230,7 @@ export function ProductImageGallery({
                     >
                       <Image
                         src={image.src}
-                        alt={image.alt || `${productName} - Thumbnail ${index + 1}`}
+                        alt={`${image.alt || productName} - Thumbnail ${index + 1} | Ideal Indiska LIVS`}
                         fill
                         className="object-cover"
                         sizes="80px"

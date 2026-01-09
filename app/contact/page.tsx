@@ -4,10 +4,12 @@ import { brandProfile } from "@/config/brand-profile";
 import { MapPin, Phone, Mail, Clock, MessageSquare, ExternalLink } from "lucide-react";
 import { ContactForm } from "@/components/forms/contact-form";
 import { GoogleMapCompact } from "@/components/shared/google-map";
+import { SchemaScript } from "@/lib/schema/schema-script";
+import { idealIndiskaOrganizationSchemaFull } from "@/lib/schema/organization";
 
 export const metadata: Metadata = {
-  title: `Contact Us - ${brandProfile.name} | ${brandProfile.address.city}`,
-  description: `Get in touch with ${brandProfile.name}. Visit our store in ${brandProfile.address.area}, call us at ${brandProfile.contact.phone}, or send us a message. We're here to help with all your Indian & Pakistani grocery needs in Stockholm.`,
+  title: `Contact Us - Ideal Indiska LIVS | Grocery Store Bandhagen Stockholm`,
+  description: `Visit our store in Bandhagen Centrum, call us, or message on WhatsApp. We provide authentic Indian & Pakistani groceries with local delivery across Stockholm.`,
   alternates: {
     canonical: '/contact',
   },
@@ -217,6 +219,12 @@ export default function ContactPage() {
           </div>
         </div>
       </section>
+
+      {/* SEO Structured Data */}
+      <SchemaScript
+        id="contact-org-schema"
+        schema={idealIndiskaOrganizationSchemaFull()}
+      />
     </main>
   );
 }

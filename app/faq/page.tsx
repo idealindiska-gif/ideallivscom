@@ -7,6 +7,8 @@ import {
     AccordionTrigger,
 } from "@/components/ui/accordion";
 import { MessageCircle, Mail, MapPin } from 'lucide-react';
+import { SchemaScript } from "@/lib/schema/schema-script";
+import { idealIndiskaFAQSchema } from "@/lib/schema/faq";
 
 export const metadata: Metadata = {
     title: 'Frequently Asked Questions | Ideal Indiska LIVS',
@@ -33,12 +35,12 @@ const faqs = [
                 a: "No, you can check out as a guest. However, creating an account lets you view order history, save your address for faster checkout, and receive exclusive first-purchase offers and promotions."
             },
             {
-                q: "Can I order groceries through WhatsApp?",
-                a: "Yes! You can place orders via WhatsApp directly from product pages, cart, or checkout. Join our WhatsApp Group by scanning the QR code in the footer section for easy ordering and updates."
+                q: "Where can I buy Indian and Pakistani spices in Stockholm?",
+                a: "You can find the widest selection of authentic Indian and Pakistani spices at Ideal Indiska LIVS, both at our Bandhagen store and online. We stock brands like Shan, MDH, National Foods, and TRS."
             },
             {
-                q: "Do you offer discounts?",
-                a: "Yes! We're one of Stockholm's most competitively priced stores for Indian and Pakistani groceries. Check our special offers page weekly for the latest promotions and deals."
+                q: "Do you offer discounts for bulk orders?",
+                a: "Yes! We're one of Stockholm's most competitively priced stores. For very large restaurant or catering orders, please contact us via WhatsApp for custom volume pricing."
             },
         ]
     },
@@ -84,7 +86,11 @@ const faqs = [
             },
             {
                 q: "What grocery brands do you stock?",
-                a: "We carry over 150 brands from around the world, specializing in authentic Indian and Pakistani products, plus select Swedish and European brands."
+                a: "We carry over 150 brands including India Gate, Guard, Shan, National Foods, Haldiram's, Ashoka, Ahmed Foods, and many more South Asian favorites."
+            },
+            {
+                q: "Do you sell Halal meat?",
+                a: "Yes, we have a dedicated section for 100% Halal certified meat and poultry. Quality and authenticity are guaranteed for all our Halal products."
             },
         ]
     },
@@ -309,6 +315,12 @@ export default function FAQPage() {
                     </div>
                 </div>
             </section>
+
+            {/* SEO Structured Data */}
+            <SchemaScript
+                id="faq-page-schema"
+                schema={idealIndiskaFAQSchema()}
+            />
         </div>
     );
 }

@@ -21,6 +21,7 @@ interface WPPost {
     rendered: string;
   };
   link: string;
+  slug: string;
   author: number;
   featured_media: number;
   _embedded?: {
@@ -119,12 +120,14 @@ export async function GET() {
         fullContent = `<img src="${escapeXml(imageUrl)}" alt="${escapeXml(imageAlt)}" />\n${contentHtml}`;
       }
 
+      const frontendLink = `${siteConfig.site_domain}/${post.slug}`;
+
       xml += `    <item>\n`;
       xml += `      <title><![CDATA[${title}]]></title>\n`;
-      xml += `      <link>${escapeXml(post.link)}</link>\n`;
+      xml += `      <link>${escapeXml(frontendLink)}</link>\n`;
       xml += `      <pubDate>${pubDate}</pubDate>\n`;
       xml += `      <dc:creator><![CDATA[${authorName}]]></dc:creator>\n`;
-      xml += `      <guid isPermaLink="true">${escapeXml(post.link)}</guid>\n`;
+      xml += `      <guid isPermaLink="true">${escapeXml(frontendLink)}</guid>\n`;
       xml += `      <description><![CDATA[${excerpt}]]></description>\n`;
       xml += `      <content:encoded><![CDATA[${fullContent}]]></content:encoded>\n`;
 

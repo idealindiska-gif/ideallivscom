@@ -7,8 +7,8 @@ import { goteborgMalmoDeliveryServiceSchema } from "@/lib/schema";
 import { GoogleMapCompact } from "@/components/shared/google-map";
 
 export const metadata: Metadata = {
-  title: "Grocery Delivery Göteborg & Malmö | Ideal Indiska Livs",
-  description: "Authentic Indian and Pakistani groceries delivered to Göteborg, Malmö, and all over Skåne and West Sweden via DHL.",
+  title: "Indian Grocery Delivery Göteborg & Malmö | Ideal Indiska Livs",
+  description: "Authentic groceries delivered to your door in Göteborg, Malmö, Lund, and Helsingborg. Fast shipping to all of Skåne and West Sweden with DHL.",
   alternates: {
     canonical: '/delivery-goteborg-malmo',
   },

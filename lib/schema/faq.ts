@@ -61,6 +61,10 @@ export function idealIndiskaFAQSchema(baseUrl: string = 'https://www.ideallivs.c
         description: 'Common questions about our products, delivery, and services',
         faqs: [
             {
+                question: 'Where can I buy Indian and Pakistani spices in Stockholm?',
+                answer: 'You can find the widest selection of authentic Indian and Pakistani spices at Ideal Indiska LIVS, both at our Bandhagen store and online. We stock brands like Shan, MDH, National Foods, and TRS.',
+            },
+            {
                 question: 'Do you offer free delivery in Stockholm?',
                 answer: 'Yes! We offer FREE delivery in Stockholm for orders over 500 SEK. For orders between 300-499 SEK, delivery costs 30 SEK. Minimum order is 300 SEK.',
             },
@@ -69,16 +73,16 @@ export function idealIndiskaFAQSchema(baseUrl: string = 'https://www.ideallivs.c
                 answer: 'Yes, we deliver across Sweden and all of Europe with DHL. There is no minimum order value for DHL delivery. Rates are calculated at checkout based on your location and order weight.',
             },
             {
+                question: 'Do you sell Halal meat?',
+                answer: 'Yes, we have a dedicated section for 100% Halal certified meat and poultry at our Bandhagen store. Quality and authenticity are guaranteed.',
+            },
+            {
                 question: 'Do you offer same-day delivery?',
                 answer: 'Yes! We offer same-day delivery to nearby areas including Bandhagen, Hagsätra, Högdalen, Farsta, Enskede, Huddinge, Solna, and Sundbyberg. Orders must be placed before 4 PM (16:00) for same-day delivery.',
             },
             {
-                question: 'Are your products Halal certified?',
-                answer: 'Yes, we specialize in Halal certified products. Our meat and many other products are Halal certified for your peace of mind.',
-            },
-            {
-                question: 'What types of products do you sell?',
-                answer: 'We offer a wide range of Indian and Pakistani groceries including Basmati rice, spices and masalas, lentils and pulses, fresh produce, frozen foods, snacks, sweets, cooking oils, and household items.',
+                question: 'What types of Indian grocery brands do you stock?',
+                answer: 'We carry over 150 brands including India Gate, Guard, Shan, National Foods, Haldiram\'s, Ashoka, Ahmed Foods, and many more South Asian favorites.',
             },
             {
                 question: 'What are your store opening hours?',
@@ -89,16 +93,8 @@ export function idealIndiskaFAQSchema(baseUrl: string = 'https://www.ideallivs.c
                 answer: 'We accept Credit Cards, Debit Cards, Swish, Klarna, Apple Pay, Google Pay, and Cash.',
             },
             {
-                question: 'Can I return or exchange products?',
-                answer: 'Yes, we have a 14-day return policy for unopened products. Please contact us at hello@ideallivs.com or call +46728494801 for return arrangements.',
-            },
-            {
                 question: 'Do you have a physical store I can visit?',
                 answer: 'Yes! Our store is located at Bandhagsplan 4, 124 32 Bandhagen, Stockholm. You are welcome to visit us during our opening hours.',
-            },
-            {
-                question: 'How can I contact you?',
-                answer: 'You can reach us by phone at +46728494801 or email at hello@ideallivs.com. We are also active on Facebook, Instagram, and YouTube.',
             },
         ],
     });

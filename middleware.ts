@@ -10,7 +10,18 @@ import type { NextRequest } from 'next/server';
  * 3. /shop/product/* → /product/*
  */
 export function middleware(request: NextRequest) {
-  const { pathname } = request.nextUrl;
+  const url = request.nextUrl.clone();
+  const host = request.headers.get('host');
+  const { pathname } = url;
+
+  // ============================================================================
+  // FORCE WWW REDIRECT (SEO Recovery)
+  // ============================================================================
+  // Ensures all traffic is consolidated on www.ideallivs.com
+  if (host === 'ideallivs.com') {
+    url.host = 'www.ideallivs.com';
+    return NextResponse.redirect(url, 301);
+  }
 
   // ============================================================================
   // OLD WORDPRESS CATEGORY URLs → /product-category/
@@ -86,11 +97,19 @@ export function middleware(request: NextRequest) {
   }
 
   // ============================================================================
-  // OLD PAGE URLs
+  // OLD PAGE URLs Redirects
   // ============================================================================
-  if (pathname === '/pages/delivery-information') {
+  const legacyRedirects: { [key: string]: string } = {
+    '/shop-by-brand-top-indian-pakistani-grocery-brands-ideal-indiska-stockholm/': '/brands',
+    '/shop-by-brand-top-indian-pakistani-grocery-brands-ideal-indiska-stockholm': '/brands',
+    '/grocery-delivery-in-goteborg-and-malmo/': '/delivery-goteborg-malmo',
+    '/grocery-delivery-in-goteborg-and-malmo': '/delivery-goteborg-malmo',
+    '/pages/delivery-information': '/europe-delivery',
+  };
+
+  if (legacyRedirects[pathname]) {
     const url = request.nextUrl.clone();
-    url.pathname = '/europe-delivery';
+    url.pathname = legacyRedirects[pathname];
     return NextResponse.redirect(url, 301);
   }
 

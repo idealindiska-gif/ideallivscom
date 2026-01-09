@@ -114,7 +114,7 @@ export function wooCategorySchema(
   }
 ): CollectionPage {
   // Build category URL
-  const categoryUrl = `${options.baseUrl}/shop/category/${wooCategory.slug}`;
+  const categoryUrl = `${options.baseUrl}/product-category/${wooCategory.slug}`;
 
   // Convert WooCommerce products to ProductInput
   const products: ProductInput[] = wooProducts.map((wooProduct) => {

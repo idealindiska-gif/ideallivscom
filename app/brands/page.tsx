@@ -6,24 +6,25 @@ import { brandProfile } from "@/config/brand-profile";
 import { getProductBrands } from "@/lib/woocommerce/brands";
 import { Package, ArrowRight } from "lucide-react";
 
+import { SchemaScript } from "@/lib/schema/schema-script";
+import { collectionPageSchema } from "@/lib/schema/collection";
+
 export const metadata: Metadata = {
-    title: `Shop by Brand - Top Indian & Pakistani Grocery Brands | ${brandProfile.name}`,
-    description: `Discover authentic Indian and Pakistani grocery brands at ${brandProfile.name} in Stockholm. Shop from trusted brands like Ahmed, Shan, MTR, National, and more. Browse our curated selection of spices, rice, snacks, and authentic ingredients.`,
-    keywords: [
-        "Indian grocery brands Stockholm",
-        "Pakistani brands",
-        "Shan spices Stockholm",
-        "Ahmed foods Sweden",
-        "MTR products",
-        "Halal brands Stockholm",
-        "Shop by brand",
-        ...brandProfile.seo.keywords,
-    ].join(", "),
-    openGraph: {
-        title: `Shop Your Favorite Indian & Pakistani Grocery Brands in Stockholm`,
-        description: `Browse trusted brands at ${brandProfile.name}. From Shan's aromatic spices to Ahmed's quality products.`,
-        type: "website",
+    title: `Indian & Pakistani Grocery Brands Stockholm | ${brandProfile.name}`,
+    description: `Shop the widest selection of authentic Indian and Pakistani grocery brands in Stockholm. Trusted by families since 2020. Shan, Ahmed, National, MTR, Haldiram's, and more.`,
+    alternates: {
+        canonical: "https://www.ideallivs.com/brands",
     },
+    keywords: [
+        "top indian brands Stockholm",
+        "pakistani grocery stores sweden",
+        "best basmati rice brands",
+        "halal certified meat brands",
+        "shan spices stockholm",
+        "haldiram sweets sweden",
+        "mtr meals online",
+        "ahmed foods supplier",
+    ].join(", "),
 };
 
 // Revalidate every hour
@@ -162,6 +163,21 @@ export default async function ShopByBrandPage() {
                     </div>
                 </Container>
             </section>
+
+            {/* Structured Data */}
+            <SchemaScript
+                id="brands-collection-schema"
+                schema={collectionPageSchema({
+                    name: "Indian & Pakistani Grocery Brands - Ideal Indiska LIVS",
+                    description: "Directory of authentic South Asian grocery brands available in Stockholm.",
+                    url: "https://www.ideallivs.com/brands",
+                    items: brands.map(brand => ({
+                        url: `https://www.ideallivs.com/brand/${brand.slug}`,
+                        name: brand.name,
+                        image: brand.image?.src || undefined
+                    }))
+                })}
+            />
         </main>
     );
 }

@@ -7,8 +7,8 @@ import { europeDeliveryServiceSchema } from '@/lib/schema';
 import { GoogleMapCompact } from "@/components/shared/google-map";
 
 export const metadata: Metadata = {
-    title: 'Europe Delivery | Ideal Indiska LIVS',
-    description: 'We deliver authentic Indian & Pakistani groceries across Europe via DHL. No minimum order, no customs hassle within EU.',
+    title: 'Indian Grocery Delivery Europe | Ideal Indiska LIVS',
+    description: 'Authentic Indian & Pakistani groceries delivered across Europe via DHL. Fast shipping from Sweden with NO customs duty within the EU. Shop over 1500+ products.',
     alternates: {
         canonical: '/europe-delivery',
     },
