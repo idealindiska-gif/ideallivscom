@@ -564,7 +564,7 @@ function MyAccountContent() {
                             </p>
                           )}
                           <p className="mt-1 text-lg font-bold text-primary">
-                            {`${item.product.currency || 'SEK'} ${item.currentPrice.toFixed(2)}`}
+                            {`${item.product.currency || 'SEK'} ${(item.currentPrice || 0).toFixed(2)}`}
                           </p>
                           {item.notes && (
                             <p className="mt-1 text-sm italic text-neutral-500">{item.notes}</p>

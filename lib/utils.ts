@@ -70,11 +70,31 @@ export function decodeHtmlEntities(text: string): string {
  * @returns Formatted price string
  */
 export function formatPrice(
-  price: number | string,
+  price: number | string | null | undefined,
   currency: string = 'SEK',
   locale: string = 'sv-SE'
 ): string {
+  // Handle null/undefined/empty values
+  if (price === null || price === undefined || price === '') {
+    return new Intl.NumberFormat(locale, {
+      style: 'currency',
+      currency: currency,
+      minimumFractionDigits: 0,
+      maximumFractionDigits: 0,
+    }).format(0);
+  }
+
   const numericPrice = typeof price === 'string' ? parseFloat(price) : price;
+
+  // Handle NaN
+  if (isNaN(numericPrice)) {
+    return new Intl.NumberFormat(locale, {
+      style: 'currency',
+      currency: currency,
+      minimumFractionDigits: 0,
+      maximumFractionDigits: 0,
+    }).format(0);
+  }
 
   return new Intl.NumberFormat(locale, {
     style: 'currency',

@@ -81,7 +81,20 @@ export function ShopTopBar({ categories, brands = [], totalProducts, className }
     // Handle Sort
     const handleSort = (value: string) => {
         const params = new URLSearchParams(searchParams?.toString() || '');
-        params.set('orderby', value);
+
+        // Handle price sorting specially
+        if (value === 'price-asc') {
+            params.set('orderby', 'price');
+            params.set('order', 'asc');
+        } else if (value === 'price-desc') {
+            params.set('orderby', 'price');
+            params.set('order', 'desc');
+        } else {
+            // For other sorts (date, popularity, etc.)
+            params.set('orderby', value);
+            params.delete('order'); // Let WooCommerce use default order
+        }
+
         router.push(`?${params.toString()}`);
     };
 
@@ -312,7 +325,7 @@ export function ShopTopBar({ categories, brands = [], totalProducts, className }
                             <DropdownMenuSeparator />
                             <DropdownMenuItem onClick={() => handleSort('date')}>Newest</DropdownMenuItem>
                             <DropdownMenuItem onClick={() => handleSort('popularity')}>Popularity</DropdownMenuItem>
-                            <DropdownMenuItem onClick={() => handleSort('price')}>Price: Low to High</DropdownMenuItem>
+                            <DropdownMenuItem onClick={() => handleSort('price-asc')}>Price: Low to High</DropdownMenuItem>
                             <DropdownMenuItem onClick={() => handleSort('price-desc')}>Price: High to Low</DropdownMenuItem>
                         </DropdownMenuContent>
                     </DropdownMenu>

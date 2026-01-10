@@ -226,7 +226,12 @@ export function formatAddress(address: {
  * @param currency - Currency code (default: SEK)
  * @returns Formatted price string
  */
-export function formatPrice(price: number | string, currency: string = 'SEK'): string {
+export function formatPrice(price: number | string | null | undefined, currency: string = 'SEK'): string {
+  // Handle null/undefined/empty values
+  if (price === null || price === undefined || price === '') {
+    return `0 ${currency}`;
+  }
+
   const numericPrice = typeof price === 'string' ? parseFloat(price) : price;
 
   if (isNaN(numericPrice)) {
