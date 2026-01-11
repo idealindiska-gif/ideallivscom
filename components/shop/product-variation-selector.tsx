@@ -87,11 +87,15 @@ export function ProductVariationSelector({
   // Find matching variation based on selected attributes
   useEffect(() => {
     // Use extracted attributes if product.attributes is empty
-    const attributesToCheck = product.attributes && product.attributes.length > 0
+    const baseAttributes = product.attributes && product.attributes.length > 0
       ? product.attributes
       : variationAttributes;
 
+    // CRITICAL FIX: Only check variation attributes (filter out non-variation attributes)
+    const attributesToCheck = baseAttributes.filter(attr => attr.variation);
+
     console.log('🔍 Checking variation match:', {
+      allAttributes: baseAttributes.map(a => ({name: a.name, variation: a.variation})),
       attributesToCheck: attributesToCheck.map(a => a.name),
       selectedAttributes,
       totalVariations: variations.length
@@ -101,7 +105,7 @@ export function ProductVariationSelector({
       (attr) => selectedAttributes[attr.name]
     );
 
-    console.log('✅ All attributes selected?', allAttributesSelected);
+    console.log('✅ All attributes selected?', allAttributesSelected, `(${Object.keys(selectedAttributes).length}/${attributesToCheck.length})`);
 
     if (!allAttributesSelected) {
       console.log('⚠️ Not all attributes selected yet');
