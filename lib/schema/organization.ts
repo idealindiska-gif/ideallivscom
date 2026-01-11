@@ -401,13 +401,7 @@ export function idealIndiskaOrganizationSchemaFull(baseUrl: string = 'https://ww
     ],
 
     // Aggregate rating (placeholder - update with real data)
-    aggregateRating: {
-      '@type': 'AggregateRating',
-      ratingValue: '4.8',
-      reviewCount: '150',
-      bestRating: '5',
-      worstRating: '1',
-    },
+    
 
     // Order action
     potentialAction: {
