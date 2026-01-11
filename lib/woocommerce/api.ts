@@ -145,6 +145,7 @@ export async function fetchWooCommerceAPI<T>(
       const headers: HeadersInit = {
         'Content-Type': 'application/json',
         'Authorization': authHeader,
+        'User-Agent': 'IdealLivs-Frontend/1.0',
         ...options.headers,
       };
 
@@ -152,7 +153,7 @@ export async function fetchWooCommerceAPI<T>(
       const response = await fetchWithTimeout(url, {
         ...options,
         headers,
-      }, 15000); // 15 second timeout
+      }, 20000); // Increased to 20 second timeout
 
       // Handle non-OK responses
       if (!response.ok) {
@@ -206,7 +207,7 @@ export async function fetchWooCommerceAPI<T>(
 
       // Handle timeout errors
       if (error instanceof Error && error.message.includes('timeout')) {
-        errorTracker.captureTimeout(endpoint, 15000, { url });
+        errorTracker.captureTimeout(endpoint, 20000, { url });
         throw new WooCommerceAPIError(
           0,
           `Request timeout: ${error.message}`,
@@ -221,7 +222,7 @@ export async function fetchWooCommerceAPI<T>(
         'unknown_error'
       );
     }
-  }, 3); // Retry up to 3 times
+  }, 5, 2000); // Retry up to 5 times with 2s initial delay
 }
 
 /**
@@ -285,6 +286,7 @@ export async function fetchWooCommercePaginated<T>(
         headers: {
           'Content-Type': 'application/json',
           'Authorization': authHeader,
+          'User-Agent': 'IdealLivs-Frontend/1.0',
         },
       };
 
@@ -296,7 +298,7 @@ export async function fetchWooCommercePaginated<T>(
         };
       }
 
-      const response = await fetchWithTimeout(url, fetchOptions, 15000);
+      const response = await fetchWithTimeout(url, fetchOptions, 20000);
 
       if (!response.ok) {
         const errorData = await response.json().catch(() => ({ message: response.statusText }));
@@ -347,7 +349,7 @@ export async function fetchWooCommercePaginated<T>(
         'pagination_error'
       );
     }
-  }, 3); // Retry up to 3 times
+  }, 5, 2000); // Retry up to 5 times with 2s initial delay
 }
 
 /**
