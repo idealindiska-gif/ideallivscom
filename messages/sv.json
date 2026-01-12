@@ -1,0 +1,55 @@
+{
+  "common": {
+    "addToCart": "Lägg till i varukorg",
+    "search": "Sök",
+    "categories": "Kategorier",
+    "price": "Pris",
+    "quantity": "Antal",
+    "total": "Totalt",
+    "subtotal": "Delsumma",
+    "checkout": "Till kassan",
+    "continueShopping": "Fortsätt handla",
+    "viewCart": "Visa varukorg",
+    "stockStatus": {
+      "inStock": "I lager",
+      "outOfStock": "Slut i lager",
+      "onBackorder": "Tillgänglig för restorder"
+    }
+  },
+  "product": {
+    "details": "Produktdetaljer",
+    "description": "Beskrivning",
+    "additionalInformation": "Ytterligare information",
+    "reviews": "Recensioner",
+    "relatedProducts": "Relaterade produkter",
+    "youMayAlsoLike": "Du kanske också gillar",
+    "sku": "Artikelnummer",
+    "categories": "Kategorier",
+    "tags": "Taggar",
+    "weight": "Vikt",
+    "dimensions": "Mått",
+    "availability": "Tillgänglighet"
+  },
+  "navigation": {
+    "home": "Hem",
+    "shop": "Butik",
+    "products": "Produkter",
+    "about": "Om oss",
+    "contact": "Kontakt",
+    "myAccount": "Mitt konto",
+    "cart": "Varukorg",
+    "wishlist": "Önskelista"
+  },
+  "checkout": {
+    "title": "Kassan",
+    "shipping": "Frakt",
+    "billing": "Fakturering",
+    "payment": "Betalning",
+    "placeOrder": "Slutför beställning",
+    "orderSummary": "Ordersammanfattning"
+  },
+  "footer": {
+    "allRightsReserved": "Alla rättigheter förbehållna",
+    "followUs": "Följ oss"
+  }
+}

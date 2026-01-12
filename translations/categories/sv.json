@@ -1,0 +1,7 @@
+{
+  "_comment": "Add category translations here using category slug as key",
+  "_example": {
+    "name": "Swedish category name",
+    "description": "Swedish category description"
+  }
+}

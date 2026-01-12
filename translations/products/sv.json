@@ -1,0 +1,8 @@
+{
+  "_comment": "Add product translations here using product slug as key",
+  "_example": {
+    "name": "Swedish product name",
+    "short_description": "Swedish short description",
+    "description": "<p>Swedish full description HTML</p>"
+  }
+}

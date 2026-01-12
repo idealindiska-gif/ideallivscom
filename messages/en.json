@@ -1,0 +1,55 @@
+{
+  "common": {
+    "addToCart": "Add to Cart",
+    "search": "Search",
+    "categories": "Categories",
+    "price": "Price",
+    "quantity": "Quantity",
+    "total": "Total",
+    "subtotal": "Subtotal",
+    "checkout": "Checkout",
+    "continueShopping": "Continue Shopping",
+    "viewCart": "View Cart",
+    "stockStatus": {
+      "inStock": "In Stock",
+      "outOfStock": "Out of Stock",
+      "onBackorder": "Available on Backorder"
+    }
+  },
+  "product": {
+    "details": "Product Details",
+    "description": "Description",
+    "additionalInformation": "Additional Information",
+    "reviews": "Reviews",
+    "relatedProducts": "Related Products",
+    "youMayAlsoLike": "You May Also Like",
+    "sku": "SKU",
+    "categories": "Categories",
+    "tags": "Tags",
+    "weight": "Weight",
+    "dimensions": "Dimensions",
+    "availability": "Availability"
+  },
+  "navigation": {
+    "home": "Home",
+    "shop": "Shop",
+    "products": "Products",
+    "about": "About",
+    "contact": "Contact",
+    "myAccount": "My Account",
+    "cart": "Cart",
+    "wishlist": "Wishlist"
+  },
+  "checkout": {
+    "title": "Checkout",
+    "shipping": "Shipping",
+    "billing": "Billing",
+    "payment": "Payment",
+    "placeOrder": "Place Order",
+    "orderSummary": "Order Summary"
+  },
+  "footer": {
+    "allRightsReserved": "All rights reserved",
+    "followUs": "Follow Us"
+  }
+}

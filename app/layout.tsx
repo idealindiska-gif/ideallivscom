@@ -1,6 +1,8 @@
 import "./globals.css";
 
 import { Inter as FontSans, Montserrat as FontHeading } from "next/font/google";
+import { NextIntlClientProvider } from 'next-intl';
+import { getMessages } from 'next-intl/server';
 import { ThemeProvider } from "@/components/theme/theme-provider";
 import { Analytics } from "@vercel/analytics/react";
 import { SpeedInsights } from "@vercel/speed-insights/next";
@@ -131,8 +133,12 @@ export default async function RootLayout({
 }) {
   const categories = await getProductCategories({ parent: 0 });
 
+  // English is the default locale
+  const locale = 'en';
+  const messages = await getMessages({ locale });
+
   return (
-    <html lang="sv-SE" suppressHydrationWarning>
+    <html lang="en" suppressHydrationWarning>
       <head>
         {/* Critical preconnects - Most important first */}
         <link rel="preconnect" href="https://crm.ideallivs.com" crossOrigin="anonymous" />
@@ -171,12 +177,13 @@ export default async function RootLayout({
         {/* Facebook Pixel */}
         <FacebookPixel />
 
-        <ThemeProvider
-          attribute="class"
-          defaultTheme="system"
-          enableSystem
-          disableTransitionOnChange
-        >
+        <NextIntlClientProvider locale="en" messages={messages}>
+          <ThemeProvider
+            attribute="class"
+            defaultTheme="system"
+            enableSystem
+            disableTransitionOnChange
+          >
           {/* Top Green Info Bar - Desktop only */}
           <TopInfoBar />
 
@@ -200,7 +207,8 @@ export default async function RootLayout({
           <WishlistDrawer />
           <Toaster />
           <ExitSurveyWrapper />
-        </ThemeProvider>
+          </ThemeProvider>
+        </NextIntlClientProvider>
         <Analytics />
         <SpeedInsights />
         <AiChatWidget />
