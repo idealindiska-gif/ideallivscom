@@ -10,6 +10,10 @@ import { Skeleton } from '@/components/ui/skeleton';
 import { wooCategorySchema, breadcrumbSchema, categoryBreadcrumbs } from '@/lib/schema';
 import { siteConfig } from '@/site.config';
 
+// ISR: Revalidate category pages every 2 hours
+// Category structure rarely changes, products within are fetched with their own cache
+export const revalidate = 7200;
+
 interface ProductCategoryPageProps {
     params: Promise<{
         slug?: string[];

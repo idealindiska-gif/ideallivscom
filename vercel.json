@@ -7,6 +7,40 @@
   "regions": [
     "arn1"
   ],
+  "functions": {
+    "app/api/health/route.ts": {
+      "memory": 128,
+      "maxDuration": 5
+    },
+    "app/api/search/route.ts": {
+      "memory": 512,
+      "maxDuration": 10
+    },
+    "app/api/products/**/route.ts": {
+      "memory": 256,
+      "maxDuration": 10
+    },
+    "app/api/recommendations/**/route.ts": {
+      "memory": 512,
+      "maxDuration": 10
+    },
+    "app/api/shipping/**/route.ts": {
+      "memory": 256,
+      "maxDuration": 10
+    },
+    "app/api/orders/**/route.ts": {
+      "memory": 512,
+      "maxDuration": 30
+    },
+    "app/api/stripe/**/route.ts": {
+      "memory": 512,
+      "maxDuration": 30
+    },
+    "app/api/sitemap/**/route.ts": {
+      "memory": 512,
+      "maxDuration": 60
+    }
+  },
   "headers": [
     {
       "source": "/(.*)",
@@ -34,7 +68,52 @@
       ]
     },
     {
-      "source": "/api/(.*)",
+      "source": "/api/products/:path*",
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "s-maxage=7200, stale-while-revalidate=14400"
+        }
+      ]
+    },
+    {
+      "source": "/api/recommendations/:path*",
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "s-maxage=3600, stale-while-revalidate=7200"
+        }
+      ]
+    },
+    {
+      "source": "/api/search",
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "s-maxage=900, stale-while-revalidate=1800"
+        }
+      ]
+    },
+    {
+      "source": "/api/shipping/:path*",
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "s-maxage=0, max-age=0, must-revalidate"
+        }
+      ]
+    },
+    {
+      "source": "/api/orders/:path*",
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "s-maxage=0, max-age=0, must-revalidate"
+        }
+      ]
+    },
+    {
+      "source": "/api/stripe/:path*",
       "headers": [
         {
           "key": "Cache-Control",

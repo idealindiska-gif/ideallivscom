@@ -76,25 +76,26 @@ export const WC_API_CONFIG = {
   },
 
   // Cache configuration (in seconds)
+  // Optimized for Vercel cost reduction - prices rarely change
   cache: {
-    // Product caching
-    products: 1800, // 30 minutes
-    productDetail: 3600, // 1 hour
-    productVariations: 1800, // 30 minutes
+    // Product caching - aggressive since prices rarely change
+    products: 7200, // 2 hours (was 30 min)
+    productDetail: 7200, // 2 hours (was 1 hour)
+    productVariations: 7200, // 2 hours (was 30 min)
 
-    // Category/Tag caching
-    categories: 3600, // 1 hour
-    tags: 3600, // 1 hour
+    // Category/Tag caching - very stable data
+    categories: 86400, // 24 hours (was 1 hour)
+    tags: 86400, // 24 hours (was 1 hour)
 
     // No cache for user-specific data
     cart: 0,
     orders: 0,
     customers: 0,
 
-    // Settings cache
-    settings: 86400, // 24 hours
-    paymentGateways: 86400, // 24 hours
-    shippingMethods: 86400, // 24 hours
+    // Settings cache - rarely changes
+    settings: 604800, // 7 days (was 24 hours)
+    paymentGateways: 604800, // 7 days
+    shippingMethods: 604800, // 7 days
   },
 
   // Default query parameters

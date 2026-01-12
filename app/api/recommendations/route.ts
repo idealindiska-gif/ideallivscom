@@ -37,7 +37,12 @@ export async function GET(request: NextRequest) {
         // Limit results
         recommendations = recommendations.slice(0, limit);
 
-        return NextResponse.json({ recommendations });
+        // Cache recommendations on CDN for 1 hour
+        return NextResponse.json({ recommendations }, {
+            headers: {
+                'Cache-Control': 's-maxage=3600, stale-while-revalidate=7200',
+            },
+        });
     } catch (error) {
         console.error('Recommendations API error:', error);
         return NextResponse.json(

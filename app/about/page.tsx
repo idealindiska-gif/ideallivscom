@@ -5,6 +5,9 @@ import { brandProfile } from "@/config/brand-profile";
 import { ShoppingBag, Heart, Users, Award, MessageCircle, Mail, MapPin } from "lucide-react";
 import { GoogleMapCompact } from "@/components/shared/google-map";
 
+// ISR: Revalidate static pages every 24 hours
+export const revalidate = 86400;
+
 export const metadata: Metadata = {
   title: `About ${brandProfile.name} - Stockholm's Best Indian & Pakistani Grocery`,
   description: `Discover the story of ${brandProfile.name}. Since 2020, we have been Stockholm's most trusted source for authentic Indian and Pakistani groceries, premium Basmati rice, and Halal meat.`,

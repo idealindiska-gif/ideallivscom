@@ -10,6 +10,10 @@ import { decodeHtmlEntities } from '@/lib/utils';
 import { brandSchema, breadcrumbSchema, productListItem } from '@/lib/schema';
 import { siteConfig } from '@/site.config';
 
+// ISR: Revalidate brand pages every 2 hours
+// Brand product associations rarely change
+export const revalidate = 7200;
+
 interface BrandArchivePageProps {
     params: Promise<{
         slug: string;

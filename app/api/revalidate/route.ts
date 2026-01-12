@@ -33,8 +33,7 @@ export async function POST(request: NextRequest) {
 
     try {
       console.log(
-        `Revalidating content: ${contentType}${
-          contentId ? ` (ID: ${contentId})` : ""
+        `Revalidating content: ${contentType}${contentId ? ` (ID: ${contentId})` : ""
         }`
       );
 
@@ -67,15 +66,47 @@ export async function POST(request: NextRequest) {
           revalidateTag(`author-${contentId}`);
         }
       }
+      // WooCommerce product revalidation (for promotions/price changes)
+      else if (contentType === "product") {
+        revalidateTag("woocommerce");
+        revalidateTag("products");
+        if (contentId) {
+          // Revalidate specific product page
+          const slug = requestBody.slug;
+          if (slug) {
+            revalidatePath(`/product/${slug}`);
+          }
+          revalidateTag(`product-${contentId}`);
+        }
+        // Revalidate shop and category pages
+        revalidatePath("/shop", "page");
+      }
+      // WooCommerce category revalidation
+      else if (contentType === "product_category") {
+        revalidateTag("woocommerce");
+        revalidateTag("categories");
+        if (contentId) {
+          const slug = requestBody.slug;
+          if (slug) {
+            revalidatePath(`/product-category/${slug}`);
+          }
+        }
+      }
+      // Bulk revalidation for promotions (revalidate all products)
+      else if (contentType === "promotion" || contentType === "sale") {
+        revalidateTag("woocommerce");
+        revalidateTag("products");
+        revalidatePath("/shop", "page");
+        revalidatePath("/", "page"); // Homepage may show sale products
+      }
 
       // Also revalidate the entire layout for safety
       revalidatePath("/", "layout");
 
       return NextResponse.json({
         revalidated: true,
-        message: `Revalidated ${contentType}${
-          contentId ? ` (ID: ${contentId})` : ""
-        } and related content`,
+        message: `Revalidated ${contentType}${contentId ? ` (ID: ${contentId})` : ""
+          } and related content`,
         timestamp: new Date().toISOString(),
       });
     } catch (error) {

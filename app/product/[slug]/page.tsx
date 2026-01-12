@@ -5,6 +5,11 @@ import { brandConfig } from '@/config/brand.config';
 import { siteConfig } from '@/site.config';
 import type { Metadata } from 'next';
 
+// ISR: Revalidate product pages every 2 hours
+// Products are cached and served instantly, regenerated in background
+// Use on-demand revalidation via webhook for immediate updates during promotions
+export const revalidate = 7200;
+
 interface ProductPageProps {
     params: Promise<{
         slug: string;

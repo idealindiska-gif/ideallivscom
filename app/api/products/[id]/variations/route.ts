@@ -18,7 +18,12 @@ export async function GET(
 
     const variations = await getProductVariations(productId);
 
-    return NextResponse.json(variations);
+    // Cache variations on CDN for 2 hours, serve stale while revalidating
+    return NextResponse.json(variations, {
+      headers: {
+        'Cache-Control': 's-maxage=7200, stale-while-revalidate=14400',
+      },
+    });
   } catch (error) {
     console.error('Error fetching variations:', error);
     return NextResponse.json(

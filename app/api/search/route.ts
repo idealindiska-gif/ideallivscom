@@ -34,7 +34,12 @@ export async function GET(request: NextRequest) {
         // Sort by relevance
         results.sort((a, b) => b.relevance - a.relevance);
 
-        return NextResponse.json({ results });
+        // Cache search results on CDN for 15 minutes
+        return NextResponse.json({ results }, {
+            headers: {
+                'Cache-Control': 's-maxage=900, stale-while-revalidate=1800',
+            },
+        });
     } catch (error: any) {
         console.error('[Search API] Error details:', {
             message: error?.message,
