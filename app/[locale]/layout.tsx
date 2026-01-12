@@ -1,0 +1,228 @@
+import "../globals.css";
+
+import { Inter as FontSans, Montserrat as FontHeading } from "next/font/google";
+import { NextIntlClientProvider } from 'next-intl';
+import { getMessages } from 'next-intl/server';
+import { notFound } from 'next/navigation';
+import { ThemeProvider } from "@/components/theme/theme-provider";
+import { Analytics } from "@vercel/analytics/react";
+import { SpeedInsights } from "@vercel/speed-insights/next";
+import { TopInfoBar } from "@/components/layout/top-info-bar";
+import { SchemaScript } from "@/lib/schema/schema-script";
+import { idealIndiskaWebsiteSchema, schemaGraph, idealIndiskaOrganizationSchemaFull } from "@/lib/schema";
+import { GoogleTagManager, GoogleTagManagerNoScript, FacebookPixel } from "@/components/analytics";
+import { VerticalSidebar } from "@/components/layout/vertical-sidebar";
+import { ContentHeader } from "@/components/layout/content-header";
+import { Footer } from "@/components/layout/footer";
+import { GeoMetaTags } from "@/components/seo/geo-meta-tags";
+import { HreflangTags } from "@/components/seo/hreflang-tags";
+import { CartDrawer } from "@/components/cart/cart-drawer";
+import { WishlistDrawer } from "@/components/wishlist/wishlist-drawer";
+import { Toaster } from "@/components/ui/toaster";
+import { siteConfig } from "@/site.config";
+import { cn } from "@/lib/utils";
+import { AiChatWidget } from "@/components/ai/ai-chat-widget";
+import { ExitSurveyWrapper } from "@/components/feedback/exit-survey-wrapper";
+
+import { getProductCategories } from "@/lib/woocommerce";
+
+import type { Metadata } from "next";
+
+const fontSans = FontSans({
+  subsets: ["latin"],
+  variable: "--font-sans",
+  display: "swap",
+  preload: true,
+  adjustFontFallback: true,
+  fallback: ['system-ui', '-apple-system', 'sans-serif'],
+});
+
+const fontHeading = FontHeading({
+  weight: ["400", "500", "600", "700"],
+  subsets: ["latin"],
+  variable: "--font-heading",
+  display: "swap",
+  preload: true,
+  adjustFontFallback: true,
+  fallback: ['system-ui', '-apple-system', 'sans-serif'],
+});
+
+export const metadata: Metadata = {
+  title: {
+    default: siteConfig.site_name,
+    template: `%s | ${siteConfig.site_name}`,
+  },
+  description: siteConfig.site_description,
+  metadataBase: new URL(siteConfig.site_domain),
+  alternates: {
+    canonical: "/sv/",
+  },
+  icons: {
+    icon: "https://crm.ideallivs.com/wp-content/uploads/2025/05/ideal-favicon.png",
+    shortcut: "https://crm.ideallivs.com/wp-content/uploads/2025/05/ideal-favicon.png",
+    apple: "https://crm.ideallivs.com/wp-content/uploads/2025/05/ideal-favicon.png",
+  },
+  verification: {
+    google: "JHCIpEz_IWYNdnNQGCkUKVQ8tiUre1hcCOqcSNhKlmQ",
+  },
+  openGraph: {
+    type: "website",
+    locale: "sv_SE",
+    alternateLocale: ["en_SE"],
+    url: `${siteConfig.site_domain}/sv/`,
+    siteName: siteConfig.site_name,
+    title: siteConfig.site_name,
+    description: siteConfig.site_description,
+    images: [
+      {
+        url: "https://crm.ideallivs.com/wp-content/uploads/2025/07/rice-and-flours-e1752149384409.jpg",
+        width: 1200,
+        height: 630,
+        alt: "Ideal Indiska LIVS - Indian & Pakistani Groceries in Stockholm",
+      },
+    ],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: siteConfig.site_name,
+    description: siteConfig.site_description,
+    images: ["https://crm.ideallivs.com/wp-content/uploads/2025/07/rice-and-flours-e1752149384409.jpg"],
+  },
+  keywords: [
+    "Indiska livsmedel Stockholm",
+    "Pakistanska livsmedel Sverige",
+    "Halal mat Stockholm",
+    "Basmati ris Sverige",
+    "Asiatiska kryddor Stockholm",
+    "Indian groceries Stockholm",
+    "Bandhagen mataffär",
+    "Indisk butik Sverige",
+  ],
+  authors: [{ name: "Ideal Indiska LIVS" }],
+  creator: "Ideal Indiska LIVS",
+  publisher: "Ideal Indiska LIVS",
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      "max-video-preview": -1,
+      "max-image-preview": "large",
+      "max-snippet": -1,
+    },
+  },
+};
+
+export const viewport = {
+  width: 'device-width',
+  initialScale: 1,
+  maximumScale: 5,
+  userScalable: true,
+};
+
+export default async function SwedishLayout({
+  children,
+  params,
+}: {
+  children: React.ReactNode;
+  params: Promise<{ locale: string }>;
+}) {
+  const { locale } = await params;
+
+  // Only 'sv' is allowed in this route
+  if (locale !== 'sv') {
+    notFound();
+  }
+
+  const categories = await getProductCategories({ parent: 0 });
+  const messages = await getMessages({ locale: 'sv' });
+
+  return (
+    <html lang="sv" suppressHydrationWarning>
+      <head>
+        {/* Critical preconnects */}
+        <link rel="preconnect" href="https://crm.ideallivs.com" crossOrigin="anonymous" />
+        <link rel="dns-prefetch" href="https://crm.ideallivs.com" />
+
+        {/* Font preconnects */}
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
+
+        {/* Analytics preconnects */}
+        <link rel="dns-prefetch" href="https://www.googletagmanager.com" />
+        <link rel="dns-prefetch" href="https://connect.facebook.net" />
+        <link rel="dns-prefetch" href="https://www.facebook.com" />
+
+        {/* Preload critical hero image */}
+        <link
+          rel="preload"
+          as="image"
+          href="https://crm.ideallivs.com/wp-content/uploads/2025/08/delivery-cover-post.png"
+          fetchPriority="high"
+        />
+
+        {/* Geo-Targeting Meta Tags */}
+        <GeoMetaTags />
+
+        {/* Hreflang Tags */}
+        <HreflangTags canonicalUrl={`${siteConfig.site_domain}/sv/`} />
+
+        {/* Google Tag Manager */}
+        <GoogleTagManager />
+      </head>
+      <body className={cn("min-h-screen font-sans antialiased", fontSans.variable, fontHeading.variable)} suppressHydrationWarning>
+        {/* Google Tag Manager (noscript) */}
+        <GoogleTagManagerNoScript />
+
+        {/* Facebook Pixel */}
+        <FacebookPixel />
+
+        <NextIntlClientProvider locale="sv" messages={messages}>
+          <ThemeProvider
+            attribute="class"
+            defaultTheme="system"
+            enableSystem
+            disableTransitionOnChange
+          >
+            {/* Top Green Info Bar - Desktop only */}
+            <TopInfoBar />
+
+            {/* Main Layout Container */}
+            <div className="flex min-h-screen lg:min-h-[calc(100vh-40px)] overflow-x-hidden">
+              {/* Vertical Sidebar - Fixed on left, hidden on mobile */}
+              <VerticalSidebar categories={categories} />
+
+              {/* Main Content Area - Responsive margin */}
+              <div className="flex-1 lg:ml-64 flex flex-col overflow-x-hidden max-w-full">
+                {/* Content Header - Search, Login, Cart */}
+                <ContentHeader />
+
+                {/* Page Content */}
+                <main className="flex-1 w-full overflow-x-hidden">{children}</main>
+                <Footer />
+              </div>
+            </div>
+
+            <CartDrawer />
+            <WishlistDrawer />
+            <Toaster />
+            <ExitSurveyWrapper />
+          </ThemeProvider>
+        </NextIntlClientProvider>
+        <Analytics />
+        <SpeedInsights />
+        <AiChatWidget />
+
+        {/* Global SEO Schemas */}
+        <SchemaScript
+          id="global-schema"
+          schema={schemaGraph(
+            idealIndiskaWebsiteSchema(`${siteConfig.site_domain}/sv/`),
+            idealIndiskaOrganizationSchemaFull(siteConfig.site_domain)
+          )}
+        />
+      </body>
+    </html>
+  );
+}

@@ -8,6 +8,7 @@ import { useRouter } from "next/navigation";
 import { useSidebar } from "./mobile-sidebar-toggle";
 import { CartIcon } from "@/components/cart/cart-icon";
 import { UserNav } from "@/components/layout/user-nav";
+import { LanguageSwitcher } from "@/components/layout/language-switcher";
 
 export function ContentHeader() {
   const [searchQuery, setSearchQuery] = useState("");
@@ -52,6 +53,9 @@ export function ContentHeader() {
           </div>
 
           <div className="h-8 w-px bg-border mx-2" />
+
+          {/* Language Switcher */}
+          <LanguageSwitcher />
 
           {/* User Nav */}
           <UserNav />
