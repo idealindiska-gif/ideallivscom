@@ -11,7 +11,7 @@ import { Plus } from 'lucide-react';
 import { ProductGrid } from '@/components/shop/product-grid';
 import { ProductImageGallery } from '@/components/shop/product-image-gallery';
 import { ProductVariationSelector } from '@/components/shop/product-variation-selector';
-import { ProductTabs } from '@/components/shop/product-tabs';
+import { ProductReviews } from '@/components/shop/product-reviews';
 import { ProductSchema } from '@/components/shop/product-schema';
 import { StockIndicator } from '@/components/shop/stock-indicator';
 import { QuantitySelector } from '@/components/shop/quantity-selector';
@@ -85,7 +85,7 @@ export function ProductTemplate({
       <ProductSchema product={product} reviews={reviews} />
 
       <div className="min-h-screen bg-background overflow-x-hidden max-w-full">
-        <div className="w-full px-5 py-6 md:py-8 max-w-full">
+        <div className="w-full px-[25px] py-6 md:py-8 max-w-full">
           {/* Breadcrumbs */}
           {breadcrumbs && breadcrumbs.length > 0 && (
             <Breadcrumbs items={breadcrumbs} className="mb-4" />
@@ -559,19 +559,199 @@ export function ProductTemplate({
             </div>
           </div>
 
-          {/* Product Tabs */}
-          <div className="mt-8 md:mt-10">
-            <ProductTabs product={product} reviews={reviews} />
+          {/* Product Sections - No Tabs */}
+          <div className="mt-8 md:mt-12 space-y-12">
+
+            {/* 1. Additional Information Section - Multi-column */}
+            {hasProductAdditionalInfo(product) && (
+              <section className="border-t border-border pt-8">
+                <h2 className="text-2xl md:text-3xl font-bold mb-6 text-foreground">
+                  Additional Information
+                </h2>
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                  {/* SKU */}
+                  {product.sku && (
+                    <div className="bg-muted/30 rounded-lg p-4 border border-border">
+                      <dt className="text-sm font-semibold text-muted-foreground uppercase tracking-wide mb-1">SKU</dt>
+                      <dd className="text-base font-medium text-foreground">{product.sku}</dd>
+                    </div>
+                  )}
+
+                  {/* Weight */}
+                  {product.weight && (
+                    <div className="bg-muted/30 rounded-lg p-4 border border-border">
+                      <dt className="text-sm font-semibold text-muted-foreground uppercase tracking-wide mb-1">Weight</dt>
+                      <dd className="text-base font-medium text-foreground">{product.weight} kg</dd>
+                    </div>
+                  )}
+
+                  {/* Dimensions */}
+                  {product.dimensions && hasDimensions(product.dimensions) && (
+                    <div className="bg-muted/30 rounded-lg p-4 border border-border">
+                      <dt className="text-sm font-semibold text-muted-foreground uppercase tracking-wide mb-1">Dimensions</dt>
+                      <dd className="text-base font-medium text-foreground">
+                        {product.dimensions.length} × {product.dimensions.width} × {product.dimensions.height} cm
+                      </dd>
+                    </div>
+                  )}
+
+                  {/* Stock Status */}
+                  <div className="bg-muted/30 rounded-lg p-4 border border-border">
+                    <dt className="text-sm font-semibold text-muted-foreground uppercase tracking-wide mb-1">Stock Status</dt>
+                    <dd className="text-base font-medium">
+                      <Badge
+                        variant={
+                          product.stock_status === 'instock'
+                            ? 'default'
+                            : product.stock_status === 'onbackorder'
+                              ? 'secondary'
+                              : 'destructive'
+                        }
+                      >
+                        {product.stock_status === 'instock'
+                          ? 'In Stock'
+                          : product.stock_status === 'onbackorder'
+                            ? 'Available on Backorder'
+                            : 'Out of Stock'}
+                      </Badge>
+                    </dd>
+                  </div>
+
+                  {/* Stock Quantity */}
+                  {product.manage_stock && product.stock_quantity !== null && (
+                    <div className="bg-muted/30 rounded-lg p-4 border border-border">
+                      <dt className="text-sm font-semibold text-muted-foreground uppercase tracking-wide mb-1">Available Quantity</dt>
+                      <dd className="text-base font-medium text-foreground">{product.stock_quantity} units</dd>
+                    </div>
+                  )}
+
+                  {/* Categories */}
+                  {product.categories && product.categories.length > 0 && (
+                    <div className="bg-muted/30 rounded-lg p-4 border border-border">
+                      <dt className="text-sm font-semibold text-muted-foreground uppercase tracking-wide mb-1">Categories</dt>
+                      <dd className="text-base font-medium text-foreground">
+                        {product.categories.map((cat) => cat.name).join(', ')}
+                      </dd>
+                    </div>
+                  )}
+
+                  {/* Product Attributes */}
+                  {product.attributes &&
+                    product.attributes.map((attr) => (
+                      <div key={attr.id || attr.name} className="bg-muted/30 rounded-lg p-4 border border-border">
+                        <dt className="text-sm font-semibold text-muted-foreground uppercase tracking-wide mb-1">{attr.name}</dt>
+                        <dd className="text-base font-medium text-foreground">
+                          {attr.options ? attr.options.join(', ') : 'N/A'}
+                        </dd>
+                      </div>
+                    ))}
+
+                  {/* Tags */}
+                  {product.tags && product.tags.length > 0 && (
+                    <div className="bg-muted/30 rounded-lg p-4 border border-border md:col-span-2 lg:col-span-3">
+                      <dt className="text-sm font-semibold text-muted-foreground uppercase tracking-wide mb-2">Tags</dt>
+                      <dd className="flex flex-wrap gap-2">
+                        {product.tags.map((tag) => (
+                          <Badge key={tag.id} variant="outline">
+                            {decodeHtmlEntities(tag.name)}
+                          </Badge>
+                        ))}
+                      </dd>
+                    </div>
+                  )}
+                </div>
+              </section>
+            )}
+
+            {/* 2. Description Section */}
+            {product.description && product.description.trim() !== '' && (
+              <section className="border-t border-border pt-8">
+                <h2 className="text-2xl md:text-3xl font-bold mb-6 text-foreground">
+                  Product Description
+                </h2>
+                <style jsx>{`
+                  .prose :global(h1),
+                  .prose :global(h2),
+                  .prose :global(h3),
+                  .prose :global(h4),
+                  .prose :global(h5),
+                  .prose :global(h6) {
+                    font-size: 18px !important;
+                    font-weight: 600 !important;
+                    line-height: 1.4 !important;
+                    margin-top: 1.5em !important;
+                    margin-bottom: 0.75em !important;
+                  }
+                  .prose :global(p),
+                  .prose :global(li) {
+                    font-size: 15px !important;
+                    font-weight: 400 !important;
+                    line-height: 1.7 !important;
+                  }
+                  .prose :global(ul),
+                  .prose :global(ol) {
+                    margin-top: 1em !important;
+                    margin-bottom: 1em !important;
+                  }
+                  .prose :global(li) {
+                    margin-top: 0.5em !important;
+                    margin-bottom: 0.5em !important;
+                  }
+                `}</style>
+                <div
+                  className="prose max-w-none dark:prose-invert"
+                  dangerouslySetInnerHTML={{ __html: product.description }}
+                />
+              </section>
+            )}
+
+            {/* 3. Reviews Section */}
+            {(reviews.length > 0 || product.reviews_allowed) && (
+              <section className="border-t border-border pt-8">
+                <h2 className="text-2xl md:text-3xl font-bold mb-6 text-foreground flex items-center gap-3">
+                  Customer Reviews
+                  {product.rating_count > 0 && (
+                    <Badge variant="secondary" className="text-base">
+                      {product.rating_count} {product.rating_count === 1 ? 'Review' : 'Reviews'}
+                    </Badge>
+                  )}
+                </h2>
+                <ProductReviews
+                  productId={product.id}
+                  reviews={reviews}
+                  averageRating={product.average_rating}
+                  ratingCount={product.rating_count}
+                  compact={false}
+                />
+              </section>
+            )}
+
           </div>
         </div>
       </div>
 
-      {/* AI-Powered Recommendations */}
-      <div className="bg-primary/5 py-12">
-        <div className="w-full px-5 max-w-full">
-          <ProductRecommendations currentProduct={product} maxRecommendations={4} />
+      {/* 4. AI-Powered Recommendations - You May Also Like */}
+      <div className="bg-primary/5 py-12 border-t border-border">
+        <div className="w-full px-[25px] max-w-full">
+          <ProductRecommendations currentProduct={product} maxRecommendations={5} />
         </div>
       </div>
     </>
   );
+}
+
+// Helper functions
+function hasProductAdditionalInfo(product: Product): boolean {
+  return !!(
+    product.sku ||
+    product.weight ||
+    (product.dimensions && hasDimensions(product.dimensions)) ||
+    (product.categories && product.categories.length > 0) ||
+    (product.tags && product.tags.length > 0) ||
+    (product.attributes && product.attributes.length > 0)
+  );
+}
+
+function hasDimensions(dimensions: { length: string; width: string; height: string }): boolean {
+  return !!(dimensions.length || dimensions.width || dimensions.height);
 }
