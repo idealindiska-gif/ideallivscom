@@ -97,7 +97,7 @@ export function ProductTemplate({
             {relatedProducts && relatedProducts.length > 0 && (
               <div className="lg:col-span-3 order-3 lg:order-1">
                 <div className="lg:sticky lg:top-24 space-y-3">
-                  <h3 style={{ fontSize: '20px', fontWeight: 500, lineHeight: 1.52, letterSpacing: '0.025em' }} className="text-foreground border-b border-border/50 pb-2">
+                  <h3 style={{ fontSize: '18px', fontWeight: 600, lineHeight: 1.52, letterSpacing: '0.025em' }} className="text-foreground border-b border-border/50 pb-2">
                     You May Also Like
                   </h3>
                   {/* Desktop: Vertical list */}
@@ -127,7 +127,7 @@ export function ProductTemplate({
 
                           {/* Product Info */}
                           <div className="flex-1 min-w-0">
-                            <h4 style={{ fontSize: '15.13px', fontWeight: 400, lineHeight: 1.57, letterSpacing: '0.03em' }} className="text-foreground line-clamp-2 group-hover:text-foreground/70 transition-colors">
+                            <h4 style={{ fontSize: '15px', fontWeight: 500, lineHeight: 1.57, letterSpacing: '0.02em' }} className="text-foreground line-clamp-2 group-hover:text-foreground/70 transition-colors">
                               {decodeHtmlEntities(relatedProduct.name)}
                             </h4>
                             <div className="mt-1">
@@ -565,7 +565,7 @@ export function ProductTemplate({
             {/* 1. Additional Information Section - Multi-column */}
             {hasProductAdditionalInfo(product) && (
               <section className="border-t border-border pt-8">
-                <h2 className="text-2xl md:text-3xl font-bold mb-6 text-foreground">
+                <h2 style={{ fontSize: '20px', fontWeight: 600 }} className="mb-6 text-foreground">
                   Additional Information
                 </h2>
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -666,18 +666,17 @@ export function ProductTemplate({
             {/* 2. Description Section */}
             {product.description && product.description.trim() !== '' && (
               <section className="border-t border-border pt-8">
-                <h2 className="text-2xl md:text-3xl font-bold mb-6 text-foreground">
+                <h2 style={{ fontSize: '20px', fontWeight: 600 }} className="mb-6 text-foreground">
                   Product Description
                 </h2>
                 <style jsx>{`
-                  .prose :global(h1),
-                  .prose :global(h2),
-                  .prose :global(h3),
-                  .prose :global(h4),
-                  .prose :global(h5),
-                  .prose :global(h6) {
-                    font-size: 18px !important;
-                    font-weight: 600 !important;
+                   .prose :global(h1) { font-size: 22px !important; font-weight: 600 !important; }
+                  .prose :global(h2) { font-size: 20px !important; font-weight: 500 !important; }
+                  .prose :global(h3) { font-size: 18px !important; font-weight: 500 !important; }
+                  .prose :global(h4) { font-size: 16px !important; font-weight: 500 !important; }
+                  .prose :global(h5) { font-size: 15px !important; font-weight: 600 !important; }
+                  .prose :global(h6) { font-size: 14px !important; font-weight: 600 !important; }
+                  .prose :global(h1), .prose :global(h2), .prose :global(h3), .prose :global(h4), .prose :global(h5), .prose :global(h6) {
                     line-height: 1.4 !important;
                     margin-top: 1.5em !important;
                     margin-bottom: 0.75em !important;
@@ -707,7 +706,7 @@ export function ProductTemplate({
 
             {/* 3. Reviews Section */}
             <section className="border-t border-border pt-8">
-              <h2 className="text-2xl md:text-3xl font-bold mb-6 text-foreground flex items-center gap-3">
+              <h2 style={{ fontSize: '20px', fontWeight: 600 }} className="mb-6 text-foreground flex items-center gap-3">
                 Customer Reviews
                 {product.rating_count > 0 && (
                   <Badge variant="secondary" className="text-base">

@@ -113,7 +113,7 @@ export function ProductRecommendations({
             <div className="flex items-center justify-between">
                 <div className="flex items-center gap-2">
                     <Sparkles className="h-5 w-5 text-secondary-500" />
-                    <h2 className="font-heading text-2xl font-bold text-primary-950 dark:text-primary-50">
+                    <h2 style={{ fontSize: '20px' }} className="font-heading font-semibold text-primary-950 dark:text-primary-50">
                         {currentProduct ? 'You May Also Like' : 'Recommended For You'}
                     </h2>
                 </div>
@@ -167,7 +167,7 @@ export function ProductRecommendations({
 
                                 {/* Content */}
                                 <div className="p-4">
-                                    <h3 className="mb-1 line-clamp-2 font-heading text-base font-medium text-primary-950 dark:text-primary-50">
+                                    <h3 style={{ fontSize: '15px' }} className="mb-1 line-clamp-2 font-heading font-medium text-primary-950 dark:text-primary-50">
                                         {product.name}
                                     </h3>
                                     <p className="mb-2 text-xs text-neutral-600 dark:text-neutral-400 line-clamp-1">

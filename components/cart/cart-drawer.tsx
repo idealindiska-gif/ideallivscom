@@ -103,9 +103,9 @@ export function CartDrawer() {
                     <div className="flex flex-1 flex-col">
                       <div className="flex justify-between">
                         <div className="flex-1">
-                          <h4 className="text-sm font-semibold line-clamp-2">
+                          <h3 className="text-sm font-semibold line-clamp-2">
                             {item.product.name}
-                          </h4>
+                          </h3>
                           <p className="mt-1 text-sm text-muted-foreground">
                             {formatPrice(item.price, 'SEK')}
                           </p>
