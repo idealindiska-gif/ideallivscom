@@ -72,15 +72,22 @@ export function ProductVariationSelector({
   }, [product, variations]);
 
   // Get unique attribute values
-  const getAttributeOptions = (attributeName: string) => {
+  const getAttributeOptions = (attribute: ProductAttribute) => {
+    // If the attribute has the options array (from product.attributes), use it primarily
+    if (attribute.options && attribute.options.length > 0) {
+      console.log(`🎯 Using defined options for "${attribute.name}":`, attribute.options);
+      return attribute.options;
+    }
+
+    // Fallback: extract from variations (what was there before)
     const options = new Set<string>();
     variations.forEach((variation) => {
-      const attr = variation.attributes.find((a) => a.name === attributeName);
+      const attr = variation.attributes.find((a) => a.name === attribute.name);
       if (attr) {
         options.add(attr.option);
       }
     });
-    console.log(`🎯 Options for "${attributeName}":`, Array.from(options));
+    console.log(`🎯 Extracted options for "${attribute.name}":`, Array.from(options));
     return Array.from(options);
   };
 
@@ -95,7 +102,7 @@ export function ProductVariationSelector({
     const attributesToCheck = baseAttributes.filter(attr => attr.variation);
 
     console.log('🔍 Checking variation match:', {
-      allAttributes: baseAttributes.map(a => ({name: a.name, variation: a.variation})),
+      allAttributes: baseAttributes.map(a => ({ name: a.name, variation: a.variation })),
       attributesToCheck: attributesToCheck.map(a => a.name),
       selectedAttributes,
       totalVariations: variations.length
@@ -107,33 +114,21 @@ export function ProductVariationSelector({
 
     console.log('✅ All attributes selected?', allAttributesSelected, `(${Object.keys(selectedAttributes).length}/${attributesToCheck.length})`);
 
-    if (!allAttributesSelected) {
-      console.log('⚠️ Not all attributes selected yet');
-      setSelectedVariation(null);
-      onVariationChange?.(null);
-      return;
-    }
+    // Prioritize variations with more specific attribute matches
+    const sortedVariations = [...variations].sort((a, b) => b.attributes.length - a.attributes.length);
 
-    const matchingVariation = variations.find((variation) => {
+    const matchingVariation = sortedVariations.find((variation) => {
+      // A variation matches if EVERY attribute it defines matching our current selection
+      // (Empty attributes in a variation act as wildcards in WooCommerce)
       const matches = variation.attributes.every((attr) => {
         const match = selectedAttributes[attr.name] === attr.option;
-        console.log(`  Checking ${attr.name}: ${selectedAttributes[attr.name]} === ${attr.option} ? ${match}`);
+        console.log(`  Checking ${variation.id} - ${attr.name}: ${selectedAttributes[attr.name]} === ${attr.option} ? ${match}`);
         return match;
       });
       return matches;
     });
 
-    console.log('🎯 Matching variation found:', matchingVariation);
-
-    if (matchingVariation) {
-      console.log('✅ Setting selected variation:', {
-        id: matchingVariation.id,
-        price: matchingVariation.price,
-        stock_status: matchingVariation.stock_status
-      });
-    } else {
-      console.log('❌ No matching variation found for selections:', selectedAttributes);
-    }
+    console.log('🎯 Best matching variation found:', matchingVariation?.id || 'none');
 
     setSelectedVariation(matchingVariation || null);
     onVariationChange?.(matchingVariation || null);
@@ -156,7 +151,14 @@ export function ProductVariationSelector({
     // Get all combinations that include this option
     const matchingVariations = variations.filter((variation) => {
       const attr = variation.attributes.find((a) => a.name === attributeName);
-      return attr && attr.option === option;
+
+      // If variation has the attribute, it must match the option
+      if (attr) {
+        return attr.option === option;
+      }
+
+      // If variation has NO attributes at all, it's a wildcard match
+      return variation.attributes.length === 0;
     });
 
     // Check if any matching variation is in stock
@@ -178,7 +180,7 @@ export function ProductVariationSelector({
   return (
     <div className={cn('space-y-6', className)}>
       {attributesToDisplay.map((attribute) => {
-        const options = getAttributeOptions(attribute.name);
+        const options = getAttributeOptions(attribute);
         const isColorAttribute = attribute.name.toLowerCase().includes('color') ||
           attribute.name.toLowerCase().includes('colour');
         const isSizeAttribute = attribute.name.toLowerCase().includes('size');

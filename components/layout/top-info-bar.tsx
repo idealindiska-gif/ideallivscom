@@ -94,8 +94,8 @@ export function TopInfoBar() {
             </div>
           )}
 
-          {/* Language Switcher */}
-          <LanguageSwitcher variant="topbar" />
+          {/* Language Switcher - Disabled for now */}
+          {/* <LanguageSwitcher variant="topbar" /> */}
 
           {/* Location */}
           <div className="flex items-center gap-2">

@@ -85,7 +85,7 @@ export function ProductTemplate({
       <ProductSchema product={product} reviews={reviews} />
 
       <div className="min-h-screen bg-background overflow-x-hidden max-w-full">
-        <div className="w-full px-[30px] py-6 md:py-8 max-w-full">
+        <div className="w-full px-2.5 md:px-[30px] py-6 md:py-8 max-w-full">
           {/* Breadcrumbs */}
           {breadcrumbs && breadcrumbs.length > 0 && (
             <Breadcrumbs items={breadcrumbs} className="mb-4" />
@@ -578,10 +578,20 @@ export function ProductTemplate({
                   )}
 
                   {/* Weight */}
-                  {product.weight && (
+                  {(selectedVariation?.weight || product.weight) && (
                     <div className="bg-muted/30 rounded-lg p-4 border border-border">
                       <dt className="text-sm font-semibold text-muted-foreground uppercase tracking-wide mb-1">Weight</dt>
-                      <dd className="text-base font-medium text-foreground">{product.weight} kg</dd>
+                      <dd className="text-base font-medium text-foreground">
+                        {(() => {
+                          const weightValue = parseFloat(selectedVariation?.weight || product.weight || '0');
+                          if (isNaN(weightValue) || weightValue === 0) return 'N/A';
+
+                          // If weight is 1000 or more, display in kg, otherwise in g
+                          return weightValue >= 1000
+                            ? `${(weightValue / 1000).toFixed(weightValue % 1000 === 0 ? 0 : 2)} kg`
+                            : `${weightValue} g`;
+                        })()}
+                      </dd>
                     </div>
                   )}
 
@@ -729,7 +739,7 @@ export function ProductTemplate({
 
       {/* 4. AI-Powered Recommendations - You May Also Like */}
       <div className="bg-primary/5 py-12 border-t border-border">
-        <div className="w-full px-[30px] max-w-full">
+        <div className="w-full px-2.5 md:px-[30px] max-w-full">
           <ProductRecommendations currentProduct={product} maxRecommendations={5} />
         </div>
       </div>
