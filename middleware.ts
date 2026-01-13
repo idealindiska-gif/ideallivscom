@@ -1,46 +1,11 @@
-import createMiddleware from 'next-intl/middleware';
 import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
-import { locales, defaultLocale } from './i18n.config';
-
-// Create next-intl middleware
-const intlMiddleware = createMiddleware({
-  locales,
-  defaultLocale,
-  localePrefix: 'as-needed', // English no prefix, Swedish gets /sv/
-});
 
 /**
- * Detect user's preferred locale
- */
-function detectUserLocale(request: NextRequest): string {
-  // 1. Check if URL already has /sv/ prefix
-  if (request.nextUrl.pathname.startsWith('/sv/')) {
-    return 'sv';
-  }
-
-  // 2. Check cookie preference
-  const cookieLocale = request.cookies.get('NEXT_LOCALE')?.value;
-  if (cookieLocale === 'sv') {
-    return 'sv';
-  }
-
-  // 3. Check Accept-Language header
-  const acceptLanguage = request.headers.get('accept-language');
-  if (acceptLanguage?.includes('sv')) {
-    return 'sv';
-  }
-
-  // 4. Default to English (no prefix)
-  return 'en';
-}
-
-/**
- * Handle legacy redirects with locale awareness
+ * Handle legacy redirects - simplified without locale routing
  */
 function handleLegacyRedirects(request: NextRequest): NextResponse | null {
   const { pathname } = request.nextUrl;
-  const locale = detectUserLocale(request);
 
   // Old WordPress category URLs → /product-category/
   const oldCategoryPaths: { [key: string]: string } = {
@@ -62,22 +27,25 @@ function handleLegacyRedirects(request: NextRequest): NextResponse | null {
   };
 
   if (oldCategoryPaths[pathname]) {
-    const destination = locale === 'sv' ? `/sv${oldCategoryPaths[pathname]}` : oldCategoryPaths[pathname];
-    return NextResponse.redirect(new URL(destination, request.url), 301);
+    return NextResponse.redirect(new URL(oldCategoryPaths[pathname], request.url), 301);
+  }
+
+  // Redirect /sv/* to non-locale version (disable Swedish)
+  if (pathname.startsWith('/sv/') || pathname === '/sv') {
+    const newPath = pathname.replace('/sv', '') || '/';
+    return NextResponse.redirect(new URL(newPath, request.url), 301);
   }
 
   // /shop/category/* → /product-category/*
   if (pathname.startsWith('/shop/category/')) {
     const categorySlug = pathname.replace('/shop/category/', '');
-    const destination = locale === 'sv' ? `/sv/product-category/${categorySlug}` : `/product-category/${categorySlug}`;
-    return NextResponse.redirect(new URL(destination, request.url), 301);
+    return NextResponse.redirect(new URL(`/product-category/${categorySlug}`, request.url), 301);
   }
 
   // /shop/product/* → /product/*
   if (pathname.startsWith('/shop/product/')) {
     const productSlug = pathname.replace('/shop/product/', '');
-    const destination = locale === 'sv' ? `/sv/product/${productSlug}` : `/product/${productSlug}`;
-    return NextResponse.redirect(new URL(destination, request.url), 301);
+    return NextResponse.redirect(new URL(`/product/${productSlug}`, request.url), 301);
   }
 
   // /shop/{product-slug} → /product/{product-slug}
@@ -90,8 +58,7 @@ function handleLegacyRedirects(request: NextRequest): NextResponse | null {
   ) {
     const productSlug = pathname.replace('/shop/', '');
     if (productSlug && !productSlug.includes('/')) {
-      const destination = locale === 'sv' ? `/sv/product/${productSlug}` : `/product/${productSlug}`;
-      return NextResponse.redirect(new URL(destination, request.url), 301);
+      return NextResponse.redirect(new URL(`/product/${productSlug}`, request.url), 301);
     }
   }
 
@@ -107,22 +74,19 @@ function handleLegacyRedirects(request: NextRequest): NextResponse | null {
   };
 
   if (legacyRedirects[pathname]) {
-    const destination = locale === 'sv' ? `/sv${legacyRedirects[pathname]}` : legacyRedirects[pathname];
-    return NextResponse.redirect(new URL(destination, request.url), 301);
+    return NextResponse.redirect(new URL(legacyRedirects[pathname], request.url), 301);
   }
 
   return null;
 }
 
 /**
- * Middleware for handling locale detection, redirects and URL normalization
- *
+ * Simplified Middleware - Multilingual DISABLED
+ * 
  * Handles:
- * 1. Locale detection (English default, Swedish /sv/ prefix)
- * 2. Old WordPress category URLs → New Next.js structure
- * 3. /shop/category/* → /product-category/*
- * 4. /shop/product/* → /product/*
- * 5. WWW redirect for SEO
+ * 1. WWW redirect for SEO
+ * 2. Legacy URL redirects
+ * 3. Redirects /sv/* to non-locale version
  */
 export function middleware(request: NextRequest) {
   const url = request.nextUrl.clone();
@@ -147,17 +111,13 @@ export function middleware(request: NextRequest) {
   }
 
   // ============================================================================
-  // LEGACY REDIRECTS (with locale awareness)
+  // LEGACY REDIRECTS
   // ============================================================================
   const legacyRedirect = handleLegacyRedirects(request);
   if (legacyRedirect) return legacyRedirect;
 
-  // ============================================================================
-  // LOCALE DETECTION (next-intl)
-  // ============================================================================
-  // English: no prefix (current URLs stay the same)
-  // Swedish: /sv/ prefix added
-  return intlMiddleware(request);
+  // No locale routing - just pass through
+  return NextResponse.next();
 }
 
 /**
