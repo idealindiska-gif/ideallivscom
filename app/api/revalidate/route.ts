@@ -1,28 +1,112 @@
 import { revalidatePath, revalidateTag } from "next/cache";
 import { NextRequest, NextResponse } from "next/server";
+import crypto from "crypto";
 
 export const maxDuration = 30;
 
 /**
- * WordPress webhook handler for content revalidation
- * Receives notifications from WordPress when content changes
- * and revalidates the entire site
+ * WordPress/WooCommerce webhook handler for content revalidation
+ * Supports both custom webhook format and native WooCommerce webhooks
  */
+
+function verifyWooCommerceSignature(
+  payload: string,
+  signature: string,
+  secret: string
+): boolean {
+  const expectedSignature = crypto
+    .createHmac("sha256", secret)
+    .update(payload, "utf8")
+    .digest("base64");
+  return signature === expectedSignature;
+}
 
 export async function POST(request: NextRequest) {
   try {
-    const requestBody = await request.json();
-    const secret = request.headers.get("x-webhook-secret");
+    // Get raw body for signature verification
+    const rawBody = await request.text();
+    let requestBody: Record<string, unknown>;
 
-    if (secret !== process.env.WORDPRESS_WEBHOOK_SECRET) {
-      console.error("Invalid webhook secret");
+    try {
+      requestBody = JSON.parse(rawBody);
+    } catch {
       return NextResponse.json(
-        { message: "Invalid webhook secret" },
-        { status: 401 }
+        { message: "Invalid JSON body" },
+        { status: 400 }
       );
     }
 
-    const { contentType, contentId } = requestBody;
+    // Check for WooCommerce webhook headers
+    const wcWebhookTopic = request.headers.get("x-wc-webhook-topic");
+    const wcWebhookSignature = request.headers.get("x-wc-webhook-signature");
+    const wcWebhookSource = request.headers.get("x-wc-webhook-source");
+    const customSecret = request.headers.get("x-webhook-secret");
+
+    let isAuthenticated = false;
+    let contentType = "";
+    let contentId: number | undefined;
+    let slug: string | undefined;
+
+    // Handle WooCommerce native webhooks
+    if (wcWebhookTopic && wcWebhookSignature) {
+      const secret = process.env.WORDPRESS_WEBHOOK_SECRET || "";
+      isAuthenticated = verifyWooCommerceSignature(
+        rawBody,
+        wcWebhookSignature,
+        secret
+      );
+
+      if (!isAuthenticated) {
+        console.error("Invalid WooCommerce webhook signature");
+        return NextResponse.json(
+          { message: "Invalid webhook signature" },
+          { status: 401 }
+        );
+      }
+
+      // Parse WooCommerce topic (e.g., "product.updated", "product.created")
+      const [resource, action] = wcWebhookTopic.split(".");
+
+      if (resource === "product") {
+        contentType = "product";
+        contentId = requestBody.id as number;
+        slug = requestBody.slug as string;
+      } else if (resource === "order") {
+        contentType = "order";
+        contentId = requestBody.id as number;
+      } else if (resource === "coupon") {
+        contentType = "promotion";
+      } else {
+        contentType = resource;
+        contentId = requestBody.id as number;
+      }
+
+      console.log(
+        `WooCommerce webhook received: ${wcWebhookTopic} from ${wcWebhookSource}`
+      );
+    }
+    // Handle custom webhook format (for manual triggers)
+    else if (customSecret) {
+      if (customSecret !== process.env.WORDPRESS_WEBHOOK_SECRET) {
+        console.error("Invalid custom webhook secret");
+        return NextResponse.json(
+          { message: "Invalid webhook secret" },
+          { status: 401 }
+        );
+      }
+      isAuthenticated = true;
+      contentType = requestBody.contentType as string;
+      contentId = requestBody.contentId as number | undefined;
+      slug = requestBody.slug as string | undefined;
+    }
+    // No authentication provided
+    else {
+      console.error("No webhook authentication provided");
+      return NextResponse.json(
+        { message: "Missing webhook authentication" },
+        { status: 401 }
+      );
+    }
 
     if (!contentType) {
       return NextResponse.json(
@@ -45,7 +129,6 @@ export async function POST(request: NextRequest) {
         if (contentId) {
           revalidateTag(`post-${contentId}`);
         }
-        // Clear all post pages when any post changes
         revalidateTag("posts-page-1");
       } else if (contentType === "category") {
         revalidateTag("categories");
@@ -71,8 +154,6 @@ export async function POST(request: NextRequest) {
         revalidateTag("woocommerce");
         revalidateTag("products");
         if (contentId) {
-          // Revalidate specific product page
-          const slug = requestBody.slug;
           if (slug) {
             revalidatePath(`/product/${slug}`);
           }
@@ -80,16 +161,14 @@ export async function POST(request: NextRequest) {
         }
         // Revalidate shop and category pages
         revalidatePath("/shop", "page");
+        revalidatePath("/", "page"); // Homepage shows products
       }
       // WooCommerce category revalidation
       else if (contentType === "product_category") {
         revalidateTag("woocommerce");
         revalidateTag("categories");
-        if (contentId) {
-          const slug = requestBody.slug;
-          if (slug) {
-            revalidatePath(`/product-category/${slug}`);
-          }
+        if (contentId && slug) {
+          revalidatePath(`/product-category/${slug}`);
         }
       }
       // Bulk revalidation for promotions (revalidate all products)
@@ -97,7 +176,12 @@ export async function POST(request: NextRequest) {
         revalidateTag("woocommerce");
         revalidateTag("products");
         revalidatePath("/shop", "page");
-        revalidatePath("/", "page"); // Homepage may show sale products
+        revalidatePath("/", "page");
+      }
+      // Order updates (may affect stock)
+      else if (contentType === "order") {
+        revalidateTag("woocommerce");
+        revalidateTag("products");
       }
 
       // Also revalidate the entire layout for safety

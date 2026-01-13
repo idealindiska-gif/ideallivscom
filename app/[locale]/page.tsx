@@ -9,8 +9,7 @@ import { getProducts, getProductCategories } from "@/lib/woocommerce";
 import type { Metadata } from "next";
 import { SchemaScript } from "@/lib/schema/schema-script";
 import { idealIndiskaOrganizationSchemaFull } from "@/lib/schema/organization";
-import { setRequestLocale } from 'next-intl/server';
-import { useTranslations } from 'next-intl';
+import { setRequestLocale, getTranslations } from 'next-intl/server';
 
 // ISR: Revalidate every 2 hours
 export const revalidate = 7200;
@@ -64,6 +63,9 @@ export default async function LocaleHomePage({ params }: PageProps) {
     // Enable static rendering for this locale
     setRequestLocale(locale);
 
+    // Get translations
+    const t = await getTranslations('home');
+
     // Fetch data in parallel
     const [categoriesRes, trendingRes, newArrivalsRes, dealsRes, haldiramRes, freshProduceRes] = await Promise.all([
         getProductCategories({ per_page: 6, orderby: 'count', order: 'desc', parent: 0 }),
@@ -81,27 +83,6 @@ export default async function LocaleHomePage({ params }: PageProps) {
     const haldiramProducts = haldiramRes?.data || [];
     const freshProduceProducts = freshProduceRes?.data || [];
 
-    // Swedish translations for headlines
-    const titles = locale === 'sv' ? {
-        hero: "Autentiska Indiska & Pakistanska Matvaror i Stockholm",
-        heroSubtitle: "Från aromatiska kryddor till premium Basmati-ris, halaltkött till färska produkter - allt du behöver för autentisk sydasiatisk matlagning. Levererat till din dörr i Stockholm.",
-        heroBadge: "Fri Leverans Över 500 SEK",
-        deals: "Specialerbjudanden på Indiska & Pakistanska Matvaror",
-        trending: "Kundfavoriter - Mest Populära Produkter",
-        haldiram: "Haldiram's - Autentiska Indiska Snacks",
-        newArrivals: "Nyheter - Nytt Lager Just In",
-        freshProduce: "Färska Produkter - Frukt & Grönsaker",
-    } : {
-        hero: "Authentic Indian & Pakistani Groceries in Stockholm",
-        heroSubtitle: "From aromatic spices to premium Basmati rice, halal meat to fresh produce - everything you need for authentic South Asian cooking. Delivered to your door in Stockholm.",
-        heroBadge: "Free Delivery Over 500 SEK",
-        deals: "Special Offers on Indian & Pakistani Groceries",
-        trending: "Customer Favorites - Most Popular Items",
-        haldiram: "Haldiram's - Authentic Indian Snacks",
-        newArrivals: "Fresh Arrivals - New Stock Just In",
-        freshProduce: "Fresh Produce - Fruits & Vegetables",
-    };
-
     // Locale-aware links
     const linkPrefix = locale === 'sv' ? '/sv' : '';
 
@@ -109,9 +90,9 @@ export default async function LocaleHomePage({ params }: PageProps) {
         <main className="flex min-h-screen flex-col bg-background pb-20 overflow-x-hidden max-w-full">
             {/* 1. Hero Section */}
             <Hero
-                title={titles.hero}
-                subtitle={titles.heroSubtitle}
-                badge={titles.heroBadge}
+                title={t('heroTitle')}
+                subtitle={t('heroSubtitle')}
+                badge={t('heroBadge')}
             />
 
             {/* 2. Features/Benefits Section */}
@@ -125,7 +106,7 @@ export default async function LocaleHomePage({ params }: PageProps) {
 
             {/* 5. Special Offers */}
             <ProductShowcase
-                title={titles.deals}
+                title={t('specialOffers')}
                 products={dealProducts}
                 moreLink={`${linkPrefix}/deals`}
             />
@@ -135,28 +116,28 @@ export default async function LocaleHomePage({ params }: PageProps) {
 
             {/* 7. Trending Products */}
             <ProductShowcase
-                title={titles.trending}
+                title={t('customerFavorites')}
                 products={trendingProducts}
                 moreLink={`${linkPrefix}/shop?sort=bestsellers`}
             />
 
             {/* 8. Haldiram Section */}
             <ProductShowcase
-                title={titles.haldiram}
+                title={t('haldiramSection')}
                 products={haldiramProducts}
                 moreLink={`${linkPrefix}/brand/haldiram`}
             />
 
             {/* 9. New Arrivals */}
             <ProductShowcase
-                title={titles.newArrivals}
+                title={t('freshArrivals')}
                 products={newProducts}
                 moreLink={`${linkPrefix}/shop?sort=new`}
             />
 
             {/* 10. Fresh Produce Section */}
             <ProductShowcase
-                title={titles.freshProduce}
+                title={t('freshProduce')}
                 products={freshProduceProducts}
                 moreLink={`${linkPrefix}/product-category/fresh-produce`}
             />

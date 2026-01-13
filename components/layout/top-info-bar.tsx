@@ -1,10 +1,11 @@
 "use client";
 
-import { Phone, Mail, MapPin, Clock, ShoppingCart } from "lucide-react";
+import { Phone, Mail, MapPin, Clock } from "lucide-react";
 import Link from "next/link";
 import { brandConfig } from "@/config/brand.config";
 import { useEffect, useState } from "react";
 import { getStoreStatus, type StoreStatus } from "@/lib/store-hours";
+import { LanguageSwitcher } from "./language-switcher";
 
 // WhatsApp Icon Component
 function WhatsAppIcon({ className }: { className?: string }) {
@@ -80,11 +81,10 @@ export function TopInfoBar() {
             <div className="flex items-center gap-2 text-white/90">
               <Clock className="h-4 w-4" />
               <div className="flex items-center gap-2">
-                <span className={`inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full text-xs font-semibold ${
-                  storeStatus.isOpen
-                    ? 'bg-green-500/20 text-green-100 border border-green-400/30'
-                    : 'bg-red-500/20 text-red-100 border border-red-400/30'
-                }`}>
+                <span className={`inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full text-xs font-semibold ${storeStatus.isOpen
+                  ? 'bg-green-500/20 text-green-100 border border-green-400/30'
+                  : 'bg-red-500/20 text-red-100 border border-red-400/30'
+                  }`}>
                   <span className={`w-1.5 h-1.5 rounded-full ${storeStatus.isOpen ? 'bg-green-300' : 'bg-red-300'}`} />
                   {storeStatus.statusText}
                 </span>
@@ -94,11 +94,8 @@ export function TopInfoBar() {
             </div>
           )}
 
-          {/* Online Orders 24/7 */}
-          <div className="flex items-center gap-2 bg-white/10 px-2 py-1 rounded-md border border-white/20">
-            <ShoppingCart className="h-4 w-4 text-green-300" />
-            <span className="text-white font-semibold text-xs">Orders 24/7</span>
-          </div>
+          {/* Language Switcher */}
+          <LanguageSwitcher variant="topbar" />
 
           {/* Location */}
           <div className="flex items-center gap-2">

@@ -2,6 +2,7 @@
   "common": {
     "addToCart": "Lägg till i varukorg",
     "search": "Sök",
+    "searchPlaceholder": "Sök efter produkter...",
     "categories": "Kategorier",
     "price": "Pris",
     "quantity": "Antal",
@@ -10,6 +11,9 @@
     "checkout": "Till kassan",
     "continueShopping": "Fortsätt handla",
     "viewCart": "Visa varukorg",
+    "viewAll": "Visa alla",
+    "learnMore": "Läs mer",
+    "shopNow": "Handla nu",
     "stockStatus": {
       "inStock": "I lager",
       "outOfStock": "Slut i lager",
@@ -38,7 +42,12 @@
     "contact": "Kontakt",
     "myAccount": "Mitt konto",
     "cart": "Varukorg",
-    "wishlist": "Önskelista"
+    "wishlist": "Önskelista",
+    "brands": "Varumärken",
+    "blog": "Blogg",
+    "deals": "Erbjudanden",
+    "delivery": "Leverans",
+    "faq": "Vanliga frågor"
   },
   "checkout": {
     "title": "Kassan",
@@ -50,6 +59,29 @@
   },
   "footer": {
     "allRightsReserved": "Alla rättigheter förbehållna",
-    "followUs": "Följ oss"
+    "followUs": "Följ oss",
+    "quickLinks": "Snabblänkar",
+    "customerService": "Kundtjänst",
+    "storeInfo": "Butiksinformation"
+  },
+  "home": {
+    "heroTitle": "Autentiska Indiska & Pakistanska Matvaror i Stockholm",
+    "heroSubtitle": "Från aromatiska kryddor till premium Basmati-ris, halaltkött till färska produkter - allt du behöver för autentisk sydasiatisk matlagning. Levererat till din dörr i Stockholm.",
+    "heroBadge": "Fri Leverans Över 500 SEK",
+    "specialOffers": "Specialerbjudanden på Indiska & Pakistanska Matvaror",
+    "customerFavorites": "Kundfavoriter - Mest Populära Produkter",
+    "haldiramSection": "Haldiram's - Autentiska Indiska Snacks",
+    "freshArrivals": "Nyheter - Nytt Lager Just In",
+    "freshProduce": "Färska Produkter - Frukt & Grönsaker"
+  },
+  "features": {
+    "freeDelivery": "Fri Leverans",
+    "freeDeliveryDesc": "Fri leverans i Stockholm för beställningar över 500 SEK",
+    "freshProducts": "Färska Produkter",
+    "freshProductsDesc": "Kvalitetskontrollerade varor och autentiska ingredienser",
+    "securePayment": "Säker Betalning",
+    "securePaymentDesc": "Säker och krypterad betalningshantering",
+    "support": "Support Dygnet Runt",
+    "supportDesc": "Kundtjänst tillgänglig via WhatsApp"
   }
 }

@@ -2,6 +2,7 @@
   "common": {
     "addToCart": "Add to Cart",
     "search": "Search",
+    "searchPlaceholder": "Search for products...",
     "categories": "Categories",
     "price": "Price",
     "quantity": "Quantity",
@@ -10,6 +11,9 @@
     "checkout": "Checkout",
     "continueShopping": "Continue Shopping",
     "viewCart": "View Cart",
+    "viewAll": "View All",
+    "learnMore": "Learn More",
+    "shopNow": "Shop Now",
     "stockStatus": {
       "inStock": "In Stock",
       "outOfStock": "Out of Stock",
@@ -38,7 +42,12 @@
     "contact": "Contact",
     "myAccount": "My Account",
     "cart": "Cart",
-    "wishlist": "Wishlist"
+    "wishlist": "Wishlist",
+    "brands": "Brands",
+    "blog": "Blog",
+    "deals": "Deals",
+    "delivery": "Delivery",
+    "faq": "FAQ"
   },
   "checkout": {
     "title": "Checkout",
@@ -50,6 +59,29 @@
   },
   "footer": {
     "allRightsReserved": "All rights reserved",
-    "followUs": "Follow Us"
+    "followUs": "Follow Us",
+    "quickLinks": "Quick Links",
+    "customerService": "Customer Service",
+    "storeInfo": "Store Information"
+  },
+  "home": {
+    "heroTitle": "Authentic Indian & Pakistani Groceries in Stockholm",
+    "heroSubtitle": "From aromatic spices to premium Basmati rice, halal meat to fresh produce - everything you need for authentic South Asian cooking. Delivered to your door in Stockholm.",
+    "heroBadge": "Free Delivery Over 500 SEK",
+    "specialOffers": "Special Offers on Indian & Pakistani Groceries",
+    "customerFavorites": "Customer Favorites - Most Popular Items",
+    "haldiramSection": "Haldiram's - Authentic Indian Snacks",
+    "freshArrivals": "Fresh Arrivals - New Stock Just In",
+    "freshProduce": "Fresh Produce - Fruits & Vegetables"
+  },
+  "features": {
+    "freeDelivery": "Free Delivery",
+    "freeDeliveryDesc": "Free delivery in Stockholm for orders over 500 SEK",
+    "freshProducts": "Fresh Products",
+    "freshProductsDesc": "Quality checked produce and authentic ingredients",
+    "securePayment": "Secure Payment",
+    "securePaymentDesc": "Safe & encrypted payment processing",
+    "support": "24/7 Support",
+    "supportDesc": "Customer service available via WhatsApp"
   }
 }
