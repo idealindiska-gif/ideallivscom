@@ -4,14 +4,16 @@ import Image from "next/image";
 import { Container } from "@/components/craft";
 import { brandProfile } from "@/config/brand-profile";
 import { getProductBrands } from "@/lib/woocommerce/brands";
-import { Package, ArrowRight } from "lucide-react";
+import { Package, ArrowRight, TrendingUp } from "lucide-react";
+import { BrandsGrid } from "@/components/brands-grid";
 
 import { SchemaScript } from "@/lib/schema/schema-script";
 import { collectionPageSchema } from "@/lib/schema/collection";
+import { breadcrumbSchema } from "@/lib/schema/breadcrumb";
 
 export const metadata: Metadata = {
-    title: `Indian & Pakistani Grocery Brands Stockholm | ${brandProfile.name}`,
-    description: `Shop the widest selection of authentic Indian and Pakistani grocery brands in Stockholm. Trusted by families since 2020. Shan, Ahmed, National, MTR, Haldiram's, and more.`,
+    title: `135+ Indian & Pakistani Grocery Brands Stockholm | ${brandProfile.name}`,
+    description: `Browse 135+ authentic Indian & Pakistani grocery brands in Stockholm. Shop Shan, MDH, Haldiram, National, MTR, TRS, Tilda, Aashirvaad & more at Ideal Indiska Livs. Fast delivery across Sweden.`,
     alternates: {
         canonical: "https://www.ideallivs.com/brands",
     },
@@ -24,6 +26,8 @@ export const metadata: Metadata = {
         "haldiram sweets sweden",
         "mtr meals online",
         "ahmed foods supplier",
+        "mdh masala sweden",
+        "trs foods stockholm",
     ].join(", "),
 };
 
@@ -31,7 +35,12 @@ export const metadata: Metadata = {
 export const revalidate = 3600;
 
 export default async function ShopByBrandPage() {
-    const brands = await getProductBrands({ hide_empty: true });
+    const brands = await getProductBrands({ hide_empty: true, per_page: 200 });
+
+    // Get top 10 most popular brands for featured section
+    const featuredBrands = [...brands]
+        .sort((a, b) => b.count - a.count)
+        .slice(0, 10);
 
     return (
         <main className="min-h-screen bg-background">
@@ -45,7 +54,7 @@ export default async function ShopByBrandPage() {
                             </h1>
                             <div className="flex items-center gap-2 text-primary font-bold text-sm tracking-wide uppercase bg-primary/5 w-fit px-4 py-2 rounded-full border border-primary/10">
                                 <Package className="w-4 h-4" />
-                                <span>{brands.length} Premium Brands</span>
+                                <span>{brands.length}+ Premium Brands</span>
                             </div>
                         </div>
                         <div className="space-y-4">
@@ -60,61 +69,59 @@ export default async function ShopByBrandPage() {
                 </Container>
             </section>
 
-            {/* Brands Grid - Full Width Layout */}
+            {/* Featured Brands Section */}
+            <section className="py-12 md:py-16 border-b border-border/50 bg-muted/30">
+                <Container>
+                    <div className="flex items-center gap-3 mb-8">
+                        <TrendingUp className="w-6 h-6 text-primary" />
+                        <h2 className="text-2xl md:text-3xl font-heading font-bold">
+                            Most Popular Brands
+                        </h2>
+                    </div>
+
+                    <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 lg:grid-cols-10 gap-4">
+                        {featuredBrands.map((brand) => (
+                            <Link
+                                key={brand.id}
+                                href={`/brand/${brand.slug}`}
+                                className="group"
+                            >
+                                <article className="bg-card rounded-xl border border-border shadow-sm hover:shadow-md hover:border-primary/50 transition-all duration-300 overflow-hidden">
+                                    <div className="relative aspect-square bg-white flex items-center justify-center p-4">
+                                        {brand.image?.src ? (
+                                            <Image
+                                                src={brand.image.src}
+                                                alt={brand.image.alt || brand.name}
+                                                fill
+                                                className="object-contain p-2 group-hover:scale-110 transition-transform duration-300"
+                                                sizes="(max-width: 640px) 50vw, (max-width: 1024px) 20vw, 10vw"
+                                            />
+                                        ) : (
+                                            <div className="w-12 h-12 bg-primary/10 rounded-full flex items-center justify-center text-primary font-bold text-xl border-2 border-primary/20">
+                                                {brand.name.charAt(0)}
+                                            </div>
+                                        )}
+                                    </div>
+                                    <div className="p-2 text-center border-t border-border/50">
+                                        <p className="text-xs font-medium text-muted-foreground line-clamp-1">
+                                            {brand.name}
+                                        </p>
+                                        <p className="text-xs text-primary font-bold">
+                                            {brand.count} items
+                                        </p>
+                                    </div>
+                                </article>
+                            </Link>
+                        ))}
+                    </div>
+                </Container>
+            </section>
+
+            {/* All Brands Grid with Search & Filters */}
             <section className="py-16 md:py-24">
-                <div className="w-full max-w-[1920px] mx-auto px-4 sm:px-6 lg:px-8">
-                    {brands.length === 0 ? (
-                        <div className="text-center py-12">
-                            <p className="text-muted-foreground text-lg">
-                                No brands found. Please check back later.
-                            </p>
-                        </div>
-                    ) : (
-                        <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 xl:grid-cols-8 gap-6">
-                            {brands.map((brand) => (
-                                <Link
-                                    key={brand.id}
-                                    href={`/brand/${brand.slug}`}
-                                    className="group"
-                                >
-                                    <article className="bg-card rounded-2xl border border-border shadow-sm hover:shadow-md transition-all duration-300 overflow-hidden h-full flex flex-col">
-                                        {/* Brand Image/Logo */}
-                                        <div className="relative aspect-square bg-white flex items-center justify-center p-6 border-b border-border/50">
-                                            {brand.image?.src ? (
-                                                <Image
-                                                    src={brand.image.src}
-                                                    alt={brand.image.alt || brand.name}
-                                                    fill
-                                                    className="object-contain p-2 group-hover:scale-110 transition-transform duration-300"
-                                                    sizes="(max-width: 640px) 50vw, (max-width: 1024px) 25vw, 12vw"
-                                                />
-                                            ) : (
-                                                <div className="text-center w-full">
-                                                    <div className="w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-2 text-primary font-bold text-2xl border-2 border-primary/20">
-                                                        {brand.name.charAt(0)}
-                                                    </div>
-                                                </div>
-                                            )}
-                                        </div>
-
-                                        {/* Brand Info */}
-                                        <div className="p-4 flex-1 flex flex-col text-center bg-card">
-                                            <h3 className="text-sm font-heading font-bold text-foreground group-hover:text-primary transition-colors line-clamp-2 mb-1">
-                                                {brand.name}
-                                            </h3>
-
-                                            {brand.count > 0 && (
-                                                <p className="text-xs text-muted-foreground mt-auto">
-                                                    {brand.count} Products
-                                                </p>
-                                            )}
-                                        </div>
-                                    </article>
-                                </Link>
-                            ))}
-                        </div>
-                    )}
-                </div>
+                <Container>
+                    <BrandsGrid brands={brands} />
+                </Container>
             </section>
 
             {/* SEO Content Section */}
@@ -149,7 +156,8 @@ export default async function ShopByBrandPage() {
                                 <li><strong>MTR:</strong> South Indian specialties and ready-to-eat meals</li>
                                 <li><strong>National Foods:</strong> Trusted Pakistani masalas and food products</li>
                                 <li><strong>Haldiram's:</strong> India's favorite snacks and sweets</li>
-                                <li><strong>KTC:</strong> Quality oils, rice, and cooking essentials</li>
+                                <li><strong>MDH:</strong> Premium spice blends and masalas</li>
+                                <li><strong>TRS Foods:</strong> Wide range of rice, lentils, and specialty ingredients</li>
                             </ul>
 
                             <p className="mt-6">
@@ -173,6 +181,15 @@ export default async function ShopByBrandPage() {
                         image: brand.image?.src || undefined
                     }))
                 })}
+            />
+
+            {/* Breadcrumb Schema */}
+            <SchemaScript
+                id="brands-breadcrumb-schema"
+                schema={breadcrumbSchema([
+                    { name: "Home", url: "https://www.ideallivs.com" },
+                    { name: "Brands", url: "https://www.ideallivs.com/brands" }
+                ], "https://www.ideallivs.com/brands")}
             />
         </main>
     );

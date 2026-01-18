@@ -4,8 +4,6 @@ import { Inter as FontSans, Montserrat as FontHeading } from "next/font/google";
 import { NextIntlClientProvider } from 'next-intl';
 import { getMessages } from 'next-intl/server';
 import { ThemeProvider } from "@/components/theme/theme-provider";
-import { Analytics } from "@vercel/analytics/react";
-import { SpeedInsights } from "@vercel/speed-insights/next";
 import { TopInfoBar } from "@/components/layout/top-info-bar";
 import { SchemaScript } from "@/lib/schema/schema-script";
 import { idealIndiskaWebsiteSchema, schemaGraph, idealIndiskaOrganizationSchemaFull } from "@/lib/schema";
@@ -184,33 +182,31 @@ export default async function RootLayout({
             enableSystem
             disableTransitionOnChange
           >
-          {/* Top Green Info Bar - Desktop only */}
-          <TopInfoBar />
+            {/* Top Green Info Bar - Desktop only */}
+            <TopInfoBar />
 
-          {/* Main Layout Container */}
-          <div className="flex min-h-screen lg:min-h-[calc(100vh-40px)] overflow-x-hidden">
-            {/* Vertical Sidebar - Fixed on left, hidden on mobile */}
-            <VerticalSidebar categories={categories} />
+            {/* Main Layout Container */}
+            <div className="flex min-h-screen lg:min-h-[calc(100vh-40px)] overflow-x-hidden">
+              {/* Vertical Sidebar - Fixed on left, hidden on mobile */}
+              <VerticalSidebar categories={categories} />
 
-            {/* Main Content Area - Responsive margin */}
-            <div className="flex-1 lg:ml-64 flex flex-col overflow-x-hidden max-w-full">
-              {/* Content Header - Search, Login, Cart */}
-              <ContentHeader />
+              {/* Main Content Area - Responsive margin */}
+              <div className="flex-1 lg:ml-64 flex flex-col overflow-x-hidden max-w-full">
+                {/* Content Header - Search, Login, Cart */}
+                <ContentHeader />
 
-              {/* Page Content */}
-              <main className="flex-1 w-full overflow-x-hidden">{children}</main>
-              <Footer />
+                {/* Page Content */}
+                <main className="flex-1 w-full overflow-x-hidden">{children}</main>
+                <Footer />
+              </div>
             </div>
-          </div>
 
-          <CartDrawer />
-          <WishlistDrawer />
-          <Toaster />
-          <ExitSurveyWrapper />
+            <CartDrawer />
+            <WishlistDrawer />
+            <Toaster />
+            <ExitSurveyWrapper />
           </ThemeProvider>
         </NextIntlClientProvider>
-        <Analytics />
-        <SpeedInsights />
         <AiChatWidget />
 
         {/* Global SEO Schemas */}

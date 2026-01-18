@@ -43,11 +43,16 @@ next-env.d.ts
 # MCP and tooling
 fourlines-mcp-pro/
 .claude/
+.agent/
 .antigravityignore
 
-# Documentation and guides (optional - remove if you want to include these)
+# Temporary Claude files
+tmpclaude-*
+
+# Development documentation (keep only README.md)
 *.md
 !README.md
+!CHANGELOG.md
 
 # IDE
 .vscode/
@@ -56,4 +61,20 @@ fourlines-mcp-pro/
 # Windows problematic files
 nul
 **/nul
+
+# Migration documentation (temporary)
+hostinger-migration/
+
+# Old project references
 ideallivswebsite/
+
+# Data snapshots
+brands-data.json
+categories-data.json
+wordpress-pages.json
+
+# Temporary scripts and debug files
+debug-*.ts
+debug-*.js
+test-*.js
+check-*.js

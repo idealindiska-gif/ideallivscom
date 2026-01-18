@@ -7,13 +7,13 @@
 
 // WooCommerce API Base Configuration
 export const WC_API_CONFIG = {
-  // API Base URL (will be constructed from environment variables)
-  baseUrl: `${process.env.NEXT_PUBLIC_WORDPRESS_URL}/wp-json/wc/v3`,
+  // API Base URL - Check server-side first, then public fallback (Hostinger compatibility)
+  baseUrl: `${process.env.WORDPRESS_URL || process.env.NEXT_PUBLIC_WORDPRESS_URL}/wp-json/wc/v3`,
 
-  // Authentication credentials (server-side only)
+  // Authentication credentials - Check server-side first, then public fallback (Hostinger compatibility)
   auth: {
-    consumerKey: process.env.WORDPRESS_CONSUMER_KEY || '',
-    consumerSecret: process.env.WORDPRESS_CONSUMER_SECRET || '',
+    consumerKey: process.env.WORDPRESS_CONSUMER_KEY || process.env.NEXT_PUBLIC_WORDPRESS_CONSUMER_KEY || '',
+    consumerSecret: process.env.WORDPRESS_CONSUMER_SECRET || process.env.NEXT_PUBLIC_WORDPRESS_CONSUMER_SECRET || '',
   },
 
   // WooCommerce REST API v3 Endpoints
@@ -124,9 +124,9 @@ export function getWooCommerceUrl(endpoint: string): string {
  * Uses Base64 encoding of consumer_key:consumer_secret
  */
 export function getWooCommerceAuthHeader(): string {
-  // Read environment variables directly to ensure they're available at runtime
-  const consumerKey = process.env.WORDPRESS_CONSUMER_KEY;
-  const consumerSecret = process.env.WORDPRESS_CONSUMER_SECRET;
+  // Check server-side first, then public fallback (Hostinger compatibility)
+  const consumerKey = process.env.WORDPRESS_CONSUMER_KEY || process.env.NEXT_PUBLIC_WORDPRESS_CONSUMER_KEY;
+  const consumerSecret = process.env.WORDPRESS_CONSUMER_SECRET || process.env.NEXT_PUBLIC_WORDPRESS_CONSUMER_SECRET;
 
   if (!consumerKey || !consumerSecret) {
     console.error('Missing WC credentials:', {
@@ -174,16 +174,19 @@ export function validateWooCommerceConfig(): {
 } {
   const errors: string[] = [];
 
-  if (!process.env.NEXT_PUBLIC_WORDPRESS_URL) {
-    errors.push('NEXT_PUBLIC_WORDPRESS_URL is not set');
+  // Check for WordPress URL (server-side or public)
+  if (!process.env.WORDPRESS_URL && !process.env.NEXT_PUBLIC_WORDPRESS_URL) {
+    errors.push('WORDPRESS_URL or NEXT_PUBLIC_WORDPRESS_URL is not set');
   }
 
-  if (!process.env.WORDPRESS_CONSUMER_KEY) {
-    errors.push('WORDPRESS_CONSUMER_KEY is not set');
+  // Check for consumer key (server-side or public)
+  if (!process.env.WORDPRESS_CONSUMER_KEY && !process.env.NEXT_PUBLIC_WORDPRESS_CONSUMER_KEY) {
+    errors.push('WORDPRESS_CONSUMER_KEY or NEXT_PUBLIC_WORDPRESS_CONSUMER_KEY is not set');
   }
 
-  if (!process.env.WORDPRESS_CONSUMER_SECRET) {
-    errors.push('WORDPRESS_CONSUMER_SECRET is not set');
+  // Check for consumer secret (server-side or public)
+  if (!process.env.WORDPRESS_CONSUMER_SECRET && !process.env.NEXT_PUBLIC_WORDPRESS_CONSUMER_SECRET) {
+    errors.push('WORDPRESS_CONSUMER_SECRET or NEXT_PUBLIC_WORDPRESS_CONSUMER_SECRET is not set');
   }
 
   return {
