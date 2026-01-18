@@ -1,7 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server';
 
 const WP_API_BASE = process.env.NEXT_PUBLIC_WORDPRESS_API_URL || 'https://crm.ideallivs.com/wp-json';
-const MCP_KEY = process.env.FOURLINES_MCP_KEY;
+// Check server-side first, then public fallback (Hostinger compatibility)
+const MCP_KEY = process.env.FOURLINES_MCP_KEY || process.env.NEXT_PUBLIC_FOURLINES_MCP_KEY;
 
 // Fallback shipping methods when API is unavailable
 const FALLBACK_SHIPPING_METHODS = [
@@ -48,9 +49,15 @@ export async function POST(request: NextRequest) {
     }
 
     if (!MCP_KEY) {
-      console.warn('⚠️ [API Route] Missing MCP API key, using fallback shipping methods');
+      console.error('❌ [API Route] Missing MCP API key!');
+      console.error('   - FOURLINES_MCP_KEY:', process.env.FOURLINES_MCP_KEY ? 'SET' : 'NOT SET');
+      console.error('   - NEXT_PUBLIC_FOURLINES_MCP_KEY:', process.env.NEXT_PUBLIC_FOURLINES_MCP_KEY ? 'SET' : 'NOT SET');
+      console.warn('⚠️ [API Route] Using fallback shipping methods');
       return createFallbackResponse(cartTotal);
     }
+
+    console.log('✅ [API Route] MCP API key found, calling WordPress API...');
+    console.log('   - Endpoint:', `${WP_API_BASE}/fourlines-mcp/v1/shipping/calculate`);
 
     try {
       // Call WordPress MCP API
