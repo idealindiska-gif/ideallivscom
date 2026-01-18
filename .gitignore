@@ -41,7 +41,7 @@ yarn-error.log*
 next-env.d.ts
 
 # MCP and tooling
-fourlines-mcp-pro/
+# fourlines-mcp-pro/ - REMOVED: This WordPress plugin is needed for DHL shipping integration
 .claude/
 .agent/
 .antigravityignore
