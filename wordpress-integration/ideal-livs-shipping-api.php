@@ -214,8 +214,8 @@ function ideal_livs_calculate_shipping($request) {
                 }
             }
 
-            // Add free shipping if not already present
-            if (!$has_free_shipping) {
+            // Add custom free shipping ONLY if in Stockholm area
+            if (!$has_free_shipping && ideal_livs_is_stockholm_postcode($postcode)) {
                 $available_methods[] = array(
                     'id' => 'free_shipping:custom',
                     'method_id' => 'free_shipping',
