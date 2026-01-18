@@ -223,31 +223,46 @@ class Fourlines_MCP_Shipping_DHL {
                 error_log('Zone does NOT have free shipping enabled');
             }
             
+            // STRICT CHECK: Verify if postcode is in Stockholm (100xx - 199xx)
+            $is_stockholm = false;
+            if (!empty($postcode)) {
+                $normalized_postcode = preg_replace('/\s+/', '', $postcode);
+                $prefix_num = intval(substr($normalized_postcode, 0, 3));
+                if ($prefix_num >= 100 && $prefix_num <= 199) {
+                    $is_stockholm = true;
+                }
+            }
+
             // GLOBAL FREE SHIPPING THRESHOLD (500 SEK)
             // Free shipping is ONLY available if:
             // 1. Cart total >= 500 SEK
             // 2. Customer's zone has free shipping enabled
+            // 3. Customer is in Stockholm area (Strict enforcement)
             $free_shipping_threshold = 500;
             
-            if ($cart_total < $free_shipping_threshold || !$zone_has_free_shipping) {
-                // Remove any free shipping methods
+            // Allow if strictly Stockholm AND threshold met AND zone enabled
+            // OR if it's "Store Pickup" (local_pickup) which is always free
+            if (($cart_total < $free_shipping_threshold) || !$zone_has_free_shipping || !$is_stockholm) {
+                // Remove free shipping methods
                 $available_methods = array_filter($available_methods, function($m) {
-                    return $m['method_id'] !== 'free_shipping';
+                    // Keep if not free shipping
+                    if ($m['method_id'] !== 'free_shipping' && $m['cost'] > 0) {
+                        return true;
+                    }
+                    // Keep local pickup (always free)
+                    if ($m['method_id'] === 'local_pickup' || strpos($m['id'], 'local_pickup') !== false) {
+                        return true;
+                    }
+                    // If it's free shipping, only keep if logic passes (which it doesn't here)
+                    return false;
                 });
                 $available_methods = array_values($available_methods);
-                
-                if ($cart_total < $free_shipping_threshold) {
-                    error_log('Removed free shipping: cart total below threshold');
-                } else {
-                    error_log('Removed free shipping: zone does not offer it');
-                }
             } else {
-                // Cart qualifies AND zone offers free shipping – ensure zero cost
+                // Cart qualifies AND zone offers free shipping AND is Stockholm
                 foreach ($available_methods as &$m) {
                     if ($m['method_id'] === 'free_shipping') {
                         $m['cost'] = 0;
                         $m['total_cost'] = 0;
-                        error_log('Free shipping available: cart qualifies and zone offers it');
                     }
                 }
             }
@@ -284,7 +299,7 @@ class Fourlines_MCP_Shipping_DHL {
                 'cart_total' => $cart_total,
                 'restricted_products' => $restricted_products,
                 'free_shipping_threshold' => $free_shipping_threshold,
-                'free_shipping_available' => $cart_total >= $free_shipping_threshold && $zone_has_free_shipping,
+                'free_shipping_available' => $cart_total >= $free_shipping_threshold && $zone_has_free_shipping && $is_stockholm,
                 'amount_to_free_shipping' => max(0, $free_shipping_threshold - $cart_total),
                 'debug' => $debug,
             ];
