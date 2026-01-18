@@ -32,24 +32,14 @@ class Fourlines_MCP_Shipping_DHL {
      */
     public static function check_api_key($request) {
         $api_key = $request->get_header('X-Fourlines-Key');
-
-        if (empty($api_key)) {
-            return new WP_Error(
-                'missing_api_key',
-                'API key is required',
-                ['status' => 401]
-            );
-        }
-
-        // Get stored API key
         $stored_key = get_option('fourlines_mcp_api_key');
 
+        if (empty($api_key)) {
+            return new WP_Error('missing_api_key','API key is required',['status' => 401]);
+        }
+
         if ($api_key !== $stored_key) {
-            return new WP_Error(
-                'invalid_api_key',
-                'Invalid API key',
-                ['status' => 401]
-            );
+            return new WP_Error('invalid_api_key','Invalid API key',['status' => 401]);
         }
 
         return true;
@@ -64,23 +54,15 @@ class Fourlines_MCP_Shipping_DHL {
 
             // Validate required parameters
             if (empty($params['postcode'])) {
-                return new WP_Error(
-                    'missing_params',
-                    'Missing required parameter: postcode',
-                    ['status' => 400]
-                );
+                return new WP_Error('missing_params','Missing required parameter: postcode',['status' => 400]);
             }
 
             // Initialize WooCommerce if needed
             if (!function_exists('WC')) {
-                return new WP_Error(
-                    'woocommerce_not_active',
-                    'WooCommerce is not active',
-                    ['status' => 500]
-                );
+                return new WP_Error('woocommerce_not_active','WooCommerce is not active',['status' => 500]);
             }
 
-            // Initialize WC cart and customer
+            // RESTORED: Original Initialization Sequence
             if (!WC()->cart) {
                 require_once WC_ABSPATH . 'includes/wc-cart-functions.php';
                 require_once WC_ABSPATH . 'includes/wc-notice-functions.php';
@@ -129,7 +111,7 @@ class Fourlines_MCP_Shipping_DHL {
             WC()->customer->set_shipping_state($state);
             WC()->customer->set_shipping_address($address);
 
-            // Also set billing (some plugins need it)
+            // RESTORED: Original Billing Setting (Only non-address fields)
             WC()->customer->set_billing_country($country);
             WC()->customer->set_billing_postcode($postcode);
             WC()->customer->set_billing_city($city);
@@ -162,21 +144,17 @@ class Fourlines_MCP_Shipping_DHL {
                 }
             }
 
-            // Determine shipping zone
+            // RESTORED: Manual Zone Matching (It actually checked free shipping status correctly)
             $zone_name = 'Sweden';
             $zone_id = 0;
             $matched_zone_obj = null;
 
-            // Try to match shipping zone
             $shipping_zones = WC_Shipping_Zones::get_zones();
             foreach ($shipping_zones as $zone) {
                 $zone_obj = new WC_Shipping_Zone($zone['id']);
-
-                // Check if postcode matches
                 foreach ($zone_obj->get_zone_locations() as $location) {
                     if ($location->type === 'postcode') {
                         $postcode_range = $location->code;
-                        // Simple wildcard matching
                         $pattern = str_replace('*', '.*', $postcode_range);
                         if (preg_match('/^' . $pattern . '/', $postcode)) {
                             $zone_name = $zone_obj->get_zone_name();
@@ -188,7 +166,7 @@ class Fourlines_MCP_Shipping_DHL {
                 }
             }
 
-            // If no specific zone found, check if Stockholm based on postcode
+            // If no specific zone found, check if Stockholm based on postcode (Legacy check)
             if ($zone_id === 0 && !empty($postcode)) {
                 $first_digit = substr($postcode, 0, 1);
                 if ($first_digit === '1') {
@@ -196,78 +174,49 @@ class Fourlines_MCP_Shipping_DHL {
                 }
             }
 
-            // Get cart total for minimum amount check
+            // Get cart total
             $cart_total = WC()->cart->get_subtotal();
             
-            // DEBUG: Log what we received from WooCommerce
-            error_log('MCP Shipping Debug:');
-            error_log('Cart Total: ' . $cart_total);
-            error_log('Zone ID: ' . $zone_id);
-            error_log('Zone Name: ' . $zone_name);
-            error_log('Methods from WooCommerce: ' . print_r($available_methods, true));
-            
-            // CRITICAL FIX: Check if zone actually offers free shipping
+            // Check if zone actually offers free shipping
             $zone_has_free_shipping = false;
             if ($matched_zone_obj) {
-                $zone_methods = $matched_zone_obj->get_shipping_methods(true); // true = enabled only
+                $zone_methods = $matched_zone_obj->get_shipping_methods(true);
                 foreach ($zone_methods as $method) {
                     if ($method->id === 'free_shipping' && $method->enabled === 'yes') {
                         $zone_has_free_shipping = true;
-                        error_log('Zone HAS free shipping enabled');
                         break;
                     }
                 }
             }
             
-            if (!$zone_has_free_shipping) {
-                error_log('Zone does NOT have free shipping enabled');
-            }
-            
-            // STRICT CHECK: Verify if postcode is in Stockholm (100xx - 199xx)
+            // --- STRICT FIX: STOCKHOLM CHECK ---
             $is_stockholm = false;
-            if (!empty($postcode)) {
-                $normalized_postcode = preg_replace('/\s+/', '', $postcode);
-                $prefix_num = intval(substr($normalized_postcode, 0, 3));
-                if ($prefix_num >= 100 && $prefix_num <= 199) {
-                    $is_stockholm = true;
-                }
+            // Clean postcode
+            $normalized = preg_replace('/\s+/', '', $postcode);
+            $prefix = intval(substr($normalized, 0, 3));
+            if ($prefix >= 100 && $prefix <= 199) {
+                $is_stockholm = true;
             }
 
             // GLOBAL FREE SHIPPING THRESHOLD (500 SEK)
-            // Free shipping is ONLY available if:
-            // 1. Cart total >= 500 SEK
-            // 2. Customer's zone has free shipping enabled
-            // 3. Customer is in Stockholm area (Strict enforcement)
             $free_shipping_threshold = 500;
             
-            // Allow if strictly Stockholm AND threshold met AND zone enabled
-            // OR if it's "Store Pickup" (local_pickup) which is always free
-            if (($cart_total < $free_shipping_threshold) || !$zone_has_free_shipping || !$is_stockholm) {
-                // Remove free shipping methods
+            // FILTER: Remove free shipping if cart too low, zone disabled, OR NOT STOCKHOLM
+            if ($cart_total < $free_shipping_threshold || !$zone_has_free_shipping || !$is_stockholm) {
                 $available_methods = array_filter($available_methods, function($m) {
-                    // Keep if not free shipping
-                    if ($m['method_id'] !== 'free_shipping' && $m['cost'] > 0) {
-                        return true;
-                    }
-                    // Keep local pickup (always free)
-                    if ($m['method_id'] === 'local_pickup' || strpos($m['id'], 'local_pickup') !== false) {
-                        return true;
-                    }
-                    // If it's free shipping, only keep if logic passes (which it doesn't here)
-                    return false;
+                    return $m['method_id'] !== 'free_shipping';
                 });
                 $available_methods = array_values($available_methods);
             } else {
-                // Cart qualifies AND zone offers free shipping AND is Stockholm
+                // Ensure zero cost
                 foreach ($available_methods as &$m) {
                     if ($m['method_id'] === 'free_shipping') {
-                        $m['cost'] = 0;
-                        $m['total_cost'] = 0;
+                        $m['cost'] = 0; $m['total_cost'] = 0;
                     }
                 }
             }
 
-            // Check for restricted products (if any plugins add restrictions)
+            // Check for restricted products (Hooks based)
             $restricted_products = [];
             $restrictions_applied = apply_filters('fourlines_mcp_shipping_restrictions', [], WC()->cart);
 
@@ -281,14 +230,8 @@ class Fourlines_MCP_Shipping_DHL {
                 }
             }
 
-            // Clear cart after calculation
             WC()->cart->empty_cart();
 
-            // Return response with debug info
-            $debug = [
-                'cart_total' => $cart_total,
-                'available_methods' => $available_methods,
-            ];
             return [
                 'available_methods' => $available_methods,
                 'zone' => [
@@ -301,20 +244,12 @@ class Fourlines_MCP_Shipping_DHL {
                 'free_shipping_threshold' => $free_shipping_threshold,
                 'free_shipping_available' => $cart_total >= $free_shipping_threshold && $zone_has_free_shipping && $is_stockholm,
                 'amount_to_free_shipping' => max(0, $free_shipping_threshold - $cart_total),
-                'debug' => $debug,
             ];
 
         } catch (Exception $e) {
-            error_log('Fourlines MCP Shipping Error: ' . $e->getMessage());
-
-            return new WP_Error(
-                'shipping_calculation_failed',
-                'Failed to calculate shipping: ' . $e->getMessage(),
-                ['status' => 500]
-            );
+            return new WP_Error('shipping_calculation_failed', 'Failed to calculate shipping: ' . $e->getMessage(), ['status' => 500]);
         }
     }
 }
 
-// Initialize
 Fourlines_MCP_Shipping_DHL::init();
