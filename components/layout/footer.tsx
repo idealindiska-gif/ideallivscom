@@ -190,7 +190,7 @@ export async function Footer() {
           {/* Credits */}
           <p className="flex items-center gap-1.5 text-white/60 tracking-wide font-sans">
             <span>by</span>
-            <a href="https://fourlines.agency" target="_blank" rel="noopener noreferrer" className="font-semibold text-white/80 hover:text-white transition-colors flex items-center gap-1 uppercase">
+            <a href="https://fourlinesagency.com" target="_blank" rel="nofollow noopener noreferrer" className="font-semibold text-white/80 hover:text-white transition-colors flex items-center gap-1 uppercase">
               Fourlines <ExternalLink className="h-2 w-2" />
             </a>
           </p>
